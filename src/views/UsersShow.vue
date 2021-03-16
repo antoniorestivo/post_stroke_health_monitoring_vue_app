@@ -1,7 +1,8 @@
 <template>
   <div class="users-show">
     <h1>User Profile</h1>
-    <h2>User email: {{ email }} </h2>
+    <h2>User email: {{ user.email }} </h2>
+    <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
   </div>
 </template>
 
@@ -11,13 +12,13 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      email: {},
+      user: {},
     };
   },
   created: function() {
     axios.get("/api/users/" + this.$route.params.id).then(response => {
       console.log("users show", response);
-      this.email = response.data;
+      this.user = response.data;
     });
   },
   methods: {},

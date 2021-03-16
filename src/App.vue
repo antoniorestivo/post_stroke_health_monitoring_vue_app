@@ -8,7 +8,7 @@
       
       <router-link v-if="isLoggedIn()" to="/">Patient Conditions</router-link> |
 
-      <router-link v-if="isLoggedIn()" to="/">Journals</router-link> |
+      <router-link v-if="isLoggedIn()" to="/journals">Journals</router-link> |
 
 <router-link v-if="isLoggedIn()" to="/logout">Logout</router-link> |
 

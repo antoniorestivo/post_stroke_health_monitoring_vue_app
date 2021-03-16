@@ -5,6 +5,10 @@ import SignUp from "../views/SignUp.vue";
 import Login from "../views/Login.vue";
 import Logout from "../views/Logout.vue";
 import UsersShow from "../views/UsersShow.vue";
+import UsersEdit from "../views/UsersEdit.vue";
+import JournalsIndex from "../views/JournalsIndex.vue";
+import JournalsNew from "../views/JournalsNew.vue";
+
 
 Vue.use(VueRouter);
 
@@ -38,6 +42,23 @@ const routes = [
     name: "users-show",
     component: UsersShow,
   },
+  {
+    path: "/users/:id/edit",
+    name: "users-edit",
+    component: UsersEdit,
+  },
+  {
+    path: "/journals",
+    name: "journals-index",
+    component: JournalsIndex,
+  },
+  {
+    path: "/journals/new",
+    name: "journals-new",
+    component: JournalsNew,
+  }
+
+  
 ];
 
 const router = new VueRouter({
