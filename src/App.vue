@@ -2,11 +2,22 @@
   <div id="app">
     <div id="nav">
       <h1>Post-Stroke Health Monitoring App</h1>
-      <router-link to="/signup">Sign Up</router-link>
+      <router-link v-if="!isLoggedIn()" to="/signup">Sign Up</router-link>
       |
-      <router-link to="/signin">Sign In</router-link>
+      <router-link v-if="!isLoggedIn()" to="/login">Login</router-link>
+      
+      <router-link v-if="isLoggedIn()" to="/">Patient Conditions</router-link> |
+
+      <router-link v-if="isLoggedIn()" to="/">Journals</router-link> |
+
+<router-link v-if="isLoggedIn()" to="/logout">Logout</router-link> |
+
+<router-link v-if="isLoggedIn()" to="/users/${user.id}">User Profile</router-link> |
+      
+      
     </div>
-    <router-view />
+    <router-view/>
+    
   </div>
 </template>
 
@@ -32,3 +43,21 @@
   color: #42b983;
 }
 </style>
+
+<script>
+export default {
+  data: function() {
+    return {
+      
+    };
+  },
+  created: function() {},
+  methods: {
+    isLoggedIn: function(){
+      return localStorage.getItem("jwt");
+    }
+  }
+};
+</script>
+
+
