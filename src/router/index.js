@@ -8,6 +8,7 @@ import UsersShow from "../views/UsersShow.vue";
 import UsersEdit from "../views/UsersEdit.vue";
 import JournalsIndex from "../views/JournalsIndex.vue";
 import JournalsNew from "../views/JournalsNew.vue";
+import JournalsShow from "../views/JournalsShow.vue";
 
 
 Vue.use(VueRouter);
@@ -56,6 +57,11 @@ const routes = [
     path: "/journals/new",
     name: "journals-new",
     component: JournalsNew,
+  },
+  {
+    path: "/journals/:id",
+    name: "journals-show",
+    component: JournalsShow,
   }
 
   

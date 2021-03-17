@@ -1,0 +1,32 @@
+<template>
+ <div class="journals-show">
+  <h2>Show journal at date: {{ journal.created_at }}</h2>
+  <h2>Description: {{journal.description}}</h2>
+  <h2>Image Url:{{journal.image_url}}</h2>
+  <h2>Video Url: {{journal.video_url}}</h2>
+  <h2>Health Routines/diet:{{journal.health_routines}}</h2>
+  <h2>bp-avg: {{ journal.bp_avg }}</h2>
+  <h2>bp-annotations:{{ journal.bp_annotations }}</h2>
+  <h2>image of tongue:{{ journal.image_of_tongue}}</h2>
+<router-link to="/journals">Back to all journals</router-link>
+<router-link to="/journals">Back to all journals</router-link>
+ </div>
+</template>
+<script>
+import axios from "axios";
+
+export default {
+  data: function() {
+    return {
+      journal: {},
+    };
+  },
+  created: function() {
+    axios.get("/api/journals/" + this.$route.params.id).then(response => {
+      console.log("journals show", response);
+      this.journal = response.data;
+    });
+  },
+  methods: {},
+};
+</script>
