@@ -1,48 +1,63 @@
 <template>
-  <div class="signin">
-    <h1>Sign In</h1>
-    <form v-on:submit.prevent="loginUser()">
-      <ul>
-        <li v-for="error in errors" v-bind:key="error">{{ error }} </li>
-      </ul>
-      Email <input type="text" v-model="newEmail" />
-      password <input type="text" v-model="newPassword" />
-      <input type="submit" value="Submit" />
+  <div class="journals-new">
+    <h1>Create New Journal</h1>
+    <form v-on:submit.prevent="createJournal()">
+     
+      Journal Description:
+      <input type="text" v-model="newJournalDescription" />
+      Image Url: <input type="text" v-model="newImageUrl" />
+      Video Url: <input type="text" v-model="newVideoUrl" />
+      Health Routines: <input type="text" v-model="newHealthRoutines" />
+      Blood pressure average: <input type="text" v-model="newBpAvg" />
+      Blood annotation: <input type="text" v-model="newBpAnnotations" />
+      Image of Tongue: <input type="text" v-model="newImageOfTongue" />
+      <input type="submit" value="Create" />
     </form>
 
-    
   </div>
 </template>
 
 <script>
 import axios from "axios";
 
-export default{
-  data: function() {
-    return {
-      sameEmail: "",
-      samePassword: "",
-    };
-  },
-  created: function() {},
-  methods: {
-    loginUser: function() {
-      var params = {
-        email: this.sameEmail,
-        password: this.samePassword,
+export default {
+  data: function(){
+  return {
+    journal: {},
+    errors: [],
+  };
+},
+created: function() {},
+methods: {
+  createJournal: function(){
+    var params = {
+      description: this.newJournalDescription,
+      image_url: this.newImageUrl,
+      health_routines: this.newHealthRoutines,
+      bp_avg: this.newBpAvg,
+      bp_annotations: this.newBpAnnotations,
+      image_of_tongue: this.newImageOfTongue
       
-      };
-      axios
-      .post("/api/sessions",params)
-      .then(response => {
-        console.log("user login", response);
-        this.$router.push("/sessions")
-      })
-      .catch(error => {
-          console.log("user create error", error.response);
+    };
+    axios
+        .post("/api/journals", params)
+        .then(response => {
+          console.log("journals create", response);
+          this.$router.push("/journals");
+        })
+        .catch(error => {
+          console.log("journals create error", error.response);
           this.errors = error.response.data.errors;
         });
-    },
+
   },
+},
 };
+
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.bbc.com%2Fnews%2Fuk-england-stoke-staffordshire-52047832&psig=AOvVaw01XYBi3-pU0wU9ZlCda5IN&ust=1616173132577000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCLiKuJ2ouu8CFQAAAAAdAAAAABAG
+
+https://www.youtube.com/watch?v=eX2qFMC8cFo
+
+https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fsticking-out-tongue&psig=AOvVaw3BOcQ_8KMkJ8aVo_xC9FWp&ust=1616173320127000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNjTivuouu8CFQAAAAAdAAAAABAD
+
 </script>

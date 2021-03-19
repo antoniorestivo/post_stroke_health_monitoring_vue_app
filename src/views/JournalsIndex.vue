@@ -11,7 +11,7 @@
       <h2>{{ journal.bp_avg}}</h2>
       <h2>{{ journal.bp_annotations}}</h2>
       <h2>{{ journal.image_of_tongue}}</h2>
-      <router-link :to="`/journals/${journal.id}`"> See Journal Alone</router-link>
+      <router-link :to="`/journals/${journal.id}`"> Show Journal</router-link>
       
       
 

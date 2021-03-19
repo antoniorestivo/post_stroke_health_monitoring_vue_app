@@ -6,7 +6,7 @@
       |
       <router-link v-if="!isLoggedIn()" to="/login">Login</router-link>
       
-      <router-link v-if="isLoggedIn()" to="/">Patient Conditions</router-link> |
+      <router-link v-if="isLoggedIn()" to="/conditions">Patient Conditions</router-link> |
 
       <router-link v-if="isLoggedIn()" to="/journals">Journals</router-link> |
 

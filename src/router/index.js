@@ -9,6 +9,12 @@ import UsersEdit from "../views/UsersEdit.vue";
 import JournalsIndex from "../views/JournalsIndex.vue";
 import JournalsNew from "../views/JournalsNew.vue";
 import JournalsShow from "../views/JournalsShow.vue";
+import JournalsUpdate from "../views/JournalsUpdate.vue";
+import ConditionsIndex from "../views/ConditionsIndex.vue";
+import ConditionsNew from "../views/ConditionsNew.vue";
+import ConditionsShow from "../views/ConditionsShow.vue";
+import ConditionsUpdate from "../views/ConditionsUpdate.vue";
+
 
 
 Vue.use(VueRouter);
@@ -62,6 +68,31 @@ const routes = [
     path: "/journals/:id",
     name: "journals-show",
     component: JournalsShow,
+  },
+  {
+    path: "/journals/:id/edit",
+    name: "journals-update",
+    component: JournalsUpdate,
+  },
+  {
+    path: "/conditions",
+    name: "conditions-index",
+    component: ConditionsIndex
+  },
+  {
+    path: "/conditions/new",
+    name: "conditions-new",
+    component: ConditionsNew
+  },
+  {
+    path: "/conditions/:id",
+    name: "conditions-show",
+    component: ConditionsShow
+  },
+  {
+    path: "/conditions/:id/edit",
+    name: "conditions-update",
+    component: ConditionsUpdate
   }
 
   

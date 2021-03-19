@@ -8,8 +8,8 @@
   <h2>bp-avg: {{ journal.bp_avg }}</h2>
   <h2>bp-annotations:{{ journal.bp_annotations }}</h2>
   <h2>image of tongue:{{ journal.image_of_tongue}}</h2>
-<router-link to="/journals">Back to all journals</router-link>
-<router-link to="/journals">Back to all journals</router-link>
+<router-link to="/journals"> Back to all journals </router-link>
+<router-link :to="`/journals/${journal.id}/edit`"> Update Journal</router-link>
  </div>
 </template>
 <script>

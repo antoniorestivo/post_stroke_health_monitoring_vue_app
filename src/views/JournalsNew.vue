@@ -9,7 +9,7 @@
       Video Url: <input type="text" v-model="newVideoUrl" />
       Health Routines: <input type="text" v-model="newHealthRoutines" />
       Blood pressure average: <input type="text" v-model="newBpAvg" />
-      Blood annotation: <input type="text" v-model="newBpAnnotations" />
+      Blood pressure annotation: <input type="text" v-model="newBpAnnotations" />
       Image of Tongue: <input type="text" v-model="newImageOfTongue" />
       <input type="submit" value="Create" />
     </form>

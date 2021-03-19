@@ -1,18 +1,19 @@
 <template>
-  <div class="journals-new">
-    <h1>Create New Journal</h1>
-    <form v-on:submit.prevent="createJournal()">
+  <div class="journals-update">
+    <h1>Update Journal</h1>
+    <form v-on:submit.prevent="updateJournal(journal)">
      
       Journal Description:
-      <input type="text" v-model="newJournalDescription" />
-      Image Url: <input type="text" v-model="newImageUrl" />
-      Video Url: <input type="text" v-model="newVideoUrl" />
-      Health Routines: <input type="text" v-model="newHealthRoutines" />
-      Blood pressure average: <input type="text" v-model="newBpAvg" />
-      Blood annotation: <input type="text" v-model="newBpAnnotations" />
-      Image of Tongue: <input type="text" v-model="newImageOfTongue" />
-      <input type="submit" value="Create" />
+      <input type="text" v-model="journal.description" />
+      Image Url: <input type="text" v-model="journal.image_url" />
+      Video Url: <input type="text" v-model="journal.video_url" />
+      Health Routines: <input type="text" v-model="journal.health_routines" />
+      Blood pressure average: <input type="text" v-model="journal.bp_avg" />
+      Blood annotation: <input type="text" v-model="journal.bp_annotations" />
+      Image of Tongue: <input type="text" v-model="journal.image_of_tongue" />
+      <input type="submit" value="Update" />
     </form>
+    <button v-on:click="destroyJournal()">Delete</button>
 
   </div>
 </template>
@@ -27,23 +28,29 @@ export default {
     errors: [],
   };
 },
-created: function() {},
+created: function() {
+  axios.get("/api/journals/" + this.$route.params.id).then(response => {
+      console.log("journals show", response);
+      this.journal = response.data;
+    });
+},
 methods: {
-  createJournal: function(){
+  updateJournal: function(journal){
     var params = {
-      description: this.newJournalDescription,
-      image_url: this.newImageUrl,
-      health_routines: this.newHealthRoutines,
-      bp_avg: this.newBpAvg,
-      bp_annotations: this.newBpAnnotations,
-      image_of_tongue: this.newImageOfTongue
+      description: journal.description,
+      image_url: journal.image_url,
+      video_url: journal.video_url,
+      health_routines: journal.health_routines,
+      bp_avg: journal.bp_avg,
+      bp_annotations: journal.bp_annotations,
+      image_of_tongue: journal.image_of_tongue
       
     };
     axios
-        .post("/api/journals", params)
+        .patch(`/api/journals/${this.journal.id}`, params)
         .then(response => {
-          console.log("journals create", response);
-          this.$router.push("/journals");
+          console.log("journals update", response);
+          this.$router.push(`/journals/${this.journal.id}`);
         })
         .catch(error => {
           console.log("journals create error", error.response);
@@ -51,7 +58,15 @@ methods: {
         });
 
   },
+  destroyJournal: function() {
+      axios.delete(`/api/journals/${this.journal.id}`)
+      .then(() => {
+        console.log("journal successfully destroyed");
+        this.$router.push(`/journals/${this.journal.id}`)
+      })
+    }
 },
 };
 
 </script>
+
