@@ -68,28 +68,6 @@
     </section>
     <!--=================================
     Appointment -->
-    <h1>Create New Journal</h1>
-    <form v-on:submit.prevent="createJournal()">
-      <ul>
-        <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-      </ul>
-
-      Journal Description:
-      <input type="text" v-model="newJournalDescription" />
-      Image Url:
-      <input type="text" v-model="newImageUrl" />
-      Video Url:
-      <input type="text" v-model="newVideoUrl" />
-      Health Routines:
-      <input type="text" v-model="newHealthRoutines" />
-      Blood pressure average:
-      <input type="text" v-model="newBpAvg" />
-      Blood pressure annotation:
-      <input type="text" v-model="newBpAnnotations" />
-      Image of Tongue:
-      <input type="text" v-model="newImageOfTongue" />
-      <input type="submit" value="Create" />
-    </form>
   </div>
 </template>
 
