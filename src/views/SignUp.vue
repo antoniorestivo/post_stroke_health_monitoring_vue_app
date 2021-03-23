@@ -1,15 +1,68 @@
+
 <template>
-  <div class="signup">
-    <h1>Sign Up</h1>
-    <form v-on:submit.prevent="createUser()">
-      <ul>
-        <li v-for="error in errors" v-bind:key="error">{{ error }} </li>
-      </ul>
-      Email <input type="text" v-model="newEmail" />
-      password <input type="text" v-model="newPassword" />
-      confirm password <input type="text" v-model="newConfirmPassword" />
-      <input type="submit" value="Submit" />
-    </form>
+<div class="signup">
+    <!--=================================
+    Login -->
+    <section class="space-ptb login">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-8 col-sm-10">
+            <!-- Tab-nav START -->
+            <ul class="nav nav-tabs nav-tabs-02 justify-content-center" id="myTab" role="tablist">
+              
+              <li class="nav-item">
+                <a class="nav-link active" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+              </li>
+            </ul>
+            <!-- Tab-nav END -->
+
+            <!-- Tab-content START -->
+            <div class="tab-content mt-0 register-tab-content" id="myTabContent">
+              
+
+              <!-- Register-tab START -->
+              <div class="tab-pane fade show active" id="register" role="tabpanel" aria-labelledby="register-tab">
+                <!-- Register-form START -->
+                <div class="section-title">
+                  <h2 class="title">Register to your account</h2>
+                </div>
+                <form v-on:submit.prevent="createUser()" class="form-row mt-4 mb-5 align-items-center">
+                  
+                  <div class="form-group col-md-6">
+                    <label>Email Address:</label>
+                    <input type="email" class="form-control" placeholder="" v-model="newEmail">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Password:</label>
+                    <input type="Password" class="form-control" placeholder="" v-model="newPassword">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Confirm Password:</label>
+                    <input type="Password" class="form-control" placeholder="" v-model="newConfirmPassword">
+                  </div>
+                  <div class="col-sm-6">
+                    <button type="submit" class="btn btn-primary btn-block">Sign up</button>
+                  </div>
+                  <div class="col-sm-6">
+                    <ul class="list-unstyled d-flex mb-1 mt-sm-0 mt-3">
+                      <li class="mr-1"><a href="login">Already Registered User? Click here to login</a></li>
+                    </ul>
+                  </div>
+                </form>
+                <!-- Register-form END -->
+
+                
+              </div>
+              <!-- Register-tab END -->
+            </div>
+            <!-- Tab-content END -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--=================================
+    Login -->
+    
 
     
   </div>
@@ -38,7 +91,7 @@ export default{
       .post("/api/users",params)
       .then(response => {
         console.log("user create", response);
-        this.$router.push("/users")
+        this.$router.push("/login")
       })
       .catch(error => {
           console.log("user create error", error.response);

@@ -2,10 +2,12 @@
   <div class="conditions-new">
     <h1>Create New Condition</h1>
     <form v-on:submit.prevent="createCondition()">
-     
+     <ul>
+        <li v-for="error in errors" v-bind:key="error">{{ error }} </li>
+      </ul>
       Condition Name:
       <input type="text" v-model="newName" />
-      Support: <input type="text" v-model="newSupport" />
+      Needs Support: <input type="checkbox" v-model="newSupport" />
       Treatment Retrospect: <input type="text" v-model="newTreatmentRetrospect" />
       Treatment Plan: <input type="text" v-model="newTreatmentPlan" />
       Image Url: <input type="text" v-model="newImageUrl" />

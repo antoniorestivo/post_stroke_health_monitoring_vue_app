@@ -2,10 +2,13 @@
   <div class="conditions-update">
     <h1>Update Condition</h1>
     <form v-on:submit.prevent="updateCondition(condition)">
+      <ul>
+        <li v-for="error in errors" v-bind:key="error">{{ error }} </li>
+      </ul>
      
       Condition name:
       <input type="text" v-model="condition.name" />
-      Support: <input type="text" v-model="condition.support" />
+      Support: <input type="checkbox" v-model="condition.support" />
       Treatment Retrospect: <input type="text" v-model="condition.treatment_retrospect" />
       Treatment Plan: <input type="text" v-model="condition.treatment_plan" />
       Image Url: <input type="text" v-model="condition.image_url" />
@@ -13,7 +16,8 @@
     
       <input type="submit" value="Update" />
     </form>
-    <button v-on:click="destroyCondition()">Delete</button>
+    <button v-on:click="destroyCondition()" to="/conditions">Delete</button>
+    
 
   </div>
 </template>
@@ -61,7 +65,7 @@ methods: {
       axios.delete(`/api/conditions/${this.condition.id}`)
       .then(() => {
         console.log("condition successfully destroyed");
-        this.$router.push(`/conditions/${this.condition.id}`)
+        this.$router.push(`/conditions`)
       })
     }
 },

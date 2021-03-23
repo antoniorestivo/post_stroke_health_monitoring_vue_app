@@ -2,6 +2,10 @@
   <div class="journals-update">
     <h1>Update Journal</h1>
     <form v-on:submit.prevent="updateJournal(journal)">
+      <ul>
+        <li v-for="error in errors" v-bind:key="error">{{ error }} </li>
+      </ul>
+
      
       Journal Description:
       <input type="text" v-model="journal.description" />
@@ -62,7 +66,7 @@ methods: {
       axios.delete(`/api/journals/${this.journal.id}`)
       .then(() => {
         console.log("journal successfully destroyed");
-        this.$router.push(`/journals/${this.journal.id}`)
+        this.$router.push(`/journals`)
       })
     }
 },

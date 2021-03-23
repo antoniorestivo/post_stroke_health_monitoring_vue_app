@@ -1,11 +1,12 @@
 <template>
  <div class="conditions-show">
-  <h2>Show condition at date: {{ condition.created_at }}</h2>
+   ;
+  <h2 class ="date">Show condition at from: {{ relativeDate(condition.created_at) }}</h2>
   <h2>Condition name: {{condition.name}}</h2>
   <h2>Condition support:{{condition.support}}</h2>
   <h2>Treatment Retrospect: {{condition.treatment_retrospect}}</h2>
   <h2>Treatment Plan:{{condition.treatment_plan}}</h2>
-  <h2>Image Url: {{ condition.image_url }}</h2>
+  <img :src="condition.image_url" alt="">
   <h2>Video Url:{{ condition.video_url }}</h2>
   
 <router-link to="/conditions"> Back to all conditions </router-link>
@@ -14,7 +15,7 @@
 </template>
 <script>
 import axios from "axios";
-
+import moment from "moment";
 export default {
   data: function() {
     return {
@@ -27,6 +28,10 @@ export default {
       this.condition = response.data;
     });
   },
-  methods: {},
+  methods: {
+       relativeDate: function(date) {
+       return moment(date).fromNow();
+  },
+ },
 };
 </script>
