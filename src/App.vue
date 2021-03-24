@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-  
     <header class="header">
       <!-- Topbar -->
       <div class="topbar">
@@ -9,20 +8,18 @@
             <div class="col-12">
               <div class="d-block d-md-flex align-items-center text-center">
                 <div class="mr-3 d-inline-block">
-                  
-                  <!-- <a href="mailto:gethelp@psycare.com"><i class="far fa-envelope mr-2 fa-flip-horizontal"></i>gethelp@psycare.com</a> -->
+                  <h4 class="title text-white">Post-Stroke Health Monitoring App</h4>
                 </div>
                 <div class="mr-auto d-inline-block">
                   <!-- <a href="tel:0123456789"><i class="fa fa-phone mr-2 fa fa-flip-horizontal"></i>0123-456-789</a> -->
                 </div>
                 <div class="d-inline-block mr-3">
                   <ul class="list-unstyled">
-                    <li class="logout"><router-link v-if="isLoggedIn()" to="/logout">Logout</router-link></li>
+                    <h4 class="title text-white"><router-link v-if="isLoggedIn()" to="/logout">Logout</router-link></h4>
                     <li class="login"><router-link v-if="!isLoggedIn()" to="/login">Login</router-link></li>
                     <li><router-link v-if="!isLoggedIn()" to="/signup">Sign Up</router-link></li>
                   </ul>
                 </div>
-                
               </div>
             </div>
           </div>
@@ -34,56 +31,51 @@
       <nav class="navbar navbar-static-top navbar-expand-lg header-sticky">
         <!-- <h1>Post-Stroke Health Monitoring App</h1> -->
         <div class="container">
-          <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse"><i class="fas fa-align-left"></i></button>
-          
+          <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
+            <i class="fas fa-align-left"></i>
+          </button>
+
           <div class="navbar-collapse collapse justify-content-center">
             <ul class="nav navbar-nav">
-             
               <li class="nav-item dropdown">
-                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/conditions">Patient Conditions</router-link>
+                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/conditions">
+                  Patient Conditions
+                </router-link>
               </li>
               <li class="nav-item dropdown">
                 <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/journals">Journals</router-link>
               </li>
               <li class="nav-item dropdown">
-                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/users/me">User Profile</router-link>
+                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/users/me">
+                  User Profile
+                </router-link>
               </li>
             </ul>
           </div>
-          
         </div>
       </nav>
       <!-- Nav -->
     </header>
+
     <!--=================================
      header -->
-    
-    
-     
-      
-    <router-view/>
-    
+
+    <router-view />
   </div>
 </template>
 
-<style>
-
-</style>
+<style></style>
 
 <script>
 export default {
   data: function() {
-    return {
-      
-    };
+    return {};
   },
   created: function() {},
   methods: {
-    isLoggedIn: function(){
+    isLoggedIn: function() {
       return localStorage.getItem("jwt");
-    }
-  }
+    },
+  },
 };
 </script>
-
-

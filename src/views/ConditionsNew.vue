@@ -1,22 +1,58 @@
 <template>
   <div class="conditions-new">
-    <h1>Create New Condition</h1>
-    <form v-on:submit.prevent="createCondition()">
-     <ul>
-        <li v-for="error in errors" v-bind:key="error">{{ error }} </li>
-      </ul>
-      Condition Name:
-      <input type="text" v-model="newName" />
-      Needs Support: <input type="checkbox" v-model="newSupport" />
-      Treatment Retrospect: <input type="text" v-model="newTreatmentRetrospect" />
-      Treatment Plan: <input type="text" v-model="newTreatmentPlan" />
-      Image Url: <input type="text" v-model="newImageUrl" />
-      Video Url: <input type="text" v-model="newVideoUrl" />
-      
-      
-      <input type="submit" value="Create" />
-    </form>
+    <section class="space-ptb login">
+      <div class="container">
+        <div class="row no-gutters">
+          <div class="col-lg-12 bg-white box-shadow b-radius">
+            <div class="psycare-account box-shadow-none">
+              <div class="section-title">
+                <h3 class="title">Create new condition</h3>
+              </div>
+              <ul>
+                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
+              </ul>
+              <form class="form-row align-items-center" v-on:submit.prevent="createCondition()">
+                <div class="form-group col-md-12">
+                  <label>Condition Name</label>
+                  <input v-model="newName" type="text" class="form-control" placeholder="" />
+                </div>
+                <div class="form-group col-md-12">
+                  <label>Needs Support:</label>
+                  <input v-model="newSupport" type="checkbox" class="form-control" placeholder="" />
+                </div>
+                <div class="form-group col-md-12">
+                  <label>Treatment Retrospect</label>
+                  <textarea
+                    v-model="newTreatmentRetrospect"
+                    class="form-control"
+                    name=""
+                    id=""
+                    cols="30"
+                    rows="5"
+                  ></textarea>
+                </div>
+                <div class="form-group col-md-12">
+                  <label>Treatment Plan</label>
+                  <textarea v-model="newTreatmentPlan" class="form-control" name="" id="" cols="30" rows="5"></textarea>
+                </div>
+                <div class="form-group col-md-3">
+                  <label>Image Url:</label>
+                  <input v-model="newImageUrl" type="text" class="form-control" placeholder="" />
+                </div>
+                <div class="form-group col-md-9">
+                  <label>Video Url</label>
+                  <input v-model="newVideoUrl" type="text" class="form-control" placeholder="" />
+                </div>
 
+                <div class="form-group col-sm-12">
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -24,30 +60,29 @@
 import axios from "axios";
 
 export default {
-  data: function(){
-  return {
-    newName: "",
-    newSupport: "",
-    newTreatmentRetrospect: "",
-    newTreatmentPlan: "",
-    newImageUrl: "",
-    newVideoUrl: "",
-    errors: [],
-  };
-},
-created: function() {},
-methods: {
-  createCondition: function(){
-    var params = {
-      name: this.newName,
-      support: this.newSupport,
-      treatment_retrospect: this.newTreatmentRetrospect,
-      treatment_plan: this.newTreatmentPlan,
-      image_url: this.newImageUrl,
-      video_url: this.newVideoUrl
-      
+  data: function() {
+    return {
+      newName: "",
+      newSupport: "",
+      newTreatmentRetrospect: "",
+      newTreatmentPlan: "",
+      newImageUrl: "",
+      newVideoUrl: "",
+      errors: [],
     };
-    axios
+  },
+  created: function() {},
+  methods: {
+    createCondition: function() {
+      var params = {
+        name: this.newName,
+        support: this.newSupport,
+        treatment_retrospect: this.newTreatmentRetrospect,
+        treatment_plan: this.newTreatmentPlan,
+        image_url: this.newImageUrl,
+        video_url: this.newVideoUrl,
+      };
+      axios
         .post("/api/conditions", params)
         .then(response => {
           console.log("conditions create", response);
@@ -57,9 +92,7 @@ methods: {
           console.log("conditions create error", error.response);
           this.errors = error.response.data.errors;
         });
-
+    },
   },
-},
 };
-
 </script>

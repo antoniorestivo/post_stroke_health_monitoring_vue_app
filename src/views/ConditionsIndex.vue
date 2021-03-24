@@ -1,22 +1,56 @@
 <template>
   <div class="conditions-index">
-    <h1>Conditions Index</h1>
-    <div v-for="condition in conditions" v-bind:key="condition.id">
-      Created at:<h2 class="date">{{ relativeDate(condition.created_at)}}</h2>
-      Updated at:<h2 class="date">{{ relativeDate(condition.updated_at)}}</h2>
-      Name:<h2>{{ condition.name}}</h2>
-      Needs Support:<h2>{{ condition.support}}</h2>
-      Treatment Retrospect: <h2>{{ condition.treatment_retrospect}}</h2>
-      Treatment Plan<h2>{{ condition.treatment_plan}}</h2>
-      <img :src="condition.image_url" alt="">
-      Video Url:<h2>{{ condition.video_url}}</h2>
-      <router-link :to="`/conditions/${condition.id}`"> Show Condition</router-link>
-      
-      
-
-     </div>
-     <router-link :to="`/conditions/new`">Create New Condition</router-link>
-     
+    <!--=================================
+    services -->
+    <section class="space-pt">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-12">
+            <div class="text-center mt-4 mt-lg-5">
+              <router-link :to="`/conditions/new`" class="btn btn-primary">Create New Condition</router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--=================================
+    services -->
+    <!--=================================
+    Blog -->
+    <section class="space-ptb">
+      <div class="container">
+        <div class="row">
+          <div v-for="condition in conditions" v-bind:key="condition.id" class="col-lg-4 col-md-6 mb-0 mb-lg-3">
+            <!-- Blog-Post-01 START -->
+            <div class="blog-post">
+              <div class="blog-post-image">
+                <img class="img-fluid" :src="condition.image_url" alt="" />
+              </div>
+              <div class="blog-post-content">
+                <div class="blog-post-info">
+                  <div class="blog-post-date">
+                    <i class="far fa-clock"></i>
+                    {{ relativeDate(condition.created_at) }}
+                  </div>
+                </div>
+                <h6 class="blog-post-title">
+                  Condition Name:
+                </h6>
+                <p>
+                  {{ condition.name }}
+                </p>
+                <h6>Needs Support:</h6>
+                <p class="">{{ condition.support }}</p>
+                <router-link :to="`/conditions/${condition.id}`" class="btn btn-primary">More Info</router-link>
+              </div>
+            </div>
+            <!-- Blog-Post-01 END -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--=================================
+    Blog -->
   </div>
 </template>
 
@@ -35,11 +69,10 @@ export default {
       this.conditions = response.data;
     });
   },
-    methods: {
-       relativeDate: function(date) {
-       return moment(date).format("MMM Do YY");
-  
+  methods: {
+    relativeDate: function(date) {
+      return moment(date).format("MMM Do YY");
+    },
   },
- },
 };
 </script>

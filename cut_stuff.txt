@@ -60,4 +60,28 @@ https://www.youtube.com/watch?v=eX2qFMC8cFo
 
 https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.istockphoto.com%2Fphotos%2Fsticking-out-tongue&psig=AOvVaw3BOcQ_8KMkJ8aVo_xC9FWp&ust=1616173320127000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCNjTivuouu8CFQAAAAAdAAAAABAD
 
+
+<div class="conditions-index">
+    <h1>Conditions Index</h1>
+    <div v-for="condition in conditions" v-bind:key="condition.id">
+      Created at:
+      <h2 class="date">{{ relativeDate(condition.created_at) }}</h2>
+      Updated at:
+      <h2 class="date">{{ relativeDate(condition.updated_at) }}</h2>
+      Name:
+      <h2>{{ condition.name }}</h2>
+      Needs Support:
+      <h2>{{ condition.support }}</h2>
+      Treatment Retrospect:
+      <h2>{{ condition.treatment_retrospect }}</h2>
+      Treatment Plan
+      <h2>{{ condition.treatment_plan }}</h2>
+      <img :src="condition.image_url" alt="" />
+      Video Url:
+      <h2>{{ condition.video_url }}</h2>
+      <router-link :to="`/conditions/${condition.id}`">Show Condition</router-link>
+    </div>
+    <router-link :to="`/conditions/new`">Create New Condition</router-link>
+  </div>
+
 </script>
