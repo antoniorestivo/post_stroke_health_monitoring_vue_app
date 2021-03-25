@@ -10,7 +10,10 @@
                   User Profile
                 </h1>
                 <h2>User email: {{ user.email }}</h2>
-                <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
+
+                <button class="btn btn-secondary">
+                  <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
+                </button>
               </div>
             </div>
           </div>

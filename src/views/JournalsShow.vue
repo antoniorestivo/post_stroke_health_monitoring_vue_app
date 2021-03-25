@@ -34,11 +34,13 @@
                 <div class="blog-post-image">
                   <img class="img-fluid" :src="journal.image_of_tongue" alt="" />
                 </div>
-                <router-link to="/journals">Back to all journals</router-link>
+                <button class="btn btn-secondary">
+                  <router-link to="/journals">Back to all journals</router-link>
+                </button>
 
-                |
-
-                <router-link :to="`/journals/${journal.id}/edit`">Update condition</router-link>
+                <button class="btn btn-secondary">
+                  <router-link :to="`/journals/${journal.id}/edit`">Update journal</router-link>
+                </button>
               </div>
             </div>
           </div>

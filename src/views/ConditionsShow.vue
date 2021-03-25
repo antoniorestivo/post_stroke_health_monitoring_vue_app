@@ -27,11 +27,13 @@
 
                 <h2>Video Url:{{ condition.video_url }}</h2>
 
-                <router-link to="/conditions">Back to all conditions</router-link>
+                <button class="btn btn-secondary">
+                  <router-link to="/conditions">Back to all conditions</router-link>
+                </button>
 
-                |
-
-                <router-link :to="`/conditions/${condition.id}/edit`">Update condition</router-link>
+                <button class="btn btn-secondary">
+                  <router-link :to="`/conditions/${condition.id}/edit`">Update condition</router-link>
+                </button>
               </div>
             </div>
           </div>
