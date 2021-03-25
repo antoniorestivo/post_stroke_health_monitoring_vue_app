@@ -6,7 +6,10 @@
           <div class="col-lg-6 mb-4 mb-lg-0">
             <div class="section-contant">
               <div class="section-title mb-4">
-                <h2 class="title">Name of condition: {{ condition.name }}</h2>
+                <h2 class="title">
+                  {{ condition.name }} is the name of the condition and is recorded
+                  {{ relativeDate(condition.created_at) }}
+                </h2>
                 <h3 v-if="condition.support === true">Condition Needs Outside Support</h3>
                 <h3 v-else>Condition does not need outside support at the moment</h3>
                 <h4>Treatment Retrospect:</h4>
@@ -17,23 +20,24 @@
                 <p class="lead">
                   {{ condition.treatment_plan }}
                 </p>
+
+                <div class="blog-post-image">
+                  <img class="img-fluid" :src="condition.image_url" alt="" />
+                </div>
+
+                <h2>Video Url:{{ condition.video_url }}</h2>
+
+                <router-link to="/conditions">Back to all conditions</router-link>
+
+                |
+
+                <router-link :to="`/conditions/${condition.id}/edit`">Update condition</router-link>
               </div>
             </div>
           </div>
         </div>
       </div>
     </section>
-
-    <h2 class="date">Show condition from: {{ relativeDate(condition.created_at) }}</h2>
-    <h2>Condition name: {{ condition.name }}</h2>
-    <h2>Condition support:{{ condition.support }}</h2>
-    <h2>Treatment Retrospect: {{ condition.treatment_retrospect }}</h2>
-    <h2>Treatment Plan:{{ condition.treatment_plan }}</h2>
-    <img :src="condition.image_url" alt="" />
-    <h2>Video Url:{{ condition.video_url }}</h2>
-
-    <router-link to="/conditions">Back to all conditions</router-link>
-    <router-link :to="`/conditions/${condition.id}/edit`">Update condition</router-link>
   </div>
 </template>
 <script>

@@ -1,8 +1,22 @@
 <template>
   <div class="users-show">
-    <h1>User Profile</h1>
-    <h2>User email: {{ user.email }} </h2>
-    <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
+    <section class="space-ptb">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="section-contant">
+              <div class="section-title mb-4">
+                <h1 class="title">
+                  User Profile
+                </h1>
+                <h2>User email: {{ user.email }}</h2>
+                <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
@@ -23,7 +37,4 @@ export default {
   },
   methods: {},
 };
-
-
 </script>
-

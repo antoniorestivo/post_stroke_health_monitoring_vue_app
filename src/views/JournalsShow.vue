@@ -1,16 +1,50 @@
 <template>
   <div class="journals-show">
-    <h2 class="date">Show journal from: {{ relativeDate(journal.created_at) }}</h2>
-    <h2>Description: {{ journal.description }}</h2>
-    <img :src="journal.image_url" alt="" />
-    <a :href="journal.video_url" target="_blank">Video</a>
+    <section class="space-ptb">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="section-contant">
+              <div class="section-title mb-4">
+                <h2 class="title">
+                  This journal is recorded around
+                  {{ relativeDate(journal.created_at) }}
+                </h2>
+                <h4>Description</h4>
+                <p class="lead">
+                  {{ journal.description }}
+                </p>
+                <h4>Health Routines/diet</h4>
+                <p class="lead">
+                  {{ journal.health_routines }}
+                </p>
+                <h4>Blood pressure average</h4>
+                <p class="lead">
+                  {{ journal.bp_avg }}
+                </p>
+                <h4>Blood pressure annotations</h4>
+                <p class="lead">
+                  {{ journal.bp_annotations }}
+                </p>
 
-    <h2>Health Routines/diet:{{ journal.health_routines }}</h2>
-    <h2>bp-avg: {{ journal.bp_avg }}</h2>
-    <h2>bp-annotations:{{ journal.bp_annotations }}</h2>
-    <img :src="journal.image_of_tongue" alt="" />
-    <router-link to="/journals">Back to all journals</router-link>
-    <router-link :to="`/journals/${journal.id}/edit`">Update Journal</router-link>
+                <div class="blog-post-image">
+                  <img class="img-fluid" :src="journal.image_url" alt="" />
+                </div>
+                <h2>Video Url:{{ journal.video_url }}</h2>
+                <div class="blog-post-image">
+                  <img class="img-fluid" :src="journal.image_of_tongue" alt="" />
+                </div>
+                <router-link to="/journals">Back to all journals</router-link>
+
+                |
+
+                <router-link :to="`/journals/${journal.id}/edit`">Update condition</router-link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 <script>

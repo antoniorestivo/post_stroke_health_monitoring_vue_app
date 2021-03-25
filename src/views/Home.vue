@@ -1,20 +1,20 @@
 <template>
   <div class="home">
-    <h1>{{ message }}</h1>
+    <h5>{{ message }}</h5>
   </div>
 </template>
 
-<style>
-</style>
+<style></style>
 
 <script>
 export default {
   data: function() {
     return {
-      message: "Welcome to the Post-Stroke Health Monitoring App"
+      message:
+        "This App helps tracks the stroke patient's conditions and daily state. This app helps assist the intuition of the caretaker in making the best lifestyle choices for the patient. ",
     };
   },
   created: function() {},
-  methods: {}
+  methods: {},
 };
 </script>
