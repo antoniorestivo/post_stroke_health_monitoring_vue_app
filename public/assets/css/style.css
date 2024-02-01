@@ -6994,4 +6994,29 @@ button {
   .footer .footer-middle {
     margin-top: 50px; } }
 
+#addFieldBtn {
+    cursor: pointer;
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.input-group {
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+.dynamic-input {
+    margin: 5px;
+
+}
+
+.form-header {
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /*# sourceMappingURL=../css/style.css.map */
