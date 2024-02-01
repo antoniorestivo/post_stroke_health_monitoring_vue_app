@@ -9,6 +9,12 @@
             <div class="text-center mt-4 mt-lg-5">
               <router-link :to="`/journals/new`" class="btn btn-primary">Create New Journal</router-link>
             </div>
+            <div v-if="!template" class="text-center mt-4 mt-lg-5">
+              <router-link :to="`/journals/template/new`" class="btn btn-primary">Create Journal Template</router-link>
+            </div>
+            <div v-if="template" class="text-center mt-4 mt-lg-5">
+              <router-link :to="`/journals/new`" class="btn btn-primary">Edit Journal Template</router-link>
+            </div>
           </div>
         </div>
       </div>
@@ -62,12 +68,15 @@ export default {
   data: function() {
     return {
       journals: [],
+      template: null
     };
   },
   created: function() {
     axios.get("/api/journals").then(response => {
       console.log("journals index", response);
-      this.journals = response.data;
+      let data = JSON.parse(response.data);
+      this.journals = data.journals;
+      this.template = data.template;
     });
   },
   methods: {

@@ -7,15 +7,14 @@ import Logout from "../views/Logout.vue";
 import UsersShow from "../views/UsersShow.vue";
 import UsersEdit from "../views/UsersEdit.vue";
 import JournalsIndex from "../views/JournalsIndex.vue";
-import JournalsNew from "../views/JournalsNew.vue";
+import JournalsNewV2 from "../views/JournalsNewV2.vue";
+import JournalsTemplateNew from "../views/JournalsTemplateNew.vue";
 import JournalsShow from "../views/JournalsShow.vue";
 import JournalsUpdate from "../views/JournalsUpdate.vue";
 import ConditionsIndex from "../views/ConditionsIndex.vue";
 import ConditionsNew from "../views/ConditionsNew.vue";
 import ConditionsShow from "../views/ConditionsShow.vue";
 import ConditionsUpdate from "../views/ConditionsUpdate.vue";
-
-
 
 Vue.use(VueRouter);
 
@@ -62,7 +61,12 @@ const routes = [
   {
     path: "/journals/new",
     name: "journals-new",
-    component: JournalsNew,
+    component: JournalsNewV2,
+  },
+  {
+    path: "/journals/template/new",
+    name: "journals-template-new",
+    component: JournalsTemplateNew,
   },
   {
     path: "/journals/:id",
@@ -94,8 +98,6 @@ const routes = [
     name: "conditions-update",
     component: ConditionsUpdate
   }
-
-  
 ];
 
 const router = new VueRouter({
