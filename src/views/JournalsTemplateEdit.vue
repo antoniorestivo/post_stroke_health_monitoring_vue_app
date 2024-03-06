@@ -6,44 +6,18 @@
           <div class="col-lg-12 bg-white box-shadow b-radius">
             <div class="psycare-account box-shadow-none">
               <div class="section-title">
-                <h3 class="title">Update Journal</h3>
+                <h3 class="title">Update Journal Template</h3>
               </div>
               <ul>
                 <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
               </ul>
-              <form class="form-row align-items-center" v-on:submit.prevent="updateJournal(journal)">
-                <div class="form-group col-md-12">
-                  <label>Description</label>
-                  <textarea
-                    v-model="journal.description"
-                    class="form-control"
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="10"
-                  ></textarea>
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Image Url</label>
-                  <input v-model="journal.image_url" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Video Url</label>
-                  <input v-model="journal.video_url" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Health Routines</label>
-                  <textarea
-                    v-model="journal.health_routines"
-                    class="form-control"
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="5"
-                  ></textarea>
-                </div>
-                <div v-for="metric in Object.keys(journal.metrics)" v-bind:key="metric">
-                  <label>{{ metric }}</label>
+              <form class="form-row align-items-center" v-on:submit.prevent="updateJournalTemplate(template)">
+                <div v-for="metric in Object.keys(template.health_metrics)" v-bind:key="metric">
+                  <label>{{ metric.metric_name }}</label>
+                  <input v-model="journal.metrics[metric]" name="metric" type="text" class="health-metric" />
+                  <label>{{ metric.metric_data_type }}</label>
+                  <input v-model="journal.metrics[metric]" name="metric" type="text" class="health-metric" />
+                  <label>{{ metric.metric_unit_name }}</label>
                   <input v-model="journal.metrics[metric]" name="metric" type="text" class="health-metric" />
                 </div>
 
@@ -66,14 +40,14 @@ import axios from "axios";
 export default {
   data: function() {
     return {
-      journal: {},
+      template: {},
       errors: [],
     };
   },
   created: function() {
-    axios.get("/api/journals/" + this.$route.params.id).then(response => {
-      console.log("journals show", response);
-      this.journal = response.data;
+    axios.get("/api/journals/template/" + this.$route.params.id).then(response => {
+      console.log("templates show", response);
+      this.template = JSON.parse(response.data);
     });
   },
   methods: {

@@ -13,7 +13,9 @@
               <router-link :to="`/journals/template/new`" class="btn btn-primary">Create Journal Template</router-link>
             </div>
             <div v-if="template" class="text-center mt-4 mt-lg-5">
-              <router-link :to="`/journals/new`" class="btn btn-primary">Edit Journal Template</router-link>
+              <router-link :to="`/journals/template/${template.id}/edit`" class="btn btn-primary">
+                Edit Journal Template
+              </router-link>
             </div>
           </div>
         </div>
@@ -29,9 +31,6 @@
           <div v-for="journal in journals" v-bind:key="journal.id" class="col-lg-4 col-md-6 mb-0 mb-lg-3">
             <!-- Blog-Post-01 START -->
             <div class="blog-post">
-              <div class="blog-post-image">
-                <img class="img-fluid" :src="journal.image_url" alt="" />
-              </div>
               <div class="blog-post-content">
                 <div class="blog-post-info">
                   <div class="blog-post-date">
@@ -45,8 +44,29 @@
                 <p>
                   {{ journal.description }}
                 </p>
-                <h6>Blood Pressure:</h6>
-                <p class="">{{ journal.bp_avg }}</p>
+                <div class="blog-post-image">
+                  <img class="img-fluid" :src="journal.image_url" alt="" />
+                </div>
+                <h7 class="blog-post-title">
+                  Video Url:
+                </h7>
+                <p>
+                  {{ journal.video_url }}
+                </p>
+                <h6 class="blog-post-title">
+                  Health Routines:
+                </h6>
+                <p>
+                  {{ journal.health_routines }}
+                </p>
+                <h6 class="blog-post-title">
+                  Metrics:
+                </h6>
+                <div v-for="metric in Object.keys(journal.metrics)" v-bind:key="metric">
+                  <h7>{{ metric }}</h7>
+                  <p>{{ journal.metrics[metric] }}</p>
+                </div>
+
                 <router-link :to="`/journals/${journal.id}`" class="btn btn-primary">More Info</router-link>
               </div>
             </div>
@@ -68,7 +88,7 @@ export default {
   data: function() {
     return {
       journals: [],
-      template: null
+      template: null,
     };
   },
   created: function() {

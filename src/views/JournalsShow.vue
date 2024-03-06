@@ -18,27 +18,20 @@
                 <p class="lead">
                   {{ journal.health_routines }}
                 </p>
-                <h4>Blood pressure average</h4>
-                <p class="lead">
-                  {{ journal.bp_avg }}
-                </p>
-                <h4>Blood pressure annotations</h4>
-                <p class="lead">
-                  {{ journal.bp_annotations }}
-                </p>
 
                 <div class="blog-post-image">
                   <img class="img-fluid" :src="journal.image_url" alt="" />
                 </div>
-                <h2>Video Url:{{ journal.video_url }}</h2>
-                <div class="blog-post-image">
-                  <img class="img-fluid" :src="journal.image_of_tongue" alt="" />
+                <h4>Video Url:{{ journal.video_url }}</h4>
+                <div v-for="metric in Object.keys(journal.metrics)" v-bind:key="metric">
+                  <h7>{{ metric }}</h7>
+                  <p>{{ journal.metrics[metric] }}</p>
                 </div>
                 <router-link to="/journals">Back to all journals</router-link>
 
                 |
 
-                <router-link :to="`/journals/${journal.id}/edit`">Update condition</router-link>
+                <router-link :to="`/journals/${journal.id}/edit`">Update journal</router-link>
               </div>
             </div>
           </div>

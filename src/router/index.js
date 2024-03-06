@@ -15,6 +15,7 @@ import ConditionsIndex from "../views/ConditionsIndex.vue";
 import ConditionsNew from "../views/ConditionsNew.vue";
 import ConditionsShow from "../views/ConditionsShow.vue";
 import ConditionsUpdate from "../views/ConditionsUpdate.vue";
+import JournalsTemplateEdit from "../views/JournalsTemplateEdit.vue";
 
 Vue.use(VueRouter);
 
@@ -67,6 +68,11 @@ const routes = [
     path: "/journals/template/new",
     name: "journals-template-new",
     component: JournalsTemplateNew,
+  },
+  {
+    path: "/journals/template/:id/edit",
+    name: "journals-template-edit",
+    component: JournalsTemplateEdit,
   },
   {
     path: "/journals/:id",
