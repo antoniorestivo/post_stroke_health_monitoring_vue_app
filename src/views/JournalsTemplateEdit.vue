@@ -13,13 +13,16 @@
               </ul>
               <form class="form-row align-items-center" v-on:submit.prevent="updateJournalTemplate(template)">
                 <div v-for="metric in template.metrics" v-bind:key="metric">
-                  <label>{{ metric.metric_name }}</label>
+                  <label style="margin-right: 4px;">Metric name</label>
                   <input v-model="metric.metric_name" name="metric" type="text" class="health-metric" />
-                  <label>{{ metric.metric_data_type }}</label>
+                  <label style="margin-right: 4px; margin-left: 4px;">Metric data type</label>
                   <input v-model="metric.metric_data_type" name="metric" type="text" class="health-metric" />
-                  <label>{{ metric.metric_unit_name }}</label>
+                  <label style="margin-right: 4px; margin-left: 4px;">Metric unit name</label>
                   <input v-model="metric.metric_unit_name" name="metric" type="text" class="health-metric" />
                 </div>
+                <br />
+                <br />
+                <button id="addMetricField" v-on:click.prevent="addMetricField()">Create Field</button>
 
                 <div class="form-group col-sm-12">
                   <button type="submit" class="btn btn-primary">Update</button>
@@ -47,7 +50,7 @@ export default {
   created: function() {
     const id = this.$route.params.id;
     axios.get(`/api/journal_templates/${id}/edit`).then(response => {
-      const data = response.data
+      const data = response.data;
       console.log(data);
       this.template = data;
     });
@@ -55,7 +58,7 @@ export default {
   methods: {
     updateJournalTemplate: function(template) {
       var params = {
-        metrics: template.metrics,
+        template: { metrics: template.metrics },
       };
       console.log(`!!!!${template.metrics}`);
       // metrics.forEach(ele => {
@@ -78,6 +81,9 @@ export default {
       axios.delete(`/api/journal_templates/${this.journal.id}/destroy`).then(() => {
         this.$router.push(`/journals/template/${this.template.id}/edit`);
       });
+    },
+    addMetricField: function() {
+      console.log("clicked");
     },
   },
 };
