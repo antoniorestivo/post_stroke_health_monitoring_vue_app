@@ -11,19 +11,20 @@
               <ul>
                 <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
               </ul>
-              <form class="form-row align-items-center" v-on:submit.prevent="updateJournalTemplate(template)">
-                <div v-for="metric in template.metrics" v-bind:key="metric">
+              <form class="form-row align-items-center" v-on:submit.prevent="updateJournalTemplate" id="metricFormContainer">
+                <div v-for="metric in template.metrics" v-bind:key="metric" class="metricInputGroup">
                   <label style="margin-right: 4px;">Metric name</label>
-                  <input v-model="metric.metric_name" name="metric" type="text" class="health-metric" />
+                  <input v-model="metric.metric_name" name="metric_name" type="text" class="health-metric" />
                   <label style="margin-right: 4px; margin-left: 4px;">Metric data type</label>
-                  <input v-model="metric.metric_data_type" name="metric" type="text" class="health-metric" />
+                  <input v-model="metric.metric_data_type" name="metric_data_type" type="text" class="health-metric" />
                   <label style="margin-right: 4px; margin-left: 4px;">Metric unit name</label>
-                  <input v-model="metric.metric_unit_name" name="metric" type="text" class="health-metric" />
+                  <input v-model="metric.metric_unit_name" name="metric_unit_name" type="text" class="health-metric" />
+                  <button v-on:click.prevent="deleteRow">Delete Field</button>
                 </div>
-                <br />
-                <br />
+                <div style="flex-basis: 100%; height: 0"></div>
                 <button id="addMetricField" v-on:click.prevent="addMetricField()">Create Field</button>
-
+                <br>
+                <br>
                 <div class="form-group col-sm-12">
                   <button type="submit" class="btn btn-primary">Update</button>
                 </div>
@@ -51,26 +52,32 @@ export default {
     const id = this.$route.params.id;
     axios.get(`/api/journal_templates/${id}/edit`).then(response => {
       const data = response.data;
-      console.log(data);
       this.template = data;
     });
   },
   methods: {
-    updateJournalTemplate: function(template) {
+    updateJournalTemplate: function() {
       var params = {
-        template: { metrics: template.metrics },
+        template: { metrics: [] },
       };
-      console.log(`!!!!${template.metrics}`);
-      // metrics.forEach(ele => {
-      //   let key = ele.name;
-      //   let value = ele.value;
-      //   params.metrics[key] = value;
-      // });
+      let newInputGroups = document.getElementsByClassName("metricInputGroup");
+      newInputGroups.forEach(ele => {
+        let nodes = ele.childNodes;
+        let hash = {};
+        nodes.forEach(node => {
+          hash[node.name] = node.value;
+        });
+        params.template.metrics.push(hash);
+      });
       axios
         .patch(`/api/journal_templates/${this.template.id}`, params)
         .then(response => {
           console.log("journal template update", response);
           this.$router.push(`/journals/template/${this.template.id}/edit`);
+          let oldInputGroups = document.getElementsByClassName('newInputGroup');
+          oldInputGroups.forEach(ele => {
+            ele.remove();
+          });
         })
         .catch(error => {
           console.log("journal template update error", error.response);
@@ -83,8 +90,22 @@ export default {
       });
     },
     addMetricField: function() {
-      console.log("clicked");
+      const targetForm = document.getElementById('metricFormContainer');
+      let newElements = `<label style="margin-right: 4px;">Metric Name</label>`;
+      newElements += `<input name="metric_name" type="text" class="health-metric newMetric" />`;
+      newElements += `<label style="margin-right: 4px; margin-left: 4px;">Metric data type</label>`;
+      newElements += `<input name="metric_data_type" type="text" class="health-metric newMetric"/>`
+      newElements += `<label style="margin-right: 4px; margin-left: 4px;">Metric unit name</label>`;
+      newElements += `<input name="metric_unit_name" type="text" class="health-metric newMetric"/>`
+      let newInputGroup = document.createElement("div");
+      newInputGroup.className = 'metricInputGroup';
+      newInputGroup.innerHTML = newElements;
+      targetForm.prepend(newInputGroup);
     },
+    deleteRow: function(event) {
+      console.log(event);
+      event.target.closest('div').remove();
+    }
   },
 };
 </script>
