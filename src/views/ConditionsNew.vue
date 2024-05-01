@@ -21,19 +21,15 @@
                   <input v-model="newSupport" type="checkbox" class="form-control" placeholder="" />
                 </div>
                 <div class="form-group col-md-12">
-                  <label>Treatment Retrospect</label>
+                  <label>Condition Description</label>
                   <textarea
-                    v-model="newTreatmentRetrospect"
+                    v-model="newDescription"
                     class="form-control"
                     name=""
                     id=""
                     cols="30"
                     rows="5"
                   ></textarea>
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Treatment Plan</label>
-                  <textarea v-model="newTreatmentPlan" class="form-control" name="" id="" cols="30" rows="5"></textarea>
                 </div>
                 <div class="form-group col-md-3">
                   <label>Image Url:</label>
@@ -64,10 +60,9 @@ export default {
     return {
       newName: "",
       newSupport: "",
-      newTreatmentRetrospect: "",
-      newTreatmentPlan: "",
       newImageUrl: "",
       newVideoUrl: "",
+      newDescription: "",
       errors: [],
     };
   },
@@ -77,8 +72,7 @@ export default {
       var params = {
         name: this.newName,
         support: this.newSupport,
-        treatment_retrospect: this.newTreatmentRetrospect,
-        treatment_plan: this.newTreatmentPlan,
+        description: this.newDescription,
         image_url: this.newImageUrl,
         video_url: this.newVideoUrl,
       };
