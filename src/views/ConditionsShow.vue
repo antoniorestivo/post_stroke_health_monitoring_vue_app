@@ -28,6 +28,9 @@
                 |
 
                 <router-link :to="`/conditions/${condition.id}/treatments`">Treatments for condition</router-link>
+                <br>
+                <br>
+                <button v-on:click="destroyCondition()" type="submit" class="btn btn-primary">Delete</button>
               </div>
             </div>
           </div>
@@ -54,6 +57,12 @@ export default {
   methods: {
     relativeDate: function(date) {
       return moment(date).fromNow();
+    },
+    destroyCondition: function() {
+      axios.delete(`/api/conditions/${this.condition.id}`).then(() => {
+        console.log("condition successfully destroyed");
+        this.$router.push(`/conditions`);
+      });
     },
   },
 };

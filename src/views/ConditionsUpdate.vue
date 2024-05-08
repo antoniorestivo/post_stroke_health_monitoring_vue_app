@@ -54,7 +54,6 @@
                   <button type="submit" class="btn btn-primary">Update</button>
                 </div>
               </form>
-              <button v-on:click="destroyCondition()" type="submit" class="btn btn-primary">Delete</button>
             </div>
           </div>
         </div>
@@ -99,12 +98,6 @@ export default {
           console.log("conditions create error", error.response);
           this.errors = error.response.data.errors;
         });
-    },
-    destroyCondition: function() {
-      axios.delete(`/api/conditions/${this.condition.id}`).then(() => {
-        console.log("condition successfully destroyed");
-        this.$router.push(`/conditions`);
-      });
     },
   },
 };

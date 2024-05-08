@@ -16,6 +16,10 @@ import ConditionsNew from "../views/ConditionsNew.vue";
 import ConditionsShow from "../views/ConditionsShow.vue";
 import ConditionsUpdate from "../views/ConditionsUpdate.vue";
 import JournalsTemplateEdit from "../views/JournalsTemplateEdit.vue";
+import TreatmentsIndex from "../views/TreatmentsIndex.vue";
+import TreatmentsShow from "../views/TreatmentsShow.vue";
+import TreatmentsUpdate from "../views/TreatmentsUpdate.vue";
+import TreatmentsNew from "../views/TreatmentsNew.vue";
 
 Vue.use(VueRouter);
 
@@ -103,6 +107,26 @@ const routes = [
     path: "/conditions/:id/edit",
     name: "conditions-update",
     component: ConditionsUpdate
+  },
+  {
+    path: "/conditions/:id/treatments",
+    name: "treatments-index",
+    component: TreatmentsIndex
+  },
+  {
+    path: "/conditions/:id/treatments/new",
+    name: "treatments-new",
+    component: TreatmentsNew
+  },
+  {
+    path: "/conditions/:id/treatments/:treatment_id",
+    name: "treatments-show",
+    component: TreatmentsShow
+  },
+  {
+    path: "/conditions/:id/treatments/:treatment_id/edit",
+    name: "treatments-update",
+    component: TreatmentsUpdate
   }
 ];
 
