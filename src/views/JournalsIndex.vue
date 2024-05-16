@@ -93,7 +93,6 @@ export default {
   },
   created: function() {
     axios.get("/api/journals").then(response => {
-      console.log("journals index", response);
       let data = JSON.parse(response.data);
       this.journals = data.journals;
       this.template = data.template;

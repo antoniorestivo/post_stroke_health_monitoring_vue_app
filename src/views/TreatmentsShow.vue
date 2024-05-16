@@ -17,6 +17,10 @@
                 |
 
                 <router-link :to="`${treatment.id}/edit`">Update treatment</router-link>
+
+                |
+
+                <router-link :to="`${treatment.id}/treatment_retrospects`">Evaluate Treatment</router-link>
                 <br>
                 <br>
                 <button v-on:click="destroyTreatment()" type="submit" class="btn btn-primary">Delete</button>

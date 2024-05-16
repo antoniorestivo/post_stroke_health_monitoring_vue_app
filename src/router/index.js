@@ -20,6 +20,10 @@ import TreatmentsIndex from "../views/TreatmentsIndex.vue";
 import TreatmentsShow from "../views/TreatmentsShow.vue";
 import TreatmentsUpdate from "../views/TreatmentsUpdate.vue";
 import TreatmentsNew from "../views/TreatmentsNew.vue";
+import TreatmentRetrospectsNew from "../views/TreatmentRetrospectsNew.vue";
+import TreatmentRetrospectsIndex from "../views/TreatmentRetrospectsIndex.vue";
+import TreatmentRetrospectsShow from "../views/TreatmentRetrospectsShow.vue";
+import TreatmentRetrospectsUpdate from "../views/TreatmentRetrospectsUpdate.vue";
 
 Vue.use(VueRouter);
 
@@ -127,6 +131,26 @@ const routes = [
     path: "/conditions/:id/treatments/:treatment_id/edit",
     name: "treatments-update",
     component: TreatmentsUpdate
+  },
+  {
+    path: "/conditions/:id/treatments/:treatment_id/treatment_retrospects/new",
+    name: "treatment-retrospects-new",
+    component: TreatmentRetrospectsNew
+  },
+  {
+    path: "/conditions/:id/treatments/:treatment_id/treatment_retrospects",
+    name: "treatment-retrospects-index",
+    component: TreatmentRetrospectsIndex
+  },
+  {
+    path: "/conditions/:id/treatments/:treatment_id/treatment_retrospects/:retrospect_id",
+    name: "treatment-retrospects-show",
+    component: TreatmentRetrospectsShow
+  },
+  {
+    path: "/conditions/:id/treatments/:treatment_id/treatment_retrospects/:retrospect_id/edit",
+    name: "treatment-retrospects-update",
+    component: TreatmentRetrospectsUpdate
   }
 ];
 
