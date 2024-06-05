@@ -1,21 +1,13 @@
 <template>
-  <div class="users-show">
+  <div class="charts-show">
     <section class="space-ptb">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-lg-6 mb-4 mb-lg-0">
             <div class="section-contant">
               <div class="section-title mb-4">
-                <h1 class="title">
-                  User Profile
-                </h1>
-                <h2>User email: {{ user.email }}</h2>
+                <h2>{{ chart.title }}</h2>
                 <canvas id="myChart"></canvas>
-                <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
-
-                |
-
-                <router-link :to="`/users/${user.id}/charts`">User Charts</router-link>
               </div>
             </div>
           </div>
@@ -25,30 +17,29 @@
   </div>
 </template>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js">
-</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 import axios from "axios";
 
 export default {
   data: function() {
     return {
-      user: {},
+      chart: {},
     };
   },
   created: function() {
-    axios.get("/api/users/me").then(response => {
-      console.log("users show", response);
-      this.user = response.data;
+    axios.get(`/api/users/${this.$route.params.id}/user_charts/${this.$route.params.chart_id}`).then(response => {
+      console.log(response);
+      this.chart = response.data;
       this.loadScript('https://cdn.jsdelivr.net/npm/chart.js', () => {
         const ctx = document.getElementById('myChart').getContext('2d');
         new Chart(ctx, {
-          type: 'line', // type
+          type: this.chart.chart_type,
           data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'], // x axis data
+            labels: this.chart.data.x,
             datasets: [{
-              label: 'My First dataset', // title
-              data: [65, 59, 80, 81, 56, 55, 40], // y axis data
+              label: this.chart.title,
+              data: this.chart.data.y,
               borderColor: 'rgba(75, 192, 192, 1)',
               fill: false
             }]
@@ -56,7 +47,7 @@ export default {
           options: {
             scales: {
               y: {
-                beginAtZero: true // configuration options
+                beginAtZero: false
               }
             }
           }

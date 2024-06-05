@@ -24,6 +24,9 @@ import TreatmentRetrospectsNew from "../views/TreatmentRetrospectsNew.vue";
 import TreatmentRetrospectsIndex from "../views/TreatmentRetrospectsIndex.vue";
 import TreatmentRetrospectsShow from "../views/TreatmentRetrospectsShow.vue";
 import TreatmentRetrospectsUpdate from "../views/TreatmentRetrospectsUpdate.vue";
+import ChartsShow from "../views/ChartsShow.vue";
+import ChartsIndex from "../views/ChartsIndex.vue";
+import ChartsNew from "../views/ChartsNew.vue";
 
 Vue.use(VueRouter);
 
@@ -55,7 +58,7 @@ const routes = [
   {
     path: "/users/:id",
     name: "users-show",
-    component: UsersShow,
+    component: UsersShow
   },
   {
     path: "/users/:id/edit",
@@ -151,6 +154,21 @@ const routes = [
     path: "/conditions/:id/treatments/:treatment_id/treatment_retrospects/:retrospect_id/edit",
     name: "treatment-retrospects-update",
     component: TreatmentRetrospectsUpdate
+  },
+  {
+    path: "/users/:id/charts/new",
+    name: "charts-new",
+    component: ChartsNew
+  },
+  {
+    path: "/users/:id/charts/:chart_id",
+    name: "charts-show",
+    component: ChartsShow
+  },
+  {
+    path: "/users/:id/charts/",
+    name: "charts-index",
+    component: ChartsIndex
   }
 ];
 
