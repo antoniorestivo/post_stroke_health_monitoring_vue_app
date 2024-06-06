@@ -9,6 +9,14 @@
                 <h2>{{ chart.title }}</h2>
                 <canvas id="myChart"></canvas>
               </div>
+              <router-link :to="`/users/${this.$route.params.id}/charts`">Back to charts</router-link>
+
+              |
+
+              <router-link :to="`/users/${this.$route.params.id}/charts/${chart.id}/edit`">Update chart</router-link>
+              <br>
+              <br>
+              <button v-on:click="destroyChart()" type="submit" class="btn btn-primary">Delete</button>
             </div>
           </div>
         </div>
@@ -17,7 +25,8 @@
   </div>
 </template>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+</script>
 <script>
 import axios from "axios";
 
@@ -47,7 +56,18 @@ export default {
           options: {
             scales: {
               y: {
-                beginAtZero: false
+                beginAtZero: false,
+                title: {
+                  display: true,
+                  text: this.chart.y_label
+                }
+              },
+              x: {
+                beginAtZero: false,
+                title: {
+                  display: true,
+                  text: this.chart.x_label
+                }
               }
             }
           }
@@ -62,7 +82,14 @@ export default {
       script.src = url;
       script.onload = callback;
       document.head.appendChild(script);
+    },
+    destroyChart() {
+      const url = `/api/users/${this.$route.params.id}/user_charts/${this.$route.params.chart_id}`;
+      axios.delete(url).then(() => {
+        console.log("chart successfully destroyed");
+        this.$router.push(`/users/${this.$route.params.id}/charts`);
+      });
     }
-  },
+  }
 };
 </script>
