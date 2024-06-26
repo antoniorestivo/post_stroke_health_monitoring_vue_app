@@ -42,36 +42,7 @@ export default {
       this.chart = response.data;
       this.loadScript('https://cdn.jsdelivr.net/npm/chart.js', () => {
         const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-          type: this.chart.chart_type,
-          data: {
-            labels: this.chart.data.x,
-            datasets: [{
-              label: this.chart.title,
-              data: this.chart.data.y,
-              borderColor: 'rgba(75, 192, 192, 1)',
-              fill: false
-            }]
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: false,
-                title: {
-                  display: true,
-                  text: this.chart.y_label
-                }
-              },
-              x: {
-                beginAtZero: false,
-                title: {
-                  display: true,
-                  text: this.chart.x_label
-                }
-              }
-            }
-          }
-        });
+        this.initializeChart(ctx, this.chart);
       });
     });
   },
@@ -89,7 +60,118 @@ export default {
         console.log("chart successfully destroyed");
         this.$router.push(`/users/${this.$route.params.id}/charts`);
       });
+    },
+    initializeChart(ctx, chart) {
+      switch (chart.chart_type) {
+        case 'line':
+          this.createLineChart(ctx, chart);
+          break;
+        case 'bar':
+          this.createBarChart(ctx, chart);
+          break;
+        case 'scatter':
+          this.createScatterChart(ctx, chart);
+        default:
+          console.error(`Unknown chart type: ${chart.chart_type}`);
+      }
+    },
+    createLineChart(ctx, chart) {
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: chart.data.x,
+          datasets: [{
+            label: chart.title,
+            data: chart.data.y,
+            borderColor: 'rgba(75, 192, 192, 1)',
+            fill: false
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: chart.y_label
+              },
+            },
+            x: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: chart.x_label
+              }
+            }
+          }
+        }
+      });
+    },
+    createBarChart(ctx, chart) {
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: chart.data.x,
+          datasets: [{
+            label: chart.title,
+            data: chart.data.y,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: chart.y_label
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: chart.x_label
+              }
+            }
+          }
+        }
+      });
+    },
+    createScatterChart(ctx, chart) {
+      new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          labels: chart.data.x,
+          datasets: [{
+            label: chart.title,
+            data: chart.data.y,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: chart.y_label
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: chart.x_label
+              }
+            }
+          }
+        }
+      });
     }
+    // Add more helper functions for other chart types
   }
 };
 </script>

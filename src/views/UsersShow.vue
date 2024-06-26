@@ -43,14 +43,13 @@ export default {
       this.loadScript('https://cdn.jsdelivr.net/npm/chart.js', () => {
         const ctx = document.getElementById('myChart').getContext('2d');
         new Chart(ctx, {
-          type: 'line', // type
+          type: 'bar', // type
           data: {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'], // x axis data
+            labels: ['happy', 'sad', 'depressed', 'anxious', 'angry', 'energized'], // x axis data
             datasets: [{
               label: 'My First dataset', // title
-              data: [65, 59, 80, 81, 56, 55, 40], // y axis data
-              borderColor: 'rgba(75, 192, 192, 1)',
-              fill: false
+              data: [5, 3, 2, 4, 3, 6], // y axis data,
+              backgroundColor: ["red", "blue", "green", "yellow", "violet", "indigo"]
             }]
           },
           options: {

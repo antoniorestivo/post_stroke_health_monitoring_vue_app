@@ -30,6 +30,8 @@
                   </div>
                   <div class="form-group col-md-12">
                     <h5>Choose Second Variable</h5>
+                    <label style="margin-right: 4px;">Frequency (for categorical first variable)</label>
+                    <input type="radio" id="metric.id" value="Frequency / Count" v-model="metricTwo" name="metricTwo" />
                     <div v-for="metric in metrics" v-bind:key="metric.id" for="metric.metric_name">
                       <label style="margin-right: 4px;">{{ metric.metric_name }}</label>
                       <input type="radio" id="metric.id" :value="metric.metric_name" v-model="metricTwo" name="metricTwo" />
@@ -118,10 +120,3 @@ export default {
   },
 };
 </script>
-
-<!--t.bigint "user_id"-->
-<!--t.string "title"-->
-<!--t.string "chart_type"-->
-<!--t.string "x_label"-->
-<!--t.string "y_label"-->
-<!--t.jsonb "options"-->
