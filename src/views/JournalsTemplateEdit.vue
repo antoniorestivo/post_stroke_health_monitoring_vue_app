@@ -15,10 +15,12 @@
                 <div v-for="metric in template.metrics" v-bind:key="metric" class="metricInputGroup">
                   <label style="margin-right: 4px;">Metric name</label>
                   <input v-model="metric.metric_name" name="metric_name" type="text" class="health-metric" />
-                  <label style="margin-right: 4px; margin-left: 4px;">Metric data type</label>
+                  <label style="margin-right: 4px; margin-left: 4px;">Data type</label>
                   <input v-model="metric.metric_data_type" name="metric_data_type" type="text" class="health-metric" />
-                  <label style="margin-right: 4px; margin-left: 4px;">Metric unit name</label>
+                  <label style="margin-right: 4px; margin-left: 4px;">Unit name</label>
                   <input v-model="metric.metric_unit_name" name="metric_unit_name" type="text" class="health-metric" />
+                  <label style="margin-right: 4px; margin-left: 4px;">Warning Threshold</label>
+                  <input v-model="metric.warning_threshold" name="warning_threshold" type="text" class="health-metric" />
                   <button v-on:click.prevent="deleteRow">Delete Field</button>
                 </div>
                 <div style="flex-basis: 100%; height: 0"></div>
@@ -94,9 +96,11 @@ export default {
       let newElements = `<label style="margin-right: 4px;">Metric Name</label>`;
       newElements += `<input name="metric_name" type="text" class="health-metric newMetric" />`;
       newElements += `<label style="margin-right: 4px; margin-left: 4px;">Metric data type</label>`;
-      newElements += `<input name="metric_data_type" type="text" class="health-metric newMetric"/>`
+      newElements += `<input name="metric_data_type" type="text" class="health-metric newMetric"/>`;
       newElements += `<label style="margin-right: 4px; margin-left: 4px;">Metric unit name</label>`;
-      newElements += `<input name="metric_unit_name" type="text" class="health-metric newMetric"/>`
+      newElements += `<input name="metric_unit_name" type="text" class="health-metric newMetric"/>`;
+      newElements += `<label style="margin-right: 4px; margin-left: 4px;">Warning Threshold</label>`;
+      newElements += `<input name="warning_threshold" type="text" class="health-metric newMetric"/>`
       let newInputGroup = document.createElement("div");
       newInputGroup.className = 'metricInputGroup';
       newInputGroup.innerHTML = newElements;

@@ -10,11 +10,9 @@
                   User Profile
                 </h1>
                 <h2>User email: {{ user.email }}</h2>
-                <canvas id="myChart"></canvas>
+                <canvas id="myChart" width="20" height="20"></canvas>
                 <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
-
                 |
-
                 <router-link :to="`/users/${user.id}/charts`">User Charts</router-link>
               </div>
             </div>
@@ -24,9 +22,6 @@
     </section>
   </div>
 </template>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js">
-</script>
 <script>
 import axios from "axios";
 
@@ -40,36 +35,76 @@ export default {
     axios.get("/api/users/me").then(response => {
       console.log("users show", response);
       this.user = response.data;
-      this.loadScript('https://cdn.jsdelivr.net/npm/chart.js', () => {
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-          type: 'bar', // type
-          data: {
-            labels: ['happy', 'sad', 'depressed', 'anxious', 'angry', 'energized'], // x axis data
-            datasets: [{
-              label: 'My First dataset', // title
-              data: [5, 3, 2, 4, 3, 6], // y axis data,
-              backgroundColor: ["red", "blue", "green", "yellow", "violet", "indigo"]
-            }]
-          },
-          options: {
-            scales: {
-              y: {
-                beginAtZero: true // configuration options
-              }
-            }
-          }
-        });
+      this.loadScripts().then(() => {
+        this.createChart();
       });
     });
   },
   methods: {
+    loadScripts() {
+      return new Promise((resolve) => {
+        this.loadScript('https://cdn.jsdelivr.net/npm/chart.js', () => {
+          console.log("Chart.js loaded");
+          this.loadScript('https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-boxplot@3.0.0', () => {
+            console.log("Chart.js Boxplot plugin loaded");
+            resolve();
+          });
+        });
+      });
+    },
     loadScript(url, callback) {
       const script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = url;
       script.onload = callback;
+      script.onerror = () => {
+        console.error(`Failed to load script: ${url}`);
+      };
       document.head.appendChild(script);
+    },
+    createChart() {
+      console.log("Creating chart...");
+      const ctx = document.getElementById('myChart').getContext('2d');
+      if (ctx) {
+        console.log("Canvas context acquired", ctx);
+
+        new window.Chart(ctx, {
+          type: 'boxplot',
+          data: {
+            labels: ['Dataset 1', 'Dataset 2', 'Dataset 3'], // chart.labels
+            datasets: [{
+              label: 'Boxplot Dataset',
+              backgroundColor: 'rgba(255,99,132,0.2)',
+              borderColor: 'rgba(255,99,132,1)',
+              borderWidth: 1,
+              outlierColor: '#999999',
+              padding: 10,
+              itemRadius: 0,
+              data: [
+                [1, 2, 3, 4, 5, 11],
+                [1, 3, 8, 12, 13, 15],
+                [2, 4, 6, 8, 10, 12]
+              ]
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              title: {
+                display: true,
+                text: 'Boxplot Comparison'
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      } else {
+        console.error("Failed to acquire canvas context");
+      }
     }
   },
 };

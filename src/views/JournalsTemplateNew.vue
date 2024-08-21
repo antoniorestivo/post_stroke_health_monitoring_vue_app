@@ -26,6 +26,8 @@ const addInputField = fieldCounter => {
   let inputElementTwo = `<input type="text" name="field_unit_${fieldCounter}" id="field_unit_${fieldCounter}" class="dynamic-input" />`;
   let labelElementThree = `<label for="Field ${fieldCounter} Data Type">Field ${fieldCounter} Data Type</label>`;
   let inputElementThree = `<input type="text" name="field_data_type_${fieldCounter}" id="field_data_type_${fieldCounter}" class="dynamic-input" />`;
+  let labelElementFour = `<label for="Field ${fieldCounter} Data Type">Field ${fieldCounter} Data Type</label>`;
+  let inputElementFour = `<input type="text" name="warning_threshold_${fieldCounter}" id="warning_threshold_${fieldCounter}" class="dynamic-input" />`;
   let elements = [
     labelElementOne,
     inputElementOne,
@@ -33,6 +35,8 @@ const addInputField = fieldCounter => {
     inputElementTwo,
     labelElementThree,
     inputElementThree,
+    labelElementFour,
+    inputElementFour
   ];
   newInputGroup.innerHTML = elements.join("");
   return newInputGroup;
@@ -56,9 +60,11 @@ export default {
         let name = document.getElementById(`field_name_${i}`).value;
         let unit = document.getElementById(`field_unit_${i}`).value;
         let dataType = document.getElementById(`field_data_type_${i}`).value;
+        let warningThreshold = document.getElementById(`warning_threshold_${i}`).value;
         params.template[`field_name_${i}`] = name;
         params.template[`field_unit_${i}`] = unit;
         params.template[`field_data_type_${i}`] = dataType;
+        params.template[`warning_threshold_${i}`] = warningThreshold;
       }
       console.log(params);
       axios
