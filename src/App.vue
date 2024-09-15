@@ -8,7 +8,7 @@
             <div class="col-12">
               <div class="d-block d-md-flex align-items-center text-center">
                 <div class="mr-3 d-inline-block">
-                  <h4 class="title text-white">Post-Stroke Health Monitoring App</h4>
+                  <h3 class="title text-white">Health Monitoring App</h3>
                 </div>
                 <div class="mr-auto d-inline-block">
                   <!-- <a href="tel:0123456789"><i class="fa fa-phone mr-2 fa fa-flip-horizontal"></i>0123-456-789</a> -->
@@ -16,7 +16,7 @@
                 <div class="d-inline-block mr-3">
                   <ul class="list-unstyled">
                     <h4 class="title text-white"><router-link v-if="isLoggedIn()" to="/logout">Logout</router-link></h4>
-                    <li class="login"><router-link v-if="!isLoggedIn()" to="/login">Login</router-link></li>
+                    <li><router-link v-if="!isLoggedIn()" to="/login">Login</router-link></li>
                     <li><router-link v-if="!isLoggedIn()" to="/signup">Sign Up</router-link></li>
                   </ul>
                 </div>

@@ -8,6 +8,25 @@
               <div class="section-title">
                 <h3 class="title">Update Journal Template</h3>
               </div>
+              <div style="display: inline-flex;">
+                <p>Input the health metrics you would like to track</p>
+                <img
+                  src="https://www.shutterstock.com/image-vector/info-information-help-tooltip-icon-260nw-1265320249.jpg"
+                  alt="Info"
+                  class="info-icon"
+                  @mouseover="showTooltip()"
+                  @mouseleave="hideTooltip()"
+                />
+              </div>
+              <span v-if="tooltipVisible" class="tooltip-text">
+                Here are some health metrics examples: Blood Pressure, Heart Rate, Weight, etc. The unit name describes
+                what its measurement(s) are. Weight, for example, can have a unit of pounds (lb) or kilograms (kg). Unit
+                type can be string (for text) or numeric (for numbers). The warning threshold indicates a value that
+                defines the point when the health metric is of particular concern. A warning threshold of systolic blood
+                pressure of 130, for example, means that for any value greater than or equal to 130 it will be flagged
+                on your charts.
+              </span>
+              <div v-if="hasMessage" style="color: green;"> {{this.message}} </div>
               <ul>
                 <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
               </ul>
@@ -31,7 +50,6 @@
                   <button type="submit" class="btn btn-primary">Update</button>
                 </div>
               </form>
-              <button v-on:click="destroyJournal()" type="submit" class="btn btn-primary">Delete</button>
             </div>
           </div>
         </div>
@@ -39,6 +57,31 @@
     </section>
   </div>
 </template>
+
+<style scoped>
+.info-icon {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  margin-left: 0;
+  vertical-align: middle;
+}
+
+.tooltip-text {
+  display: inline-block;
+  background-color: #333;
+  color: #fff;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  position: absolute;
+  z-index: 1000;
+  margin-left: 10px;
+  white-space: normal;
+  max-width: 250px;
+  word-wrap: break-word;
+}
+</style>
 
 <script>
 import axios from "axios";
@@ -48,6 +91,8 @@ export default {
     return {
       template: {},
       errors: [],
+      message: null,
+      tooltipVisible: false
     };
   },
   created: function() {
@@ -58,6 +103,12 @@ export default {
     });
   },
   methods: {
+    showTooltip() {
+      this.tooltipVisible = true;
+    },
+    hideTooltip() {
+      this.tooltipVisible = false;
+    },
     updateJournalTemplate: function() {
       var params = {
         template: { metrics: [] },
@@ -80,16 +131,12 @@ export default {
           oldInputGroups.forEach(ele => {
             ele.remove();
           });
+          this.message = 'Template successfully updated!'
         })
         .catch(error => {
           console.log("journal template update error", error.response);
           this.errors = error.response.data.errors;
         });
-    },
-    destroyJournal: function() {
-      axios.delete(`/api/journal_templates/${this.journal.id}/destroy`).then(() => {
-        this.$router.push(`/journals/template/${this.template.id}/edit`);
-      });
     },
     addMetricField: function() {
       const targetForm = document.getElementById('metricFormContainer');
@@ -109,6 +156,9 @@ export default {
     deleteRow: function(event) {
       console.log(event);
       event.target.closest('div').remove();
+    },
+    hasMessage: function() {
+      return !!this.message;
     }
   },
 };

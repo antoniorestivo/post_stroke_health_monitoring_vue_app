@@ -1,19 +1,28 @@
 <template>
-  <div class="post">
+  <div style="margin-left: 1rem;">
     <h2>Enter today's health metrics</h2>
     <form id="journal-form-container" v-on:submit.prevent="createJournal()">
-      <label for="description">Describe your day</label>
-      <textarea name="description" cols="30" rows="8" id="newJournalDescription" />
+      <div class="form-group">
+        <label for="description">Describe your day</label>
+        <textarea name="description" cols="30" rows="8" id="newJournalDescription" style="margin-left: 2rem;" />
+      </div>
       <br />
-      <label for="health_routines">What are your health routines?</label>
-      <textarea name="health_routines" cols="30" rows="8" id="newJournalHealthRoutines" />
+      <div class="form-group">
+        <label for="health_routines">What are your health routines?</label>
+        <br />
+        <textarea name="health_routines" cols="30" rows="8" id="newJournalHealthRoutines" style="margin-left: 2rem;" />
+      </div>
       <br />
-      <label for="image_url">Enter an image url as a memento of your day:</label>
-      <input type="text" name="image_url" id="newJournalImageUrl" />
+      <div class="form-group">
+        <label for="image_url">Enter an image url as a memento of your day:</label>
+        <input type="text" name="image_url" id="newJournalImageUrl" />
+      </div>
       <br />
-      <label for="video_url">Enter an video url as a memento of your day:</label>
-      <input type="text" name="video_url" id="newJournalVideoUrl" />
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="form-group">
+        <label for="video_url">Enter an video url as a memento of your day:</label>
+        <input type="text" name="video_url" id="newJournalVideoUrl" />
+      </div>
+      <button type="submit" class="btn-primary">Submit</button>
     </form>
     <div v-if="loading" class="loading">Loading... Test</div>
 
@@ -22,6 +31,66 @@
     <div v-if="post" class="content"></div>
   </div>
 </template>
+
+<style scoped>
+
+.form-group {
+  margin-bottom: 1.5rem; /* Adds spacing between form fields */
+  display: flex;
+  flex-direction: column;
+}
+
+/deep/ label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+textarea,
+input[type="text"] {
+  width: 100%; /* Ensure inputs and textareas take up full width */
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea {
+  resize: vertical; /* Allow vertical resize but not horizontal */
+}
+
+/* Button styling */
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  background-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow effect on hover */
+}
+
+.btn-primary:active {
+  transform: scale(1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow effect on hover */
+}
+
+.loading {
+  color: gray;
+  font-size: 1rem;
+}
+
+.error {
+  color: red;
+}
+
+</style>
 
 <script>
 import axios from "axios";
@@ -107,5 +176,4 @@ export default {
   },
 };
 
-//[ { "id": 1, "journal_template_id": 1, "metric_name": "Weight", "metric_data_type": "decimal", "metric_unit_name": "pounds", "created_at": "2024-01-25T23:26:53.959Z", "updated_at": "2024-01-25T23:26:53.959Z" }, { "id": 2, "journal_template_id": 1, "metric_name": "Blood pressure", "metric_data_type": "string", "metric_unit_name": "systolic / diastolic", "created_at": "2024-01-25T23:26:53.962Z", "updated_at": "2024-01-25T23:26:53.962Z" } ]
 </script>

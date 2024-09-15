@@ -6,14 +6,19 @@
           <div class="col-lg-6 mb-4 mb-lg-0">
             <div class="section-contant">
               <div class="section-title mb-4">
-                <h1 class="title">
-                  User Profile
-                </h1>
-                <h2>User email: {{ user.email }}</h2>
-                <canvas id="myChart" width="20" height="20"></canvas>
+                <div style="display: flex;">
+                  <h1 class="title">
+                    {{ user.first_name }} {{ user.last_name }} Profile
+                  </h1>
+                  <img :src="profile_image_url" style="width: 100px; height: 100px; margin-left: 1rem;" />
+                </div>
+                <h4>email: {{ user.email }}</h4>
                 <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
                 |
                 <router-link :to="`/users/${user.id}/charts`">User Charts</router-link>
+                <canvas id="myMonthlyChart" width="20" height="20"></canvas>
+                <hr style="border: 2px solid black;">
+                <canvas id="myDailyChart" width="20" height="20"></canvas>
               </div>
             </div>
           </div>
@@ -29,14 +34,20 @@ export default {
   data: function() {
     return {
       user: {},
+      monthly_statistics: { labels: ['June', 'July', 'August'], logins: [12, 15, 11] },
+      daily_statistics: { labels: ['08-23-2024', '08-24-2024', '08-25-2024',], logins: [1, 2, 0]},
+      profile_image_url: ''
     };
   },
   created: function() {
     axios.get("/api/users/me").then(response => {
       console.log("users show", response);
       this.user = response.data;
+      this.monthly_statistics = response.data.monthly_statistics;
+      this.daily_statistics = response.data.daily_statistics;
+      this.profile_image_url = response.data.profile_image_url;
       this.loadScripts().then(() => {
-        this.createChart();
+        this.createCharts();
       });
     });
   },
@@ -44,9 +55,7 @@ export default {
     loadScripts() {
       return new Promise((resolve) => {
         this.loadScript('https://cdn.jsdelivr.net/npm/chart.js', () => {
-          console.log("Chart.js loaded");
           this.loadScript('https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-boxplot@3.0.0', () => {
-            console.log("Chart.js Boxplot plugin loaded");
             resolve();
           });
         });
@@ -62,50 +71,82 @@ export default {
       };
       document.head.appendChild(script);
     },
-    createChart() {
-      console.log("Creating chart...");
-      const ctx = document.getElementById('myChart').getContext('2d');
-      if (ctx) {
-        console.log("Canvas context acquired", ctx);
-
-        new window.Chart(ctx, {
-          type: 'boxplot',
-          data: {
-            labels: ['Dataset 1', 'Dataset 2', 'Dataset 3'], // chart.labels
-            datasets: [{
-              label: 'Boxplot Dataset',
-              backgroundColor: 'rgba(255,99,132,0.2)',
-              borderColor: 'rgba(255,99,132,1)',
-              borderWidth: 1,
-              outlierColor: '#999999',
-              padding: 10,
-              itemRadius: 0,
-              data: [
-                [1, 2, 3, 4, 5, 11],
-                [1, 3, 8, 12, 13, 15],
-                [2, 4, 6, 8, 10, 12]
-              ]
-            }]
-          },
-          options: {
-            responsive: true,
-            plugins: {
+    createCharts() {
+      this.createMonthlyChart();
+      this.createDailyChart();
+    },
+    createMonthlyChart() {
+      const ctx = document.getElementById('myMonthlyChart').getContext('2d');
+      new window.Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.monthly_statistics.labels,
+          datasets: [{
+            label: 'Month',
+            data: this.monthly_statistics.logins,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              },
               title: {
                 display: true,
-                text: 'Boxplot Comparison'
-              }
+                text: 'Logins'
+              },
             },
-            scales: {
-              y: {
-                beginAtZero: true
+            x: {
+              title: {
+                display: true,
+                text: 'Month'
               }
             }
           }
-        });
-      } else {
-        console.error("Failed to acquire canvas context");
-      }
+        }
+      });
+    },
+    createDailyChart() {
+      const ctx = document.getElementById('myDailyChart').getContext('2d');
+      new window.Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.daily_statistics.labels,
+          datasets: [{
+            label: 'Last 7 days logins',
+            data: this.daily_statistics.logins,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              },
+              title: {
+                display: true,
+                text: 'Logins'
+              },
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Date'
+              }
+            }
+          }
+        }
+      });
     }
-  },
+  }
 };
 </script>

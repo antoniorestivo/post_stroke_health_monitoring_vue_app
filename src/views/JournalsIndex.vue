@@ -64,7 +64,7 @@
                 </h6>
                 <div v-for="metric in Object.keys(journal.metrics)" v-bind:key="metric">
                   <h7>{{ metric }}</h7>
-                  <p>{{ journal.metrics[metric] }}</p>
+                  <p>{{ `${journal.enriched_metrics[metric]}` }}</p>
                 </div>
 
                 <router-link :to="`/journals/${journal.id}`" class="btn btn-primary">More Info</router-link>

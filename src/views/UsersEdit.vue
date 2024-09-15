@@ -17,16 +17,24 @@
                   <input v-model="user.email" type="text" class="form-control" placeholder="" />
                 </div>
                 <div class="form-group col-md-12">
-                  <label>old password</label>
-                  <input v-model="user.oldPassword" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-12">
                   <label>password</label>
                   <input v-model="user.newPassword" type="text" class="form-control" placeholder="" />
                 </div>
                 <div class="form-group col-md-12">
                   <label>confirm password</label>
                   <input v-model="user.confirmPassword" type="text" class="form-control" placeholder="" />
+                </div>
+                <div class="form-group col-md-6">
+                  <label>First Name:</label>
+                  <input type="text" class="form-control" placeholder="" v-model="user.firstName">
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Last Name:</label>
+                  <input type="text" class="form-control" placeholder="" v-model="user.lastName">
+                </div>
+                <div class="form-group col-md-6">
+                  <label>Profile Image:</label>
+                  <input type="file" class="form-control" id="profileImage" name="profileImage">
                 </div>
                 <div class="form-group col-sm-12">
                   <button type="submit" class="btn btn-primary">Update</button>
@@ -60,14 +68,13 @@ export default {
   },
   methods: {
     updateUser: function(user) {
-      var params = {
-        email: user.email,
-        password: user.newPassword,
-        confirm_password: user.confirmPassword,
-        old_password: user.oldPassword,
-      };
+      const profileImage = document.getElementById('profileImage').files[0];
+      const formData = new FormData();
+      formData.append('profile_image', profileImage)
+      formData.append('email', user.email)
+      console.log(formData);
       axios
-        .patch(`/api/users/${this.user.id}`, params)
+        .patch(`/api/users/${this.user.id}`, formData)
         .then(response => {
           console.log("user successfully updated", response.data);
           this.$router.push(`/users/${this.user.id}`);

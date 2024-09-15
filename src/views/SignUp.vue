@@ -33,6 +33,18 @@
                     <input type="email" class="form-control" placeholder="" v-model="newEmail">
                   </div>
                   <div class="form-group col-md-6">
+                    <label>First Name:</label>
+                    <input type="text" class="form-control" placeholder="" v-model="firstName">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Last Name:</label>
+                    <input type="text" class="form-control" placeholder="" v-model="lastName">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <label>Profile Image:</label>
+                    <input type="file" class="form-control" placeholder="" id="profileImage" name="profileImage">
+                  </div>
+                  <div class="form-group col-md-6">
                     <label>Password:</label>
                     <input type="Password" class="form-control" placeholder="" v-model="newPassword">
                   </div>
@@ -76,17 +88,24 @@ export default{
     return {
       newEmail: "",
       newPassword: "",
-      newConfirmPassword: ""
+      newConfirmPassword: "",
+      firstName: "",
+      lastName: ""
     };
   },
   created: function() {},
   methods: {
     createUser: function() {
+      const profileImage = document.getElementById('profileImage').files[0];
       var params = {
         email: this.newEmail,
         password: this.newPassword,
-        confirm_password: this.newConfirmPassword
+        confirm_password: this.newConfirmPassword,
+        profile_image: profileImage,
+        first_name: this.firstName,
+        last_name: this.lastName
       };
+      console.log(params);
       axios
       .post("/api/users",params)
       .then(response => {
