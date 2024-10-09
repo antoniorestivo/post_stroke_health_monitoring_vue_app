@@ -142,15 +142,15 @@ export default {
       }
       console.log(params);
       axios
-          .post("/api/journal_templates", params)
-          .then((response) => {
-            console.log("template create", response);
-            this.$router.push("/journals");
-          })
-          .catch((error) => {
-            console.log("journals template create error", error.response);
-            this.errors = error.response.data.errors;
-          });
+        .post("/api/journal_templates", params)
+        .then((response) => {
+          console.log("template create", response);
+          this.$router.push("/journals");
+        })
+        .catch((error) => {
+          console.log("journals template create error", error.response);
+          this.errors = error.response.data.errors;
+        });
     },
   },
 };
