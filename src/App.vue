@@ -38,12 +38,19 @@
           <div class="navbar-collapse collapse justify-content-center">
             <ul class="nav navbar-nav">
               <li class="nav-item dropdown">
+                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/treatments">
+                  Treatments
+                </router-link>
+              </li>
+              <li class="nav-item dropdown">
                 <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/conditions">
                   Patient Conditions
                 </router-link>
               </li>
               <li class="nav-item dropdown">
-                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/journals">Journals</router-link>
+                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/journals">
+                  Journals
+                </router-link>
               </li>
               <li class="nav-item dropdown">
                 <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/users/me">

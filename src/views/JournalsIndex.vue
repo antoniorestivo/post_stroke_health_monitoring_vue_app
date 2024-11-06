@@ -115,8 +115,8 @@ export default {
         .get("/api/journals", {
           params: {
             limit: this.recordsPerPage,
-            offset: offset,
-          },
+            offset: offset
+          }
         })
         .then(response => {
           const data = JSON.parse(response.data);
@@ -129,7 +129,7 @@ export default {
         });
     },
     relativeDate: function(date) {
-      return moment(date).format("MMM Do YY");
+      return moment(date).format("MMM Do YYYY");
     },
     changePage: function(page) {
       if (page < 1 || page > this.totalPages) {

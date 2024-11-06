@@ -28,6 +28,7 @@ import ChartsShow from "../views/ChartsShow.vue";
 import ChartsIndex from "../views/ChartsIndex.vue";
 import ChartsNew from "../views/ChartsNew.vue";
 import ChartsUpdate from "../views/ChartsUpdate.vue";
+import TreatmentsAll from "../views/TreatmentsAll.vue";
 
 Vue.use(VueRouter);
 
@@ -175,6 +176,11 @@ const routes = [
     path: "/users/:id/charts/:chart_id/edit",
     name: "charts-update",
     component: ChartsUpdate
+  },
+  {
+    path: "/treatments",
+    name: "treatments-all",
+    component: TreatmentsAll
   }
 ];
 
