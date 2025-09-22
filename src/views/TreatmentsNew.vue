@@ -1,71 +1,58 @@
 <template>
-  <div class="treatments-new">
-    <!--=================================
-    Appointment -->
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="col-lg-12 bg-white box-shadow b-radius">
-            <div class="psycare-account box-shadow-none">
-              <div class="section-title">
-                <h3 class="title">Create your new treatment</h3>
-              </div>
-              <ul>
-                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-              </ul>
-              <form class="form-row align-items-center" v-on:submit.prevent="createTreatment()">
-                <div class="form-group col-md-12">
-                  <label>Description</label>
-                  <textarea
-                      v-model="newTreatmentDescription"
-                      class="form-control"
-                      name=""
-                      id=""
-                      cols="30"
-                      rows="10"
-                  ></textarea>
-                </div>
-                <div class="form-group col-sm-12">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-              </form>
-            </div>
-          </div>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h3 class="text-2xl font-bold text-gray-800">Create New Treatment</h3>
+
+      <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
+        <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
+      </ul>
+
+      <form @submit.prevent="createTreatment" class="space-y-6">
+        <div>
+          <label class="block font-medium mb-1">Description</label>
+          <textarea
+            v-model="description"
+            rows="5"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          ></textarea>
         </div>
-      </div>
-    </section>
-    <!--=================================
-    Appointment -->
-  </div>
+
+        <div>
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 
-export default {
-  data: function() {
-    return {
-      newTreatmentDescription: "",
-      errors: [],
-    };
-  },
-  created: function() {},
-  methods: {
-    createTreatment: function() {
-      var params = {
-        description: this.newTreatmentDescription,
-      };
-      axios
-          .post(`/api/conditions/${this.$route.params.id}/treatments`, params)
-          .then(response => {
-            console.log("treatments create", response);
-            this.$router.push(`/conditions/${this.$route.params.id}/treatments`);
-          })
-          .catch(error => {
-            console.log("treatments create error", error.response);
-            this.errors = error.response.data.errors;
-          });
-    },
-  },
-};
+const route = useRoute();
+const router = useRouter();
+
+const description = ref("");
+const errors = ref([]);
+
+function createTreatment() {
+  const params = {
+    description: description.value
+  };
+
+  axios
+    .post(`/api/conditions/${route.params.id}/treatments`, params)
+    .then(() => {
+      router.push(`/conditions/${route.params.id}/treatments`);
+    })
+    .catch(error => {
+      errors.value = error.response?.data?.errors || ["Creation failed."];
+    });
+}
 </script>

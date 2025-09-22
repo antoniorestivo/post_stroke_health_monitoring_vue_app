@@ -1,63 +1,85 @@
 <template>
-  <div class="treatments-retrospects-show">
-    <section class="space-ptb">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 mb-4 mb-lg-0">
-            <div class="section-contant">
-              <div class="section-title mb-4">
-                <h3 class="title">
-                  Feedback: {{ treatment_retrospect.feedback }}
-                </h3>
-                <h4>
-                  Retrospect created {{ relativeDate(treatment_retrospect.created_at) }}
-                </h4>
-                <h4>
-                  Rating (scale 1 - 10): {{ treatment_retrospect.rating }}
-                </h4>
-                <router-link to="../treatment_retrospects">Back to all retrospects</router-link>
-
-                |
-
-                <router-link :to="`${treatment_retrospect.id}/edit`">Update retrospect</router-link>
-                <br>
-                <br>
-                <button v-on:click="destroyTreatmentRetrospect()" type="submit" class="btn btn-primary">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">
+          Treatment Retrospect
+        </h2>
+        <p class="text-sm text-gray-500">
+          Created {{ relativeDate(treatmentRetrospect.created_at) }}
+        </p>
       </div>
-    </section>
-  </div>
+
+      <div>
+        <h4 class="text-lg font-semibold text-gray-700">Feedback</h4>
+        <p class="text-gray-800">{{ treatmentRetrospect.feedback }}</p>
+      </div>
+
+      <div>
+        <h4 class="text-lg font-semibold text-gray-700">Rating (1–10)</h4>
+        <p class="text-gray-800">{{ treatmentRetrospect.rating }}</p>
+      </div>
+
+      <div
+        class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0"
+      >
+        <router-link
+          :to="
+            `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects`
+          "
+          class="text-blue-600 hover:underline"
+        >
+          ← Back to All Retrospects
+        </router-link>
+
+        <router-link
+          :to="
+            `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${treatmentRetrospect.id}/edit`
+          "
+          class="text-blue-600 hover:underline"
+        >
+          Edit Retrospect
+        </router-link>
+
+        <button
+          @click="destroyTreatmentRetrospect"
+          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </section>
 </template>
-<script>
-import axios from "axios";
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 import moment from "moment";
-export default {
-  data: function() {
-    return {
-      treatment_retrospect: {},
-    };
-  },
-  created: function() {
-    const url = `/api/conditions/${this.$route.params.id}/treatments/${this.$route.params.treatment_id}/treatment_retrospects/${this.$route.params.retrospect_id}`
-    axios.get(url)
-        .then(response => {
-          this.treatment_retrospect = response.data;
-        });
-  },
-  methods: {
-    relativeDate: function(date) {
-      return moment(date).fromNow();
-    },
-    destroyTreatmentRetrospect: function() {
-      const url = `/api/conditions/${this.$route.params.id}/treatments/${this.$route.params.treatment_id}/treatment_retrospects/${this.$route.params.retrospect_id}`
-      axios.delete(url).then(() => {
-        console.log("treatment successfully destroyed");
-        this.$router.push(`/conditions/${this.$route.params.id}/treatments/${this.$route.params.treatment_id}/treatment_retrospects`);
-      });
-    },
-  },
-};
+
+const route = useRoute();
+const router = useRouter();
+
+const treatmentRetrospect = ref({});
+
+onMounted(() => {
+  const url = `/api/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${route.params.retrospect_id}`;
+  axios.get(url).then(response => {
+    treatmentRetrospect.value = response.data;
+  });
+});
+
+function relativeDate(date) {
+  return moment(date).fromNow();
+}
+
+function destroyTreatmentRetrospect() {
+  const url = `/api/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${route.params.retrospect_id}`;
+  axios.delete(url).then(() => {
+    router.push(
+      `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects`
+    );
+  });
+}
 </script>

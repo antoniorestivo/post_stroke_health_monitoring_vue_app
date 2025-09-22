@@ -1,154 +1,196 @@
 <template>
-  <div class="charts-new">
-    <!--=================================
-    Appointment -->
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="col-lg-12 bg-white box-shadow b-radius">
-            <div class="psycare-account box-shadow-none">
-              <div class="section-title">
-                <h3 class="title">Create your new chart </h3>
-              </div>
-              <div v-if="errors" class="loading">
-                <ul>
-                  <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-                </ul>
-              </div>
-              <div v-if="loading" class="loading">Loading...</div>
-              <div v-if="post" class="content">
-                <form class="form-row align-items-center" v-on:submit.prevent="createChart()">
-                  <div class="form-group col-md-12">
-                    <h5>Choose First Variable</h5>
-                    <label style="margin-right: 4px;">Time (track metric change over time)</label>
-                    <input type="radio" id="metric.id" value="Time" v-model="metricOne" name="metricOne" />
-                    <div v-for="metric in metrics" v-bind:key="metric.id" for="metric.metric_name">
-                      <label style="margin-right: 4px; font-weight: 400;">{{ metric.metric_name }}</label>
-                      <input type="radio" id="metric.id" :value="metric.metric_name" v-model="metricOne" name="metricOne" />
-                      <br>
-                    </div>
-                  </div>
-                  <div class="form-group col-md-12">
-                    <h5>Choose Second Variable</h5>
-                    <label style="margin-right: 4px; font-weight: 400;">Frequency (for categorical first variable)</label>
-                    <input type="radio" id="metric.id" value="Frequency / Count" v-model="metricTwo" name="metricTwo" />
-                    <div v-for="metric in metrics" v-bind:key="metric.id" for="metric.metric_name">
-                      <label style="margin-right: 4px; font-weight: 400;">{{ metric.metric_name }}</label>
-                      <input type="radio" id="metric.id" :value="metric.metric_name" v-model="metricTwo" name="metricTwo" />
-                      <br>
-                    </div>
-                  </div>
-                  <hr style="width: 100%; background-color: black;">
-                  <h4>OR, select treatments to compare</h4>
-                  <div class="form-group col-md-12">
-                    <h5>Choose First Treatment</h5>
-                    <div v-for="treatment in treatments" v-bind:key="treatment.id" for="treatment.description">
-                      <label style="margin-right: 4px; font-weight: 400;">{{ treatment.description }}</label>
-                      <input type="radio" id="treatment.id" :value="treatment.id" v-model="metricOne" name="metricOne" class="treatmentSelected" />
-                      <br>
-                    </div>
-                  </div>
-                  <br>
-                  <div class="form-group col-md-12">
-                    <h5>Choose Second Treatment</h5>
-                    <div v-for="treatment in treatments" v-bind:key="treatment.id" for="treatment.description">
-                      <label style="margin-right: 4px; font-weight: 400;">{{ treatment.description }}</label>
-                      <input type="radio" id="treatment.id" :value="treatment.id" v-model="metricTwo" name="metricTwo" class="treatmentSelected" />
-                      <br>
-                    </div>
-                  </div>
-                  <hr style="width: 100%; background-color: black;">
-                  <div class="form-group col-md-12">
-                    <label>Title</label>
-                    <input v-model="title" type="text" class="form-control" placeholder="" name="title" />
-                  </div>
-                  <hr style="width: 100%; background-color: black;">
-                  <div class="form-group col-sm-12">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                  </div>
-                </form>
-              </div>
-            </div>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6">
+      <h3 class="text-2xl font-bold text-gray-800 mb-6">
+        Create Your New Chart
+      </h3>
+
+      <div v-if="errors" class="mb-4 text-red-600 text-sm">
+        <ul>
+          <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
+        </ul>
+      </div>
+
+      <div v-if="loading" class="text-gray-500 mb-4">Loading...</div>
+
+      <form
+        v-if="!loading && post"
+        @submit.prevent="createChart"
+        class="space-y-8"
+      >
+        <!-- Metric One -->
+        <div>
+          <h5 class="text-lg font-semibold mb-2">Choose First Variable</h5>
+          <label class="block mb-2">
+            <input type="radio" value="Time" v-model="metricOne" />
+            Time (track over time)
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <label
+              v-for="metric in metrics"
+              :key="`m1-${metric.id}`"
+              class="flex items-center space-x-2"
+            >
+              <input
+                type="radio"
+                :value="metric.metric_name"
+                v-model="metricOne"
+              />
+              <span>{{ metric.metric_name }}</span>
+            </label>
           </div>
         </div>
-      </div>
-    </section>
-    <!--=================================
-    Appointment -->
-  </div>
+
+        <!-- Metric Two -->
+        <div>
+          <h5 class="text-lg font-semibold mb-2">Choose Second Variable</h5>
+          <label class="block mb-2">
+            <input type="radio" value="Frequency / Count" v-model="metricTwo" />
+            Frequency (for categorical variable)
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <label
+              v-for="metric in metrics"
+              :key="`m2-${metric.id}`"
+              class="flex items-center space-x-2"
+            >
+              <input
+                type="radio"
+                :value="metric.metric_name"
+                v-model="metricTwo"
+              />
+              <span>{{ metric.metric_name }}</span>
+            </label>
+          </div>
+        </div>
+
+        <hr />
+
+        <!-- Treatments -->
+        <h4 class="text-lg font-semibold">OR, select treatments to compare</h4>
+
+        <div>
+          <h5 class="text-md font-semibold mb-1">Choose First Treatment</h5>
+          <div class="space-y-2">
+            <label
+              v-for="treatment in treatments"
+              :key="`t1-${treatment.id}`"
+              class="flex items-center space-x-2"
+            >
+              <input type="radio" :value="treatment.id" v-model="metricOne" />
+              <span>{{ treatment.description }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <h5 class="text-md font-semibold mt-4 mb-1">
+            Choose Second Treatment
+          </h5>
+          <div class="space-y-2">
+            <label
+              v-for="treatment in treatments"
+              :key="`t2-${treatment.id}`"
+              class="flex items-center space-x-2"
+            >
+              <input type="radio" :value="treatment.id" v-model="metricTwo" />
+              <span>{{ treatment.description }}</span>
+            </label>
+          </div>
+        </div>
+
+        <hr />
+
+        <div>
+          <label class="block font-medium mb-1">Chart Title</label>
+          <input
+            v-model="title"
+            type="text"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 
-export default {
-  data: function() {
-    return {
-      loading: true,
-      metrics: [],
-      treatments: [],
-      errors: null,
-      post: false
-    };
-  },
-  created: function() {
-    // watch the params of the route to fetch the data again
-    this.$watch(
-      () => this.$route.params,
-      () => {
-        this.fetchData();
-      },
-      // fetch the data when the view is created and the data is
-      // already being observed
-      { immediate: true }
-    );
-  },
-  methods: {
-    createChart: function() {
-      const treatmentIds = this.checkForTreatments();
-      var params = {
-        x_label: this.metricOne,
-        y_label: this.metricTwo,
-        title: this.title,
-        options: { treatmentIds: treatmentIds }
-      };
-      console.log(params);
-      axios
-        .post(`/api/users/${this.$route.params.id}/user_charts`, params)
-        .then(response => {
-          console.log(response);
-          this.$router.push(`/users/${this.$route.params.id}/charts`);
-        })
-        .catch(error => {
-          console.log("chart create error", error.response);
-          this.errors = error.response.data.errors;
-        });
-    },
-    fetchData() {
-      this.error = this.post = null;
-      this.loading = true;
-      axios
-        .get(`/api/users/${this.$route.params.id}/user_charts/new`)
-        .then(response => {
-          console.log(response)
-          let data = response.data;
-          this.metrics = data.metrics;
-          this.treatments = data.treatments;
-          this.loading = false;
-          this.post = true
-          this.buildFormElements(data);
-        })
-        .catch(error => {
-          this.errors = error.response.data.errors;
-        });
-    },
-    checkForTreatments() {
-      let treatmentIds = []
-      document.getElementsByClassName('treatmentSelected').forEach((ele) => {
-        if(ele.checked) { treatmentIds.push(ele.value) }
-      });
-      return treatmentIds;
-    }
-  },
-};
+const route = useRoute();
+const router = useRouter();
+
+const loading = ref(true);
+const metrics = ref([]);
+const treatments = ref([]);
+const errors = ref(null);
+const post = ref(false);
+
+const title = ref("");
+const metricOne = ref("");
+const metricTwo = ref("");
+
+watch(
+  () => route.params,
+  () => fetchData(),
+  { immediate: true }
+);
+
+function fetchData() {
+  errors.value = null;
+  post.value = false;
+  loading.value = true;
+
+  axios
+    .get(`/api/users/${route.params.id}/user_charts/new`)
+    .then(response => {
+      metrics.value = response.data.metrics;
+      treatments.value = response.data.treatments;
+      loading.value = false;
+      post.value = true;
+    })
+    .catch(error => {
+      errors.value = error.response?.data?.errors || ["Failed to load data."];
+      loading.value = false;
+    });
+}
+
+function createChart() {
+  const treatmentIds = getTreatmentIds();
+  const params = {
+    x_label: metricOne.value,
+    y_label: metricTwo.value,
+    title: title.value,
+    options: { treatmentIds }
+  };
+
+  axios
+    .post(`/api/users/${route.params.id}/user_charts`, params)
+    .then(() => {
+      router.push(`/users/${route.params.id}/charts`);
+    })
+    .catch(error => {
+      errors.value = error.response?.data?.errors || ["Chart creation failed."];
+    });
+}
+
+function getTreatmentIds() {
+  const selected = [];
+  const allRadios = document.querySelectorAll('input[type="radio"]:checked');
+  allRadios.forEach(el => {
+    if (!isNaN(el.value)) selected.push(el.value);
+  });
+  return selected;
+}
 </script>

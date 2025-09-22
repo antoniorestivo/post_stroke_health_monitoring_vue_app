@@ -1,98 +1,96 @@
 <template>
-  <div class="login">
-     <!--=================================
-    Login -->
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-8 col-sm-10">
-            <!-- Tab-nav START -->
-            <ul class="nav nav-tabs nav-tabs-02 justify-content-center" id="myTab" role="tablist">
-              <li class="nav-item">
-                <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab" aria-controls="login" aria-selected="false">Login</a>
-              </li>
-              
-            </ul>
-            <!-- Tab-nav END -->
+  <section
+    class="min-h-screen flex items-center justify-center bg-gray-100 px-4"
+  >
+    <div class="max-w-md w-full bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h2 class="text-2xl font-bold text-center text-blue-600">
+        Login to your account
+      </h2>
 
-            <!-- Tab-content START -->
-            <div class="tab-content mt-0 login-tab-content" id="myTabContent">
-              <!-- login-tab START -->
-              <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
-                <!-- login-form START -->
-                <div class="section-title">
-                  <h2 class="title">Login to your account</h2>
-                </div>
-                <form v-on:submit.prevent="login()" class="form-row mt-4 mb-5 align-items-center">
-                  <div class="form-group col-sm-12">
-                    <label>Email:</label>
-                    <input type="text" class="form-control" placeholder="" v-model="email">
-                  </div>
-                  <div class="form-group col-sm-12">
-                    <label>Password:</label>
-                    <input type="Password" class="form-control" placeholder="" v-model="password">
-                  </div>
-                  <div class="col-sm-6">
-                    <button type="submit"  class="btn btn-primary btn-block">Sign in</button>
-
-                  </div>
-                  <div class="col-sm-6">
-                    <ul class="list-unstyled d-flex mb-1 mt-sm-0 mt-3 justify-content-sm-end">
-                      <li class="mr-1"><a class="text-dark" href="signup">Don't have an account? Click here</a></li>
-                    </ul>
-                  </div>
-                </form>
-                <!-- login-form END -->
-              </div>
-              <!-- login-tab END -->
-
-              <!-- Register-tab START -->
-              
-              <!-- Register-tab END -->
-            </div>
-            <!-- Tab-content END -->
-          </div>
+      <form @submit.prevent="login" class="space-y-4">
+        <div>
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Email</label
+          >
+          <input
+            id="email"
+            v-model="email"
+            type="email"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
         </div>
-      </div>
-    </section>
-    <!--=================================
-    Login -->
-    
-  </div>
+
+        <div>
+          <label
+            for="password"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Password</label
+          >
+          <input
+            id="password"
+            v-model="password"
+            type="password"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <button
+            type="submit"
+            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Sign In
+          </button>
+        </div>
+
+        <div class="text-sm text-center">
+          <router-link to="/signup" class="text-blue-600 hover:underline">
+            Don't have an account? Click here.
+          </router-link>
+        </div>
+
+        <div v-if="errors.length" class="text-red-600 text-sm text-center">
+          <p v-for="(error, index) in errors" :key="index">{{ error }}</p>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
 
-export default {
-  data: function() {
-    return {
-      email: "",
-      password: "",
-      errors: []
-    };
-  },
-  methods: {
-    login: function() {
-      var params = {
-        email: this.email,
-        password: this.password
-      };
-      axios
-        .post("/api/sessions", params)
-        .then(response => {
-          axios.defaults.headers.common["Authorization"] =
-            "Bearer " + response.data.jwt;
-          localStorage.setItem("jwt", response.data.jwt);
-          this.$router.push("/users/me");
-        })
-        .catch(error => {
-          console.log(error.response);
-          this.errors = ["Invalid email or password."];
-          this.email = "";
-          this.password = "";
-        });
-    }
-  }
-};
+const router = useRouter();
+
+const email = ref("");
+const password = ref("");
+const errors = ref([]);
+
+import axios, { setAuthToken } from "@/lib/axios";
+
+function login() {
+  axios
+    .post(
+      "/api/sessions",
+      { email: email.value, password: password.value },
+      {
+        headers: { "Content-Type": "application/json" }
+      }
+    )
+    .then(response => {
+      const token = response.data.jwt;
+      localStorage.setItem("jwt", token);
+      setAuthToken(token); // ✅ update the instance header
+      router.push("/users/me");
+    })
+    .catch(error => {
+      console.log(error.response);
+      errors.value = ["Invalid email or password."];
+      email.value = "";
+      password.value = "";
+    });
+}
 </script>

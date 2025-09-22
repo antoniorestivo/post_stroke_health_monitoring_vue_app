@@ -1,63 +1,87 @@
 <template>
-  <div class="treatments-show">
-    <section class="space-ptb">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 mb-4 mb-lg-0">
-            <div class="section-contant">
-              <div class="section-title mb-4">
-                <h2 class="title">
-                  Description: {{ treatment.description }}
-                </h2>
-                <h4>
-                  Treatment created or began {{ relativeDate(treatment.created_at) }}
-                </h4>
-                <router-link to="../treatments">Back to all treatments</router-link>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h2 class="text-2xl font-bold text-gray-800">
+        Description: {{ treatment.description }}
+      </h2>
 
-                |
+      <p class="text-gray-600">
+        Treatment created or began {{ relativeDate(treatment.created_at) }}
+      </p>
 
-                <router-link :to="`${treatment.id}/edit`">Update treatment</router-link>
+      <div class="space-x-4 text-sm pt-4">
+        <router-link
+          :to="`/conditions/${route.params.id}/treatments`"
+          class="text-blue-600 hover:underline"
+        >
+          Back to all treatments
+        </router-link>
 
-                |
+        |
 
-                <router-link :to="`${treatment.id}/treatment_retrospects`">Evaluate Treatment</router-link>
-                <br>
-                <br>
-                <button v-on:click="destroyTreatment()" type="submit" class="btn btn-primary">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <router-link
+          :to="`/conditions/${route.params.id}/treatments/${treatment.id}/edit`"
+          class="text-blue-600 hover:underline"
+        >
+          Update treatment
+        </router-link>
+
+        |
+
+        <router-link
+          :to="
+            `/conditions/${route.params.id}/treatments/${treatment.id}/treatment_retrospects`
+          "
+          class="text-blue-600 hover:underline"
+        >
+          Evaluate Treatment
+        </router-link>
       </div>
-    </section>
-  </div>
+
+      <div class="pt-4">
+        <button
+          @click="destroyTreatment"
+          class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </section>
 </template>
-<script>
-import axios from "axios";
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 import moment from "moment";
-export default {
-  data: function() {
-    return {
-      treatment: {},
-    };
-  },
-  created: function() {
-    axios.get("/api/conditions/" + this.$route.params.id + "/" + "treatments/" + this.$route.params.treatment_id)
-        .then(response => {
-          console.log("treatments show", response);
-          this.treatment = response.data;
-        });
-  },
-  methods: {
-    relativeDate: function(date) {
-      return moment(date).fromNow();
-    },
-    destroyTreatment: function() {
-      axios.delete(`/api/conditions/${this.$route.params.id}/treatments/${this.treatment.id}`).then(() => {
-        console.log("treatment successfully destroyed");
-        this.$router.push(`/conditions/${this.$route.params.id}/treatments`);
-      });
-    },
-  },
-};
+
+const route = useRoute();
+const router = useRouter();
+
+const treatment = ref({});
+
+onMounted(() => {
+  axios
+    .get(
+      `/api/conditions/${route.params.id}/treatments/${route.params.treatment_id}`
+    )
+    .then(response => {
+      treatment.value = response.data;
+    });
+});
+
+function relativeDate(date) {
+  return moment(date).fromNow();
+}
+
+function destroyTreatment() {
+  axios
+    .delete(
+      `/api/conditions/${route.params.id}/treatments/${treatment.value.id}`
+    )
+    .then(() => {
+      router.push(`/conditions/${route.params.id}/treatments`);
+    });
+}
 </script>

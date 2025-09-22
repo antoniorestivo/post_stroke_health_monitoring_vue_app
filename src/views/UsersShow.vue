@@ -1,152 +1,137 @@
 <template>
-  <div class="users-show">
-    <section class="space-ptb">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 mb-4 mb-lg-0">
-            <div class="section-contant">
-              <div class="section-title mb-4">
-                <div style="display: flex;">
-                  <h1 class="title">
-                    {{ user.first_name }} {{ user.last_name }} Profile
-                  </h1>
-                  <img :src="profile_image_url" style="width: 100px; height: 100px; margin-left: 1rem;" />
-                </div>
-                <h4>email: {{ user.email }}</h4>
-                <router-link :to="`/users/${user.id}/edit`">Update User</router-link>
-                |
-                <router-link :to="`/users/${user.id}/charts`">User Charts</router-link>
-                <canvas id="myMonthlyChart" width="20" height="20"></canvas>
-                <hr style="border: 2px solid black;">
-                <canvas id="myDailyChart" width="20" height="20"></canvas>
-              </div>
-            </div>
-          </div>
+  <section class="min-h-screen bg-gray-50 py-10 px-4">
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+          {{ user.first_name }} {{ user.last_name }} Profile
+        </h1>
+        <img
+          v-if="profileImageUrl"
+          :src="profileImageUrl"
+          alt="Profile"
+          class="w-24 h-24 rounded-full object-cover border border-gray-300"
+        />
+      </div>
+
+      <p class="text-gray-600 mb-4">Email: {{ user.email }}</p>
+
+      <div class="space-x-4 mb-6">
+        <router-link
+          :to="`/users/${user.id}/edit`"
+          class="text-blue-600 hover:underline"
+          >Update User</router-link
+        >
+
+        <router-link
+          :to="`/users/${user.id}/charts`"
+          class="text-blue-600 hover:underline"
+          >User Charts</router-link
+        >
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 mb-2">
+            Monthly Logins
+          </h3>
+          <canvas ref="monthlyCanvas" class="w-full h-64" />
+        </div>
+        <div>
+          <h3 class="text-lg font-semibold text-gray-700 mb-2">Daily Logins</h3>
+          <canvas ref="dailyCanvas" class="w-full h-64" />
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
-<script>
-import axios from "axios";
 
-export default {
-  data: function() {
-    return {
-      user: {},
-      monthly_statistics: { labels: ['June', 'July', 'August'], logins: [12, 15, 11] },
-      daily_statistics: { labels: ['08-23-2024', '08-24-2024', '08-25-2024',], logins: [1, 2, 0]},
-      profile_image_url: ''
-    };
-  },
-  created: function() {
-    axios.get("/api/users/me").then(response => {
-      console.log("users show", response);
-      this.user = response.data;
-      this.monthly_statistics = response.data.monthly_statistics;
-      this.daily_statistics = response.data.daily_statistics;
-      this.profile_image_url = response.data.profile_image_url;
-      this.loadScripts().then(() => {
-        this.createCharts();
-      });
-    });
-  },
-  methods: {
-    loadScripts() {
-      return new Promise((resolve) => {
-        this.loadScript('https://cdn.jsdelivr.net/npm/chart.js', () => {
-          this.loadScript('https://cdn.jsdelivr.net/npm/@sgratzl/chartjs-chart-boxplot@3.0.0', () => {
-            resolve();
-          });
-        });
-      });
-    },
-    loadScript(url, callback) {
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = url;
-      script.onload = callback;
-      script.onerror = () => {
-        console.error(`Failed to load script: ${url}`);
-      };
-      document.head.appendChild(script);
-    },
-    createCharts() {
-      this.createMonthlyChart();
-      this.createDailyChart();
-    },
-    createMonthlyChart() {
-      const ctx = document.getElementById('myMonthlyChart').getContext('2d');
-      new window.Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: this.monthly_statistics.labels,
-          datasets: [{
-            label: 'Month',
-            data: this.monthly_statistics.logins,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              },
-              title: {
-                display: true,
-                text: 'Logins'
-              },
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Month'
-              }
-            }
-          }
-        }
-      });
-    },
-    createDailyChart() {
-      const ctx = document.getElementById('myDailyChart').getContext('2d');
-      new window.Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: this.daily_statistics.labels,
-          datasets: [{
-            label: 'Last 7 days logins',
-            data: this.daily_statistics.logins,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                precision: 0
-              },
-              title: {
-                display: true,
-                text: 'Logins'
-              },
-            },
-            x: {
-              title: {
-                display: true,
-                text: 'Date'
-              }
-            }
-          }
-        }
-      });
-    }
+<script setup>
+import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
+import axios from "@/lib/axios";
+import Chart from "chart.js/auto";
+
+const router = useRouter();
+const user = ref({});
+const monthlyStats = ref({ labels: [], logins: [] });
+const dailyStats = ref({ labels: [], logins: [] });
+const profileImageUrl = ref("");
+
+const monthlyCanvas = ref(null);
+const dailyCanvas = ref(null);
+
+onMounted(async () => {
+  try {
+    const response = await axios.get("/api/users/me");
+    user.value = response.data;
+    monthlyStats.value = response.data.monthly_statistics;
+    dailyStats.value = response.data.daily_statistics;
+    profileImageUrl.value = response.data.profile_image_url;
+
+    renderCharts();
+  } catch (error) {
+    console.error("Failed to load user data:", error);
+    router.push("/login"); // fallback if unauthorized
   }
-};
+});
+
+function renderCharts() {
+  if (monthlyCanvas.value && dailyCanvas.value) {
+    new Chart(monthlyCanvas.value.getContext("2d"), {
+      type: "bar",
+      data: {
+        labels: monthlyStats.value.labels,
+        datasets: [
+          {
+            label: "Month",
+            data: monthlyStats.value.logins,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { precision: 0 },
+            title: { display: true, text: "Logins" }
+          },
+          x: {
+            title: { display: true, text: "Month" }
+          }
+        }
+      }
+    });
+
+    new Chart(dailyCanvas.value.getContext("2d"), {
+      type: "bar",
+      data: {
+        labels: dailyStats.value.labels,
+        datasets: [
+          {
+            label: "Last 7 Days",
+            data: dailyStats.value.logins,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { precision: 0 },
+            title: { display: true, text: "Logins" }
+          },
+          x: {
+            title: { display: true, text: "Date" }
+          }
+        }
+      }
+    });
+  }
+}
 </script>

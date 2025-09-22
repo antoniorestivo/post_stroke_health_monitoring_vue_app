@@ -1,91 +1,114 @@
 <template>
-  <div class="charts-update">
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="col-lg-12 bg-white box-shadow b-radius">
-            <div class="psycare-account box-shadow-none">
-              <div class="section-title">
-                <h3 class="title">Update Retrospect</h3>
-              </div>
-              <ul>
-                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-              </ul>
-              <form class="form-row align-items-center" v-on:submit.prevent="updateChart(chart)">
-                <div class="form-group col-md-12">
-                  <h5>Choose First Variable</h5>
-                  <label style="margin-right: 4px;">Time (track metric change over time)</label>
-                  <input type="radio" id="metric.id" value="Time" v-model="chart.x_label" name="metricOne" />
-                  <div v-for="metric in metrics" v-bind:key="metric.id" for="metric.metric_name">
-                    <label style="margin-right: 4px;">{{ metric.metric_name }}</label>
-                    <input type="radio" id="metric.id" :value="metric.metric_name" v-model="chart.x_label" name="metricOne" />
-                    <br>
-                  </div>
-                </div>
-                <div class="form-group col-md-12">
-                  <h5>Choose Second Variable</h5>
-                  <div v-for="metric in metrics" v-bind:key="metric.id" for="metric.metric_name">
-                    <label style="margin-right: 4px;">{{ metric.metric_name }}</label>
-                    <input type="radio" id="metric.id" :value="metric.metric_name" v-model="chart.y_label" name="metricTwo" />
-                    <br>
-                  </div>
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Title</label>
-                  <input v-model="chart.title" type="text" class="form-control" placeholder="" name="title" />
-                </div>
-                <div class="form-group col-sm-12">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
-                <div class="form-group col-sm-12">
-                  <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-              </form>
-            </div>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h3 class="text-2xl font-bold text-gray-800">Update Chart</h3>
+
+      <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
+        <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
+      </ul>
+
+      <form @submit.prevent="updateChart" class="space-y-6">
+        <!-- First Variable -->
+        <div>
+          <h5 class="text-lg font-semibold mb-2">Choose First Variable</h5>
+          <label class="block mb-2">
+            <input type="radio" value="Time" v-model="chart.x_label" />
+            Time (track over time)
+          </label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <label
+              v-for="metric in metrics"
+              :key="`x-${metric.id}`"
+              class="flex items-center space-x-2"
+            >
+              <input
+                type="radio"
+                :value="metric.metric_name"
+                v-model="chart.x_label"
+              />
+              <span>{{ metric.metric_name }}</span>
+            </label>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+
+        <!-- Second Variable -->
+        <div>
+          <h5 class="text-lg font-semibold mb-2">Choose Second Variable</h5>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <label
+              v-for="metric in metrics"
+              :key="`y-${metric.id}`"
+              class="flex items-center space-x-2"
+            >
+              <input
+                type="radio"
+                :value="metric.metric_name"
+                v-model="chart.y_label"
+              />
+              <span>{{ metric.metric_name }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div>
+          <label class="block font-medium mb-1">Chart Title</label>
+          <input
+            v-model="chart.title"
+            type="text"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <!-- Submit -->
+        <div>
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Update Chart
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 
-export default {
-  data: function() {
-    return {
-      chart: {},
-      errors: [],
-      metrics: []
-    };
-  },
-  created: function() {
-    const url = `/api/users/${this.$route.params.id}/user_charts/${this.$route.params.chart_id}/edit`;
-    axios.get(url).then(response => {
-      this.chart = response.data.chart;
-      this.metrics = response.data.health_metrics;
+const route = useRoute();
+const router = useRouter();
+
+const chart = ref({});
+const errors = ref([]);
+const metrics = ref([]);
+
+onMounted(() => {
+  const url = `/api/users/${route.params.id}/user_charts/${route.params.chart_id}/edit`;
+  axios.get(url).then(response => {
+    chart.value = response.data.chart;
+    metrics.value = response.data.health_metrics;
+  });
+});
+
+function updateChart() {
+  const url = `/api/users/${route.params.id}/user_charts/${chart.value.id}`;
+  const params = {
+    x_label: chart.value.x_label,
+    y_label: chart.value.y_label,
+    title: chart.value.title
+  };
+
+  axios
+    .patch(url, params)
+    .then(() => {
+      router.push(`/users/${route.params.id}/charts`);
+    })
+    .catch(error => {
+      errors.value = error.response?.data?.errors || ["Update failed."];
     });
-  },
-  methods: {
-    updateChart: function(chart) {
-      const url = `/api/users/${this.$route.params.id}/user_charts/${this.chart.id}`;
-      var params = {
-        x_label: chart.x_label,
-        y_label: chart.y_label,
-        title: chart.title
-      };
-      axios
-          .patch(url, params)
-          .then(response => {
-            console.log(response);
-            this.$router.push(`/users/${this.$route.params.id}/charts`);
-          })
-          .catch(error => {
-            console.log("charts update error", error.response);
-            this.errors = error.response.data.errors;
-          });
-    },
-  },
-};
+}
 </script>

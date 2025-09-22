@@ -1,69 +1,91 @@
 <template>
-  <div class="conditions-show">
-    <section class="space-ptb">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 mb-4 mb-lg-0">
-            <div class="section-contant">
-              <div class="section-title mb-4">
-                <h2 class="title">
-                  {{ condition.name }} is the name of the condition and is recorded
-                  {{ relativeDate(condition.created_at) }}
-                </h2>
-                <h3 v-if="condition.support === true">Condition Needs Outside Support</h3>
-                <h3 v-else>Condition does not need outside support at the moment</h3>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h2 class="text-2xl font-bold text-gray-800">
+        {{ condition.name }} — recorded {{ relativeDate(condition.created_at) }}
+      </h2>
 
-                <div class="blog-post-image">
-                  <img class="img-fluid" :src="condition.image_url" alt="" />
-                </div>
+      <p class="text-lg text-gray-700">
+        {{
+          condition.support
+            ? "This condition needs outside support."
+            : "This condition does not currently need outside support."
+        }}
+      </p>
 
-                <h3>Video Url:{{ condition.video_url }}</h3>
-
-                <router-link to="/conditions">Back to all conditions</router-link>
-
-                |
-
-                <router-link :to="`/conditions/${condition.id}/edit`">Update condition</router-link>
-
-                |
-
-                <router-link :to="`/conditions/${condition.id}/treatments`">Treatments for condition</router-link>
-                <br>
-                <br>
-                <button v-on:click="destroyCondition()" type="submit" class="btn btn-primary">Delete</button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div v-if="condition.image_url">
+        <img
+          :src="condition.image_url"
+          alt="Condition image"
+          class="w-full rounded-lg shadow"
+        />
       </div>
-    </section>
-  </div>
+
+      <div v-if="condition.video_url">
+        <h4 class="text-md font-semibold text-gray-800 mt-4">Video URL</h4>
+        <p class="text-sm text-blue-600 break-all">{{ condition.video_url }}</p>
+      </div>
+
+      <div class="pt-6 space-x-4 text-sm">
+        <router-link to="/conditions" class="text-blue-600 hover:underline">
+          Back to all conditions
+        </router-link>
+
+        |
+
+        <router-link
+          :to="`/conditions/${condition.id}/edit`"
+          class="text-blue-600 hover:underline"
+        >
+          Update Condition
+        </router-link>
+
+        |
+
+        <router-link
+          :to="`/conditions/${condition.id}/treatments`"
+          class="text-blue-600 hover:underline"
+        >
+          Treatments for Condition
+        </router-link>
+      </div>
+
+      <div class="pt-4">
+        <button
+          @click="destroyCondition"
+          class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </section>
 </template>
-<script>
-import axios from "axios";
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 import moment from "moment";
-export default {
-  data: function() {
-    return {
-      condition: {},
-    };
-  },
-  created: function() {
-    axios.get("/api/conditions/" + this.$route.params.id).then(response => {
-      console.log("conditions show", response);
-      this.condition = response.data;
-    });
-  },
-  methods: {
-    relativeDate: function(date) {
-      return moment(date).fromNow();
-    },
-    destroyCondition: function() {
-      axios.delete(`/api/conditions/${this.condition.id}`).then(() => {
-        console.log("condition successfully destroyed");
-        this.$router.push(`/conditions`);
-      });
-    },
-  },
-};
+
+const route = useRoute();
+const router = useRouter();
+
+const condition = ref({});
+
+onMounted(() => {
+  axios.get(`/api/conditions/${route.params.id}`).then(response => {
+    condition.value = response.data;
+  });
+});
+
+function relativeDate(date) {
+  return moment(date).fromNow();
+}
+
+function destroyCondition() {
+  axios.delete(`/api/conditions/${condition.value.id}`).then(() => {
+    router.push("/conditions");
+  });
+}
 </script>

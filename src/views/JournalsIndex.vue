@@ -1,156 +1,148 @@
 <template>
-  <div class="journals-index">
-    <!--=================================
-    services -->
-    <section class="space-pt">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-12">
-            <div class="text-center mt-4 mt-lg-5">
-              <router-link :to="`/journals/new`" class="btn btn-primary">Create New Journal</router-link>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-7xl mx-auto space-y-8">
+      <!-- Actions -->
+      <div class="text-center space-y-4">
+        <router-link
+          to="/journals/new"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Create New Journal
+        </router-link>
+
+        <div v-if="!template">
+          <router-link
+            to="/journals/template/new"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Create Journal Template
+          </router-link>
+        </div>
+        <div v-else>
+          <router-link
+            :to="`/journals/template/${template.id}/edit`"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Edit Journal Template
+          </router-link>
+        </div>
+      </div>
+
+      <!-- Journals Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-for="journal in journals"
+          :key="journal.id"
+          class="bg-white shadow rounded-lg p-4 space-y-2"
+        >
+          <p class="text-sm text-gray-500">
+            {{ relativeDate(journal.created_at) }}
+          </p>
+
+          <h6 class="font-semibold text-gray-800">Description:</h6>
+          <p class="text-gray-700">{{ journal.description }}</p>
+
+          <div v-if="journal.image_url">
+            <img :src="journal.image_url" alt="Journal image" class="w-full h-auto rounded" />
+          </div>
+
+          <h6 class="font-semibold mt-2 text-gray-800">Video URL:</h6>
+          <p class="text-sm break-all text-blue-600">{{ journal.video_url }}</p>
+
+          <h6 class="font-semibold mt-2 text-gray-800">Health Routines:</h6>
+          <p class="text-sm">{{ journal.health_routines }}</p>
+
+          <h6 class="font-semibold mt-2 text-gray-800">Metrics:</h6>
+          <div class="space-y-1">
+            <div v-for="metric in Object.keys(journal.metrics)" :key="metric">
+              <p class="text-sm font-medium text-gray-600">{{ metric }}:</p>
+              <p class="text-sm text-gray-800">
+                {{ journal.enriched_metrics?.[metric] ?? '—' }}
+              </p>
             </div>
-            <div v-if="!template" class="text-center mt-4 mt-lg-5">
-              <router-link :to="`/journals/template/new`" class="btn btn-primary">Create Journal Template</router-link>
-            </div>
-            <div v-if="template" class="text-center mt-4 mt-lg-5">
-              <router-link :to="`/journals/template/${template.id}/edit`" class="btn btn-primary">
-                Edit Journal Template
-              </router-link>
-            </div>
+          </div>
+
+          <div class="mt-4">
+            <router-link
+              :to="`/journals/${journal.id}`"
+              class="text-blue-600 hover:underline text-sm"
+            >
+              More Info →
+            </router-link>
           </div>
         </div>
       </div>
-    </section>
-    <!--=================================
-    services -->
-    <!--=================================
-    Blog -->
-    <section class="space-ptb">
-      <div class="container">
-        <div class="row">
-          <div v-for="journal in journals" v-bind:key="journal.id" class="col-lg-4 col-md-6 mb-0 mb-lg-3">
-            <!-- Blog-Post START -->
-            <div class="blog-post">
-              <div class="blog-post-content">
-                <div class="blog-post-info">
-                  <div class="blog-post-date">
-                    <i class="far fa-clock"></i>
-                    {{ relativeDate(journal.created_at) }}
-                  </div>
-                </div>
-                <h6 class="blog-post-title">Description:</h6>
-                <p>{{ journal.description }}</p>
-                <div class="blog-post-image">
-                  <img class="img-fluid" :src="journal.image_url" alt="" />
-                </div>
-                <h7 class="blog-post-title">Video Url:</h7>
-                <p>{{ journal.video_url }}</p>
-                <h6 class="blog-post-title">Health Routines:</h6>
-                <p>{{ journal.health_routines }}</p>
-                <h6 class="blog-post-title">Metrics:</h6>
-                <div v-for="metric in Object.keys(journal.metrics)" v-bind:key="metric">
-                  <h7>{{ metric }}</h7>
-                  <p>{{ `${journal.enriched_metrics[metric]}` }}</p>
-                </div>
-                <router-link :to="`/journals/${journal.id}`" class="btn btn-primary">More Info</router-link>
-              </div>
-            </div>
-            <!-- Blog-Post END -->
-          </div>
-        </div>
-        <!-- Pagination Controls -->
-        <div class="pagination-controls">
-          <button
-            class="btn btn-secondary"
-            :disabled="currentPage === 1"
-            @click="changePage(currentPage - 1)"
-          >
-            Previous
-          </button>
-          <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button
-            class="btn btn-secondary"
-            :disabled="currentPage === totalPages"
-            @click="changePage(currentPage + 1)"
-          >
-            Next
-          </button>
-        </div>
+
+      <!-- Pagination -->
+      <div class="flex justify-center items-center gap-4 mt-8">
+        <button
+          class="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+          :disabled="currentPage === 1"
+          @click="changePage(currentPage - 1)"
+        >
+          Previous
+        </button>
+
+        <span class="text-sm text-gray-700">
+          Page {{ currentPage }} of {{ totalPages }}
+        </span>
+
+        <button
+          class="bg-gray-300 px-3 py-1 rounded disabled:opacity-50"
+          :disabled="currentPage === totalPages"
+          @click="changePage(currentPage + 1)"
+        >
+          Next
+        </button>
       </div>
-    </section>
-  </div>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
-import moment from "moment";
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import axios from '@/lib/axios'
+import moment from 'moment'
 
-export default {
-  data: function() {
-    return {
-      journals: [],
-      template: null,
-      currentPage: 1,
-      recordsPerPage: 9,
-      totalRecords: 0
-    };
-  },
-  created: function() {
-    this.fetchJournals(this.currentPage);
-  },
-  watch: {
-    journals(newVal) {
-      console.log("Journals updated: ", newVal);
-    }
-  },
-  computed: {
-    totalPages: function() {
-      return Math.ceil(this.totalRecords / this.recordsPerPage);
-    },
-  },
-  methods: {
-    fetchJournals: function(page) {
-      const offset = (page - 1) * this.recordsPerPage;
-      axios
-        .get("/api/journals", {
-          params: {
-            limit: this.recordsPerPage,
-            offset: offset
-          }
-        })
-        .then(response => {
-          const data = JSON.parse(response.data);
-          this.journals = data.journals;
-          this.template = data.template;
-          this.totalRecords = data.total_records;
-        })
-        .catch(error => {
-          console.error("Error fetching journal records:", error);
-        });
-    },
-    relativeDate: function(date) {
-      return moment(date).format("MMM Do YYYY");
-    },
-    changePage: function(page) {
-      if (page < 1 || page > this.totalPages) {
-        return;
+const journals = ref([])
+const template = ref(null)
+const currentPage = ref(1)
+const recordsPerPage = 9
+const totalRecords = ref(0)
+
+const totalPages = computed(() => Math.ceil(totalRecords.value / recordsPerPage))
+
+function fetchJournals(page) {
+  const offset = (page - 1) * recordsPerPage
+  axios
+    .get('/api/journals', {
+      params: {
+        limit: recordsPerPage,
+        offset
       }
-      this.currentPage = page;
-      this.fetchJournals(page);
-    },
-  },
-};
+    })
+    .then(response => {
+      const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
+      journals.value = data.journals
+      template.value = data.template
+      totalRecords.value = data.total_records
+    })
+    .catch(error => {
+      console.error('Error fetching journal records:', error)
+    })
+}
+
+function relativeDate(date) {
+  return moment(date).format('MMM Do YYYY')
+}
+
+function changePage(page) {
+  if (page < 1 || page > totalPages.value) return
+  currentPage.value = page
+  fetchJournals(page)
+}
+
+onMounted(() => {
+  fetchJournals(currentPage.value)
+})
 </script>
-
-<style scoped>
-.pagination-controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
-}
-
-.pagination-controls button {
-  margin: 0 1rem;
-}
-</style>
