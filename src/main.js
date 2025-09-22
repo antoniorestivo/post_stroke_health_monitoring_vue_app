@@ -1,21 +1,17 @@
-import Vue from "vue";
+import { createApp } from "vue";
+import "./style.css";
 import App from "./App.vue";
+import "./assets/tailwind.css";
+
 import router from "./router";
-import axios from "axios";
 
-axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-axios.defaults.baseURL = process.env.NODE_ENV === "development" ? "http://localhost:3000" : "/";
+import { setAuthToken } from "@/lib/axios";
 
-var jwt = localStorage.getItem("jwt");
-if (jwt) {
-  axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
+const token = localStorage.getItem("jwt");
+if (token) {
+  setAuthToken(token);
 }
 
-
-
-Vue.config.productionTip = false;
-
-new Vue({
-  router,
-  render: h => h(App),
-}).$mount("#app");
+createApp(App)
+  .use(router)
+  .mount("#app");

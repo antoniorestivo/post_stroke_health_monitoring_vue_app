@@ -1,78 +1,92 @@
 <template>
-  <div class="treatment-retrospects-update">
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="col-lg-12 bg-white box-shadow b-radius">
-            <div class="psycare-account box-shadow-none">
-              <div class="section-title">
-                <h3 class="title">Update Retrospect</h3>
-              </div>
-              <ul>
-                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-              </ul>
-              <form class="form-row align-items-center" v-on:submit.prevent="updateTreatmentRetrospect(treatment_retrospect)">
-                <div class="form-group col-md-12">
-                  <label>Feedback</label>
-                  <textarea
-                      v-model="treatment_retrospect.feedback"
-                      class="form-control"
-                      name=""
-                      id=""
-                      cols="30"
-                      rows="10"
-                  ></textarea>
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Retrospect Rating (scale 1 - 10)</label>
-                  <input v-model="treatment_retrospect.rating" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-sm-12">
-                  <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-              </form>
-            </div>
-          </div>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h2 class="text-2xl font-bold text-gray-800">
+        Update Treatment Retrospect
+      </h2>
+
+      <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
+        <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+      </ul>
+
+      <form @submit.prevent="updateTreatmentRetrospect" class="space-y-6">
+        <!-- Feedback -->
+        <div>
+          <label for="feedback" class="block font-medium mb-1">Feedback</label>
+          <textarea
+            id="feedback"
+            v-model="retrospect.feedback"
+            rows="6"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          ></textarea>
         </div>
-      </div>
-    </section>
-  </div>
+
+        <!-- Rating -->
+        <div>
+          <label for="rating" class="block font-medium mb-1"
+            >Rating (1–10)</label
+          >
+          <input
+            id="rating"
+            type="number"
+            min="1"
+            max="10"
+            v-model="retrospect.rating"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Update
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 
-export default {
-  data: function() {
-    return {
-      treatment_retrospect: {},
-      errors: [],
-    };
-  },
-  created: function() {
-    const url = `/api/conditions/${this.$route.params.id}/treatments/${this.$route.params.treatment_id}/treatment_retrospects/${this.$route.params.retrospect_id}`
-    axios.get(url).then(response => {
-      this.treatment_retrospect = response.data
+const route = useRoute();
+const router = useRouter();
+
+const retrospect = ref({
+  feedback: "",
+  rating: null
+});
+const errors = ref([]);
+
+onMounted(() => {
+  const url = `/api/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${route.params.retrospect_id}`;
+  axios.get(url).then(response => {
+    retrospect.value = response.data;
+  });
+});
+
+function updateTreatmentRetrospect() {
+  const url = `/api/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${route.params.retrospect_id}`;
+  const params = {
+    feedback: retrospect.value.feedback,
+    rating: retrospect.value.rating
+  };
+
+  axios
+    .patch(url, params)
+    .then(() => {
+      router.push(
+        `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${route.params.retrospect_id}`
+      );
+    })
+    .catch(error => {
+      errors.value = error.response?.data?.errors || ["Update failed."];
     });
-  },
-  methods: {
-    updateTreatmentRetrospect: function(treatment_retrospect) {
-      const url = `/api/conditions/${this.$route.params.id}/treatments/${this.$route.params.treatment_id}/treatment_retrospects/${this.$route.params.retrospect_id}`
-      var params = {
-        feedback: treatment_retrospect.feedback,
-        rating: treatment_retrospect.rating
-      };
-      axios
-          .patch(url, params)
-          .then(response => {
-            console.log(response);
-            this.$router.push(`/conditions/${this.$route.params.id}/treatments/${this.$route.params.treatment_id}/treatment_retrospects/${this.$route.params.retrospect_id}`);
-          })
-          .catch(error => {
-            console.log("treatments create error", error.response);
-            this.errors = error.response.data.errors;
-          });
-    },
-  },
-};
+}
 </script>

@@ -1,88 +1,61 @@
 <template>
   <div id="app">
-    <header class="header">
-      <!-- Topbar -->
-      <div class="topbar">
-        <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <div class="d-block d-md-flex align-items-center text-center">
-                <div class="mr-3 d-inline-block">
-                  <h3 class="title text-white">Health Monitoring App</h3>
-                </div>
-                <div class="mr-auto d-inline-block">
-                  <!-- <a href="tel:0123456789"><i class="fa fa-phone mr-2 fa fa-flip-horizontal"></i>0123-456-789</a> -->
-                </div>
-                <div class="d-inline-block mr-3">
-                  <ul class="list-unstyled">
-                    <h4 class="title text-white"><router-link v-if="isLoggedIn()" to="/logout">Logout</router-link></h4>
-                    <li><router-link v-if="!isLoggedIn()" to="/login">Login</router-link></li>
-                    <li><router-link v-if="!isLoggedIn()" to="/signup">Sign Up</router-link></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+    <header class="bg-blue-800 text-white">
+      <div
+        class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center"
+      >
+        <h1 class="text-2xl font-bold mb-2 sm:mb-0">Health Monitoring App</h1>
+
+        <div class="flex space-x-4">
+          <router-link v-if="isLoggedIn()" to="/logout" class="hover:underline">
+            Logout
+          </router-link>
+          <router-link v-if="!isLoggedIn()" to="/login" class="hover:underline">
+            Login
+          </router-link>
+          <router-link
+            v-if="!isLoggedIn()"
+            to="/signup"
+            class="hover:underline"
+          >
+            Sign Up
+          </router-link>
         </div>
       </div>
-      <!-- Topbar -->
 
-      <!-- Nav -->
-      <nav class="navbar navbar-static-top navbar-expand-lg header-sticky">
-        <!-- <h1>Post-Stroke Health Monitoring App</h1> -->
-        <div class="container">
-          <button type="button" class="navbar-toggler" data-toggle="collapse" data-target=".navbar-collapse">
-            <i class="fas fa-align-left"></i>
-          </button>
-
-          <div class="navbar-collapse collapse justify-content-center">
-            <ul class="nav navbar-nav">
-              <li class="nav-item dropdown">
-                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/treatments">
-                  Treatments
-                </router-link>
-              </li>
-              <li class="nav-item dropdown">
-                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/conditions">
-                  Patient Conditions
-                </router-link>
-              </li>
-              <li class="nav-item dropdown">
-                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/journals">
-                  Journals
-                </router-link>
-              </li>
-              <li class="nav-item dropdown">
-                <router-link class="nav-link dropdown-toggle" v-if="isLoggedIn()" to="/users/me">
-                  User Profile
-                </router-link>
-              </li>
-            </ul>
-          </div>
+      <nav
+        v-if="isLoggedIn()"
+        class="bg-blue-700 text-white border-t border-blue-600"
+      >
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap gap-6 text-sm">
+          <router-link to="/treatments" class="hover:underline"
+            >Treatments</router-link
+          >
+          <router-link to="/conditions" class="hover:underline"
+            >Patient Conditions</router-link
+          >
+          <router-link to="/journals" class="hover:underline"
+            >Journals</router-link
+          >
+          <router-link to="/users/me" class="hover:underline"
+            >User Profile</router-link
+          >
         </div>
       </nav>
-      <!-- Nav -->
     </header>
 
-    <!--=================================
-     header -->
-
-    <router-view />
+    <main class="mt-6">
+      <router-view />
+    </main>
   </div>
 </template>
 
-<style></style>
-
 <script>
 export default {
-  data: function() {
-    return {};
-  },
-  created: function() {},
   methods: {
-    isLoggedIn: function() {
-      return localStorage.getItem("jwt");
-    },
-  },
+    isLoggedIn() {
+      return !!localStorage.getItem("jwt");
+    }
+  }
 };
 </script>

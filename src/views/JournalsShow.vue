@@ -1,65 +1,83 @@
 <template>
-  <div class="journals-show">
-    <section class="space-ptb">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-lg-6 mb-4 mb-lg-0">
-            <div class="section-contant">
-              <div class="section-title mb-4">
-                <h2 class="title">
-                  This journal is recorded around
-                  {{ relativeDate(journal.created_at) }}
-                </h2>
-                <h4>Description</h4>
-                <p class="lead">
-                  {{ journal.description }}
-                </p>
-                <h4>Health Routines/diet</h4>
-                <p class="lead">
-                  {{ journal.health_routines }}
-                </p>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h2 class="text-2xl font-bold text-gray-800">
+        This journal is recorded around {{ relativeDate(journal.created_at) }}
+      </h2>
 
-                <div class="blog-post-image">
-                  <img class="img-fluid" :src="journal.image_url" alt="" />
-                </div>
-                <h4>Video Url:{{ journal.video_url }}</h4>
-                <div v-for="metric in Object.keys(journal.metrics)" v-bind:key="metric">
-                  <h7>{{ metric }}</h7>
-                  <p>{{ journal.metrics[metric] }}</p>
-                </div>
-                <router-link to="/journals">Back to all journals</router-link>
+      <div>
+        <h4 class="text-lg font-semibold text-gray-700 mb-1">Description</h4>
+        <p class="text-gray-800">{{ journal.description }}</p>
+      </div>
 
-                |
+      <div>
+        <h4 class="text-lg font-semibold text-gray-700 mb-1">
+          Health Routines / Diet
+        </h4>
+        <p class="text-gray-800">{{ journal.health_routines }}</p>
+      </div>
 
-                <router-link :to="`/journals/${journal.id}/edit`">Update journal</router-link>
-              </div>
-            </div>
+      <div v-if="journal.image_url">
+        <img
+          :src="journal.image_url"
+          alt="Journal image"
+          class="w-full rounded shadow"
+        />
+      </div>
+
+      <div v-if="journal.video_url">
+        <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-1">Video URL</h4>
+        <p class="text-sm break-all text-blue-600">{{ journal.video_url }}</p>
+      </div>
+
+      <div v-if="journal.metrics && Object.keys(journal.metrics).length">
+        <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">Metrics</h4>
+        <div class="space-y-1">
+          <div
+            v-for="metric in Object.keys(journal.metrics)"
+            :key="metric"
+            class="text-sm"
+          >
+            <p class="font-medium text-gray-600">{{ metric }}:</p>
+            <p class="text-gray-800">{{ journal.metrics[metric] }}</p>
           </div>
         </div>
       </div>
-    </section>
-  </div>
+
+      <div class="pt-6 space-x-4 text-sm">
+        <router-link to="/journals" class="text-blue-600 hover:underline">
+          Back to all journals
+        </router-link>
+
+        |
+
+        <router-link
+          :to="`/journals/${journal.id}/edit`"
+          class="text-blue-600 hover:underline"
+        >
+          Update journal
+        </router-link>
+      </div>
+    </div>
+  </section>
 </template>
-<script>
-import axios from "axios";
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
+import axios from "@/lib/axios";
 import moment from "moment";
 
-export default {
-  data: function() {
-    return {
-      journal: {},
-    };
-  },
-  created: function() {
-    axios.get("/api/journals/" + this.$route.params.id).then(response => {
-      console.log("journals show", response);
-      this.journal = response.data;
-    });
-  },
-  methods: {
-    relativeDate: function(date) {
-      return moment(date).fromNow();
-    },
-  },
-};
+const route = useRoute();
+const journal = ref({});
+
+onMounted(() => {
+  axios.get(`/api/journals/${route.params.id}`).then(response => {
+    journal.value = response.data;
+  });
+});
+
+function relativeDate(date) {
+  return moment(date).fromNow();
+}
 </script>

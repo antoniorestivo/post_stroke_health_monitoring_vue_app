@@ -1,96 +1,137 @@
 <template>
-  <div class="users-edit">
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="col-lg-12 bg-white box-shadow b-radius">
-            <div class="psycare-account box-shadow-none">
-              <div class="section-title">
-                <h3 class="title">Update User</h3>
-              </div>
-              <ul>
-                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-              </ul>
-              <form class="form-row align-items-center" v-on:submit.prevent="updateUser(user)">
-                <div class="form-group col-md-12">
-                  <label>Email</label>
-                  <input v-model="user.email" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-12">
-                  <label>password</label>
-                  <input v-model="user.newPassword" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-12">
-                  <label>confirm password</label>
-                  <input v-model="user.confirmPassword" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-6">
-                  <label>First Name:</label>
-                  <input type="text" class="form-control" placeholder="" v-model="user.firstName">
-                </div>
-                <div class="form-group col-md-6">
-                  <label>Last Name:</label>
-                  <input type="text" class="form-control" placeholder="" v-model="user.lastName">
-                </div>
-                <div class="form-group col-md-6">
-                  <label>Profile Image:</label>
-                  <input type="file" class="form-control" id="profileImage" name="profileImage">
-                </div>
-                <div class="form-group col-sm-12">
-                  <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-              </form>
-              <button v-on:click="destroyUser()" type="submit" class="btn btn-primary">Delete</button>
-            </div>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h3 class="text-2xl font-bold text-gray-800">Update User</h3>
+
+      <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
+        <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
+      </ul>
+
+      <form @submit.prevent="updateUser" class="space-y-6">
+        <div>
+          <label class="block font-medium mb-1">Email</label>
+          <input
+            v-model="user.email"
+            type="email"
+            class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label class="block font-medium mb-1">Password</label>
+          <input
+            v-model="user.newPassword"
+            type="password"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label class="block font-medium mb-1">Confirm Password</label>
+          <input
+            v-model="user.confirmPassword"
+            type="password"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block font-medium mb-1">First Name</label>
+            <input
+              v-model="user.firstName"
+              type="text"
+              class="w-full border border-gray-300 rounded px-3 py-2"
+            />
+          </div>
+
+          <div>
+            <label class="block font-medium mb-1">Last Name</label>
+            <input
+              v-model="user.lastName"
+              type="text"
+              class="w-full border border-gray-300 rounded px-3 py-2"
+            />
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+
+        <div>
+          <label class="block font-medium mb-1">Profile Image</label>
+          <input
+            ref="profileImageRef"
+            type="file"
+            class="block w-full text-sm text-gray-600 border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+
+        <div class="flex flex-wrap gap-4">
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Update
+          </button>
+
+          <button
+            type="button"
+            @click="destroyUser"
+            class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+          >
+            Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import axios from '@/lib/axios'
 
-export default {
-  data: function() {
-    return {
-      user: {},
+const route = useRoute()
+const router = useRouter()
 
-      errors: [],
-    };
-  },
-  created: function() {
-    axios.get("/api/users/" + this.$route.params.id).then(response => {
-      console.log("users update", response);
-      this.user = response.data;
-    });
-  },
-  methods: {
-    updateUser: function(user) {
-      const profileImage = document.getElementById('profileImage').files[0];
-      const formData = new FormData();
-      formData.append('profile_image', profileImage)
-      formData.append('email', user.email)
-      console.log(formData);
-      axios
-        .patch(`/api/users/${this.user.id}`, formData)
-        .then(response => {
-          console.log("user successfully updated", response.data);
-          this.$router.push(`/users/${this.user.id}`);
-        })
-        .catch(error => {
-          console.log("user create error", error.response);
-          this.errors = error.response.data.errors;
-        });
-    },
-    destroyUser: function() {
-      axios.delete(`/api/users/${this.user.id}`).then(() => {
-        localStorage.removeItem("jwt");
-        console.log("user successfully destroyed");
-        this.$router.push(`/signup`);
-      });
-    },
-  },
-};
+const user = ref({})
+const errors = ref([])
+const profileImageRef = ref(null)
+
+onMounted(() => {
+  axios.get(`/api/users/${route.params.id}`).then((response) => {
+    user.value = response.data
+  })
+})
+
+function updateUser() {
+  const profileImage = profileImageRef.value?.files?.[0]
+  const formData = new FormData()
+
+  formData.append('email', user.value.email)
+  formData.append('first_name', user.value.firstName)
+  formData.append('last_name', user.value.lastName)
+  formData.append('password', user.value.newPassword || '')
+  formData.append('password_confirmation', user.value.confirmPassword || '')
+
+  if (profileImage) {
+    formData.append('profile_image', profileImage)
+  }
+
+  axios
+    .patch(`/api/users/${user.value.id}`, formData)
+    .then(() => {
+      router.push(`/users/${user.value.id}`)
+    })
+    .catch((error) => {
+      console.log(error.response)
+      errors.value = error.response?.data?.errors || ['Update failed.']
+    })
+}
+
+function destroyUser() {
+  axios.delete(`/api/users/${user.value.id}`).then(() => {
+    localStorage.removeItem('jwt')
+    router.push('/signup')
+  })
+}
 </script>

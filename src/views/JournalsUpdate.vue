@@ -1,113 +1,130 @@
 <template>
-  <div class="journals-update">
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row no-gutters">
-          <div class="col-lg-12 bg-white box-shadow b-radius">
-            <div class="psycare-account box-shadow-none">
-              <div class="section-title">
-                <h3 class="title">Update Journal</h3>
-              </div>
-              <ul>
-                <li v-for="error in errors" v-bind:key="error">{{ error }}</li>
-              </ul>
-              <form class="form-row align-items-center" v-on:submit.prevent="updateJournal(journal)">
-                <div class="form-group col-md-12">
-                  <label>Description</label>
-                  <textarea
-                    v-model="journal.description"
-                    class="form-control"
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="10"
-                  ></textarea>
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Image Url</label>
-                  <input v-model="journal.image_url" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Video Url</label>
-                  <input v-model="journal.video_url" type="text" class="form-control" placeholder="" />
-                </div>
-                <div class="form-group col-md-12">
-                  <label>Health Routines</label>
-                  <textarea
-                    v-model="journal.health_routines"
-                    class="form-control"
-                    name=""
-                    id=""
-                    cols="30"
-                    rows="5"
-                  ></textarea>
-                </div>
-                <div v-for="metric in Object.keys(journal.metrics)" v-bind:key="metric">
-                  <label>{{ metric }}</label>
-                  <input v-model="journal.metrics[metric]" name="metric" type="text" class="health-metric" />
-                </div>
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+      <h3 class="text-2xl font-bold text-gray-800">Update Journal</h3>
 
-                <div class="form-group col-sm-12">
-                  <button type="submit" class="btn btn-primary">Update</button>
-                </div>
-              </form>
-              <button v-on:click="destroyJournal()" type="submit" class="btn btn-primary">Delete</button>
+      <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
+        <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
+      </ul>
+
+      <form @submit.prevent="updateJournal" class="space-y-6">
+        <div>
+          <label class="block font-medium mb-1">Description</label>
+          <textarea
+            v-model="journal.description"
+            rows="5"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          ></textarea>
+        </div>
+
+        <div>
+          <label class="block font-medium mb-1">Image URL</label>
+          <input
+            v-model="journal.image_url"
+            type="text"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label class="block font-medium mb-1">Video URL</label>
+          <input
+            v-model="journal.video_url"
+            type="text"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label class="block font-medium mb-1">Health Routines</label>
+          <textarea
+            v-model="journal.health_routines"
+            rows="4"
+            class="w-full border border-gray-300 rounded px-3 py-2"
+          ></textarea>
+        </div>
+
+        <div v-if="journal.metrics && Object.keys(journal.metrics).length">
+          <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">Metrics</h4>
+          <div class="space-y-3">
+            <div
+              v-for="metric in Object.keys(journal.metrics)"
+              :key="metric"
+              class="flex flex-col"
+            >
+              <label class="text-sm font-medium text-gray-700 mb-1">{{
+                metric
+              }}</label>
+              <input
+                v-model="journal.metrics[metric]"
+                type="text"
+                class="w-full border border-gray-300 rounded px-3 py-2"
+              />
             </div>
           </div>
         </div>
-      </div>
-    </section>
-  </div>
+
+        <div class="flex gap-4 pt-4">
+          <button
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Update
+          </button>
+
+          <button
+            type="button"
+            @click="destroyJournal"
+            class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+          >
+            Delete
+          </button>
+        </div>
+      </form>
+    </div>
+  </section>
 </template>
 
-<script>
-import axios from "axios";
+<script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import axios from "@/lib/axios";
 
-export default {
-  data: function() {
-    return {
-      journal: {},
-      errors: [],
-    };
-  },
-  created: function() {
-    axios.get("/api/journals/" + this.$route.params.id).then(response => {
-      console.log("journals show", response);
-      this.journal = response.data;
+const route = useRoute();
+const router = useRouter();
+
+const journal = ref({});
+const errors = ref([]);
+
+onMounted(() => {
+  axios.get(`/api/journals/${route.params.id}`).then(response => {
+    journal.value = response.data;
+  });
+});
+
+function updateJournal() {
+  const params = {
+    description: journal.value.description,
+    image_url: journal.value.image_url,
+    video_url: journal.value.video_url,
+    health_routines: journal.value.health_routines,
+    metrics: journal.value.metrics
+  };
+
+  axios
+    .patch(`/api/journals/${journal.value.id}`, params)
+    .then(() => {
+      router.push(`/journals/${journal.value.id}`);
+    })
+    .catch(error => {
+      console.log("journals update error", error.response);
+      errors.value = error.response?.data?.errors || ["Update failed."];
     });
-  },
-  methods: {
-    updateJournal: function(journal) {
-      var params = {
-        description: journal.description,
-        image_url: journal.image_url,
-        video_url: journal.video_url,
-        health_routines: journal.health_routines,
-        metrics: journal.metrics,
-      };
-      console.log(`!!!!${journal.metrics}`);
-      // metrics.forEach(ele => {
-      //   let key = ele.name;
-      //   let value = ele.value;
-      //   params.metrics[key] = value;
-      // });
-      axios
-        .patch(`/api/journals/${this.journal.id}`, params)
-        .then(response => {
-          console.log("journals update", response);
-          this.$router.push(`/journals/${this.journal.id}`);
-        })
-        .catch(error => {
-          console.log("journals create error", error.response);
-          this.errors = error.response.data.errors;
-        });
-    },
-    destroyJournal: function() {
-      axios.delete(`/api/journals/${this.journal.id}`).then(() => {
-        console.log("journal successfully destroyed");
-        this.$router.push(`/journals`);
-      });
-    },
-  },
-};
+}
+
+function destroyJournal() {
+  axios.delete(`/api/journals/${journal.value.id}`).then(() => {
+    router.push("/journals");
+  });
+}
 </script>
