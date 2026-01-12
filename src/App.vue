@@ -7,14 +7,14 @@
         <h1 class="text-2xl font-bold mb-2 sm:mb-0">Health Monitoring App</h1>
 
         <div class="flex space-x-4">
-          <router-link v-if="isLoggedIn()" to="/logout" class="hover:underline">
+          <router-link v-if="isLoggedIn" to="/logout" class="hover:underline">
             Logout
           </router-link>
-          <router-link v-if="!isLoggedIn()" to="/login" class="hover:underline">
+          <router-link v-if="!isLoggedIn" to="/login" class="hover:underline">
             Login
           </router-link>
           <router-link
-            v-if="!isLoggedIn()"
+            v-if="!isLoggedIn"
             to="/signup"
             class="hover:underline"
           >
@@ -24,7 +24,7 @@
       </div>
 
       <nav
-        v-if="isLoggedIn()"
+        v-if="isLoggedIn"
         class="bg-blue-700 text-white border-t border-blue-600"
       >
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap gap-6 text-sm">
@@ -50,12 +50,9 @@
   </div>
 </template>
 
-<script>
-export default {
-  methods: {
-    isLoggedIn() {
-      return !!localStorage.getItem("jwt");
-    }
-  }
-};
+<script setup>
+import { useAuth } from "@/lib/auth";
+
+const { isLoggedIn } = useAuth();
 </script>
+

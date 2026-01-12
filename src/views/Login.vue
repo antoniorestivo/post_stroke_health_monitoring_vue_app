@@ -7,7 +7,7 @@
         Login to your account
       </h2>
 
-      <form @submit.prevent="login" class="space-y-4">
+      <form @submit.prevent="completeLogin" class="space-y-4">
         <div>
           <label
             for="email"
@@ -70,8 +70,9 @@ const password = ref("");
 const errors = ref([]);
 
 import axios, { setAuthToken } from "@/lib/axios";
+import { login } from "@/lib/auth";
 
-function login() {
+function completeLogin() {
   axios
     .post(
       "/api/sessions",
@@ -82,8 +83,8 @@ function login() {
     )
     .then(response => {
       const token = response.data.jwt;
-      localStorage.setItem("jwt", token);
-      setAuthToken(token); // ✅ update the instance header
+      login(token);
+      setAuthToken(token);
       router.push("/users/me");
     })
     .catch(error => {

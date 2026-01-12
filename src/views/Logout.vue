@@ -4,12 +4,13 @@
 </template>
 
 <script>
-import axios from "axios";
+import axios from "@/lib/axios";
+import { logout } from "@/lib/auth";
 
 export default {
-  created: function() {
+  created() {
     delete axios.defaults.headers.common["Authorization"];
-    localStorage.removeItem("jwt");
+    logout();
     this.$router.push("/");
   }
 };
