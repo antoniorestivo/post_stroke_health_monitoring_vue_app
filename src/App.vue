@@ -37,6 +37,9 @@
           <router-link to="/journals" class="hover:underline"
             >Journals</router-link
           >
+          <router-link to="/users/me/dashboard" class="hover:underline"
+            >Dashboard</router-link
+          >
           <router-link to="/users/me" class="hover:underline"
             >User Profile</router-link
           >

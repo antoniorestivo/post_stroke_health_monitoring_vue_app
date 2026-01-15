@@ -29,6 +29,7 @@ import ChartsIndex from '../views/ChartsIndex.vue'
 import ChartsNew from '../views/ChartsNew.vue'
 import ChartsUpdate from '../views/ChartsUpdate.vue'
 import TreatmentsAll from '../views/TreatmentsAll.vue'
+import Dashboard from '../views/Dashboard.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -60,7 +61,8 @@ const routes = [
   { path: '/users/:id/charts/:chart_id', name: 'charts-show', component: ChartsShow },
   { path: '/users/:id/charts', name: 'charts-index', component: ChartsIndex },
   { path: '/users/:id/charts/:chart_id/edit', name: 'charts-update', component: ChartsUpdate },
-  { path: '/treatments', name: 'treatments-all', component: TreatmentsAll }
+  { path: '/treatments', name: 'treatments-all', component: TreatmentsAll },
+  { path: '/users/:id/dashboard', name: 'dashboard', component: Dashboard }
 ];
 
 const router = createRouter({
