@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import axios from "@/lib/axios";
+import axios, { setAuthToken } from "@/lib/axios";
 import { login } from "@/lib/auth";
 import { useRouter } from "vue-router";
 
@@ -27,6 +27,8 @@ async function tryDemo() {
   const token = response.data.jwt;
 
   login(token);
+  setAuthToken(token);
+
   router.push("/users/me/dashboard");
 }
 </script>
