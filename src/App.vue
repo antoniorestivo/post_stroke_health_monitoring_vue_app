@@ -32,7 +32,7 @@
             >Treatments</router-link
           >
           <router-link to="/conditions" class="hover:underline"
-            >Patient Conditions</router-link
+            >Conditions</router-link
           >
           <router-link to="/journals" class="hover:underline"
             >Journals</router-link

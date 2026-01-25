@@ -1,34 +1,38 @@
 <template>
   <section class="min-h-screen bg-gray-100 py-10 px-4">
     <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
-      <h3 class="text-2xl font-bold text-gray-800">Update Journal Template</h3>
-
-      <!-- Tooltip Block -->
       <div class="flex items-center space-x-2">
-        <p class="text-gray-700">
-          Input the health metrics you would like to track
-        </p>
-        <div class="relative inline-block">
-          <img
+        <h3 class="text-2xl font-bold text-gray-800">
+          Update Journal Template
+        </h3>
+        <!-- Tooltip Block -->
+        <img
             src="https://www.shutterstock.com/image-vector/info-information-help-tooltip-icon-260nw-1265320249.jpg"
             alt="Info"
             class="w-4 h-4 cursor-pointer"
             @mouseover="tooltipVisible = true"
             @mouseleave="tooltipVisible = false"
-          />
-          <div
-            v-if="tooltipVisible"
-            class="absolute left-full top-0 ml-2 w-64 text-xs text-white bg-black p-2 rounded shadow z-50"
-          >
-            Here are some health metrics examples: Blood Pressure, Heart Rate,
-            Weight, etc. The unit name describes what its measurement(s) are.
-            Weight, for example, can have a unit of pounds (lb) or kilograms
-            (kg). Unit type can be string (for text) or numeric (for numbers).
-            The warning threshold defines the point when the health metric
-            becomes concerning.
-          </div>
-        </div>
+        />
       </div>
+      <p class="text-gray-700">
+        Choose what you want to pay attention to each day. Your setup will show up as health metrics to track in your
+        journal entries.
+      </p>
+      <p
+          v-if="tooltipVisible"
+          class="text-sm bg-gray-800 text-white p-3 rounded max-w-md leading-relaxed"
+      >
+        Each field becomes a question in your daily journal.
+        <br /><br />
+        <strong>Examples:</strong>
+        <ul class="list-disc list-inside mt-1">
+          <li><strong>Sleep Hours</strong> – how long you slept</li>
+          <li><strong>Energy Level</strong> – how you felt during the day</li>
+          <li><strong>Exercise Intensity</strong> – how hard you worked out</li>
+        </ul>
+        <br />
+        Warning thresholds are optional. They simply help highlight days that might need extra attention.
+      </p>
 
       <div v-if="message" class="text-green-600">{{ message }}</div>
       <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
@@ -42,54 +46,69 @@
           :key="index"
           class="border p-4 bg-gray-50 rounded space-y-2"
         >
-          <div class="flex flex-col sm:flex-row sm:gap-4">
-            <div class="flex-1">
-              <label class="font-medium text-sm">Metric Name</label>
-              <input
-                v-model="metric.metric_name"
-                class="w-full border rounded px-3 py-2"
-                type="text"
-              />
+          <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm space-y-4">
+            <div class="text-med font-bold text-gray-600">
+              Metric {{ index + 1 }}
+            </div>
+            <!-- First row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Column 1 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">Metric Name</label>
+                <input
+                    v-model="metric.metric_name"
+                    type="text"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              <!-- Column 2 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">Data Type</label>
+                <input
+                    v-model="metric.metric_data_type"
+                    type="text"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
             </div>
 
-            <div class="flex-1">
-              <label class="font-medium text-sm">Data Type</label>
-              <input
-                v-model="metric.metric_data_type"
-                class="w-full border rounded px-3 py-2"
-                type="text"
-              />
-            </div>
-          </div>
+            <!-- Second row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Column 1 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">Unit Name</label>
+                <input
+                    v-model="metric.metric_unit_name"
+                    type="text"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
 
-          <div class="flex flex-col sm:flex-row sm:gap-4">
-            <div class="flex-1">
-              <label class="font-medium text-sm">Unit Name</label>
-              <input
-                v-model="metric.metric_unit_name"
-                class="w-full border rounded px-3 py-2"
-                type="text"
-              />
+              <!-- Column 2 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">Warning Threshold</label>
+                <input
+                    v-model="metric.warning_threshold"
+                    type="text"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
             </div>
 
-            <div class="flex-1">
-              <label class="font-medium text-sm">Warning Threshold</label>
-              <input
-                v-model="metric.warning_threshold"
-                class="w-full border rounded px-3 py-2"
-                type="text"
-              />
+            <div class="text-right">
+              <button
+                  type="button"
+                  @click="removeMetricField(index)"
+                  class="text-red-600 text-sm hover:underline"
+              >
+                Delete Field
+              </button>
             </div>
-          </div>
-
-          <div class="text-right">
-            <button
-              type="button"
-              @click="removeMetricField(index)"
-              class="text-red-600 text-sm hover:underline"
-            >
-              Delete Field
-            </button>
           </div>
         </div>
 
@@ -106,7 +125,7 @@
         <div>
           <button
             type="submit"
-            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
           >
             Update
           </button>
