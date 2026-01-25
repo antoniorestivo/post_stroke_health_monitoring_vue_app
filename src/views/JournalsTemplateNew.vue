@@ -3,7 +3,8 @@
     <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
       <div class="flex items-center space-x-2">
         <h2 class="text-lg font-semibold text-gray-800">
-          Input the health metrics you would like to track.
+          Choose what you want to pay attention to each day. Your setup will show up as health metrics to track in your
+          journal entries.
         </h2>
         <img
           src="https://www.shutterstock.com/image-vector/info-information-help-tooltip-icon-260nw-1265320249.jpg"
@@ -13,66 +14,121 @@
           @mouseleave="tooltipVisible = false"
         />
       </div>
-
+      <p> These are the questions your journal will ask each time you log an entry.
+        You can change this later, and it will only affect future entries.
+      </p>
       <p
-        v-if="tooltipVisible"
-        class="text-sm bg-gray-800 text-white p-2 rounded max-w-md"
+          v-if="tooltipVisible"
+          class="text-sm bg-gray-800 text-white p-3 rounded max-w-md leading-relaxed"
       >
-        Here are some health metrics examples: Blood Pressure, Heart Rate,
-        Weight, etc. The unit name describes what its measurement(s) are.
-        Weight, for example, can have a unit of pounds (lb) or kilograms (kg).
-        Unit type can be string (for text) or numeric (for numbers). The warning
-        threshold indicates a value that defines the point when the health
-        metric is of particular concern.
+        Each field becomes a question in your daily journal.
+        <br /><br />
+        <strong>Examples:</strong>
+        <ul class="list-disc list-inside mt-1">
+          <li><strong>Sleep Hours</strong> – how long you slept</li>
+          <li><strong>Energy Level</strong> – how you felt during the day</li>
+          <li><strong>Exercise Intensity</strong> – how hard you worked out</li>
+        </ul>
+        <br />
+        Warning thresholds are optional. They simply help highlight days that might need extra attention.
       </p>
 
-      <p class="text-sm text-gray-500 mt-2">
+      <hr>
+      <p class="text-xs text-gray-500 mt-2">
         This will pre-fill the form with a common setup. You can edit anything before submitting.
       </p>
 
-      <div class="mb-4 space-x-2">
+      <div class="mb-4 space-x-2 text-xs">
         <button
             type="button"
             @click="applyPreset(basicHealthPreset)"
-            class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition"
+            class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700 transition"
         >
-          Use a Basic Daily Health Template
+          Start with a common daily health setup
         </button>
       </div>
+      <hr>
 
       <form @submit.prevent="createJournalTemplate" class="space-y-4">
         <div
           v-for="(field, index) in metricFields"
           :key="index"
-          class="border p-4 rounded bg-gray-50 space-y-2"
+          class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm space-y-3"
         >
-          <label class="block font-medium">Field {{ index + 1 }} Name</label>
-          <input
-            type="text"
-            v-model="field.name"
-            class="w-full border rounded px-3 py-2"
-          />
+          <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm space-y-4">
+            <div class="text-med font-bold text-gray-600">
+              Metric {{ index + 1 }}
+            </div>
+            <!-- First row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Column 1 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">
+                  What do you want to track?
+                </label>
+                <p class="text-xs text-gray-500">
+                  For example: Weight, Sleep Hours, Energy Level
+                </p>
+                <input
+                    type="text"
+                    v-model="field.name"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
 
-          <label class="block font-medium">Unit</label>
-          <input
-            type="text"
-            v-model="field.unit"
-            class="w-full border rounded px-3 py-2"
-          />
+              <!-- Column 2 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">
+                  How is it measured?
+                </label>
+                <p class="text-xs text-gray-500">
+                  For example: pounds, hours, scale 1–5
+                </p>
+                <input
+                    type="text"
+                    v-model="field.unit"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
 
-          <label class="block font-medium">Data Type</label>
-          <input
-            type="text"
-            v-model="field.dataType"
-            class="w-full border rounded px-3 py-2"
-          />
+            <!-- Second row -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Column 1 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">
+                  What kind of value is this?
+                </label>
+                <p class="text-xs text-gray-500">
+                  Usually a number, but text is fine too
+                </p>
+                <input
+                    type="text"
+                    v-model="field.dataType"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
 
-          <label class="block font-medium">Warning Threshold</label>
-          <input
-            type="text"
-            v-model="field.warningThreshold"
-            class="w-full border rounded px-3 py-2"
-          />
+              <!-- Column 2 -->
+              <div class="space-y-1">
+                <label class="block font-medium text-gray-700">
+                  When should this stand out? (optional)
+                </label>
+                <p class="text-xs text-gray-500">
+                  e.g. "200" (Leave blank if you don’t want alerts)
+                </p>
+                <input
+                    type="text"
+                    v-model="field.warningThreshold"
+                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+            </div>
+          </div>
         </div>
 
         <button
@@ -173,5 +229,4 @@ function applyPreset(preset) {
     warningThreshold: field.warningThreshold
   }));
 }
-
 </script>
