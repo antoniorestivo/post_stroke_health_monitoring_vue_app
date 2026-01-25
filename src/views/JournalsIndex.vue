@@ -3,12 +3,14 @@
     <div class="max-w-7xl mx-auto space-y-8">
       <!-- Actions -->
       <div class="text-center space-y-4">
-        <router-link
-          to="/journals/new"
-          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-        >
-          Create New Journal
-        </router-link>
+        <div v-if="template">
+          <router-link
+            to="/journals/new"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Create New Journal
+          </router-link>
+        </div>
 
         <div v-if="!template">
           <router-link
@@ -123,6 +125,7 @@ function fetchJournals(page) {
     })
     .then(response => {
       const data = typeof response.data === 'string' ? JSON.parse(response.data) : response.data
+      console.log(data);
       journals.value = data.journals
       template.value = data.template
       totalRecords.value = data.total_records

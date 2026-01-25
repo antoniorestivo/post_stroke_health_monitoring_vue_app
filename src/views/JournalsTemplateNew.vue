@@ -26,6 +26,20 @@
         metric is of particular concern.
       </p>
 
+      <p class="text-sm text-gray-500 mt-2">
+        This will pre-fill the form with a common setup. You can edit anything before submitting.
+      </p>
+
+      <div class="mb-4 space-x-2">
+        <button
+            type="button"
+            @click="applyPreset(basicHealthPreset)"
+            class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300 transition"
+        >
+          Use a Basic Daily Health Template
+        </button>
+      </div>
+
       <form @submit.prevent="createJournalTemplate" class="space-y-4">
         <div
           v-for="(field, index) in metricFields"
@@ -100,6 +114,27 @@ const metricFields = ref([
   }
 ]);
 
+const basicHealthPreset = [
+  {
+    name: "Sleep Hours",
+    unit: "hours",
+    dataType: "number",
+    warningThreshold: 6.0
+  },
+  {
+    name: "Energy Level",
+    unit: "scale_1_5",
+    dataType: "number",
+    warningThreshold: 2
+  },
+  {
+    name: "Exercise Intensity",
+    unit: "scale_0_3",
+    dataType: "number",
+    warningThreshold: 0
+  }
+];
+
 function addField() {
   metricFields.value.push({
     name: "",
@@ -129,4 +164,14 @@ function createJournalTemplate() {
       console.error("Template creation error:", error.response);
     });
 }
+
+function applyPreset(preset) {
+  metricFields.value = preset.map(field => ({
+    name: field.name,
+    unit: field.unit,
+    dataType: field.dataType,
+    warningThreshold: field.warningThreshold
+  }));
+}
+
 </script>
