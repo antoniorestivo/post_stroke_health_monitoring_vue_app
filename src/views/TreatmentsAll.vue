@@ -1,55 +1,95 @@
 <template>
-  <section class="min-h-screen bg-gray-100 py-10 px-4">
+  <section>
     <div class="max-w-6xl mx-auto space-y-10">
-      <h1 class="text-center text-3xl font-bold text-gray-800">
-        Conditions and Treatments
-      </h1>
 
+      <!-- Header -->
+      <div class="space-y-2">
+        <h1 class="text-2xl font-semibold text-gray-800">
+          Treatments across your conditions
+        </h1>
+        <p class="text-sm text-gray-600 max-w-2xl">
+          Review all treatments you’ve tried or are trying, grouped by the conditions they were meant to address.
+        </p>
+      </div>
+
+      <!-- Condition groups -->
       <div
-        v-for="(condition, index) in conditionTreatments"
-        :key="condition.id"
-        class="space-y-6"
+          v-for="condition in conditionTreatments"
+          :key="condition.id"
+          class="space-y-4"
       >
-        <!-- Condition Card -->
-        <div class="border border-black rounded-md p-4 bg-white shadow">
-          <h3 class="text-lg font-semibold text-gray-800">Condition</h3>
-          <p class="text-md text-gray-700 font-semibold">
+        <!-- Condition header -->
+        <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm space-y-1">
+          <h2 class="text-lg font-semibold text-gray-800">
             {{ condition.name }}
+          </h2>
+          <p class="text-sm text-gray-600">
+            {{ condition.description }}
           </p>
-          <p class="text-sm text-gray-600">{{ condition.description }}</p>
         </div>
 
-        <!-- Treatments Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
-            v-for="(treatment, tIndex) in condition.treatments"
-            :key="treatment.id"
-            class="bg-white rounded-lg shadow p-4 space-y-2"
-          >
-            <p class="text-sm text-gray-500">
-              Created {{ relativeDate(treatment.created_at) }}
-            </p>
-
-            <h6 class="text-md font-semibold text-gray-800">
-              Treatment #{{ tIndex + 1 }}
-            </h6>
-
-            <p class="text-sm text-gray-700">{{ treatment.description }}</p>
-
-            <router-link
-              :to="`/conditions/${condition.id}/treatments/${treatment.id}`"
-              class="text-blue-600 hover:underline text-sm"
+        <!-- Treatments -->
+        <div v-if="condition.treatments.length > 0">
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+                v-for="(treatment, tIndex) in condition.treatments"
+                :key="treatment.id"
+                class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm space-y-2"
             >
-              More Info →
+              <p class="text-xs text-gray-500">
+                Started {{ relativeDate(treatment.created_at) }}
+              </p>
+
+              <p class="text-sm font-medium text-gray-700">
+                Treatment attempt #{{ tIndex + 1 }}
+              </p>
+
+              <p class="text-sm text-gray-600 line-clamp-3">
+                {{ treatment.description }}
+              </p>
+
+              <router-link
+                  :to="`/conditions/${condition.id}/treatments/${treatment.id}`"
+                  class="text-blue-600 hover:underline text-sm"
+              >
+                View details →
+              </router-link>
+            </div>
+          </div>
+
+          <!-- Add another treatment -->
+          <div class="pt-4">
+            <router-link
+                :to="`/conditions/${condition.id}/treatments/new`"
+                class="inline-block text-sm text-blue-600 hover:underline"
+            >
+              + Add another treatment
             </router-link>
           </div>
         </div>
 
-        <!-- Divider between sections -->
-        <hr
-          v-if="index < conditionTreatments.length - 1"
-          class="border-t-2 border-black my-8"
-        />
+        <!-- Empty state: no treatments -->
+        <div
+            v-else
+            class="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-6 text-center space-y-3"
+        >
+          <h3 class="text-sm font-semibold text-gray-700">
+            No treatments added yet
+          </h3>
+
+          <p class="text-sm text-gray-600 max-w-md mx-auto">
+            Treatments represent specific approaches you’ve tried to improve or manage this condition.
+            Add one to start tracking what you’ve done and how it worked.
+          </p>
+
+          <router-link
+              :to="`/conditions/${condition.id}/treatments/new`"
+              class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+          >
+            Add your first treatment
+          </router-link>
+        </div>
+
       </div>
     </div>
   </section>

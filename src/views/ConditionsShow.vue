@@ -1,61 +1,89 @@
 <template>
   <section class="min-h-screen bg-gray-100 py-10 px-4">
-    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
-      <h2 class="text-2xl font-bold text-gray-800">
-        {{ condition.name }} — recorded {{ relativeDate(condition.created_at) }}
-      </h2>
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-8">
 
-      <p class="text-lg text-gray-700">
-        {{
-          condition.support
-            ? "This condition needs outside support."
-            : "This condition does not currently need outside support."
-        }}
-      </p>
-
-      <div v-if="condition.image_url">
-        <img
-          :src="condition.image_url"
-          alt="Condition image"
-          class="w-full rounded-lg shadow"
-        />
+      <!-- Header -->
+      <div class="space-y-1">
+        <h1 class="text-2xl font-semibold text-gray-800">
+          {{ condition.name }}
+        </h1>
+        <p class="text-sm text-gray-500">
+          Added {{ relativeDate(condition.created_at) }}
+        </p>
       </div>
 
-      <div v-if="condition.video_url">
-        <h4 class="text-md font-semibold text-gray-800 mt-4">Video URL</h4>
-        <p class="text-sm text-blue-600 break-all">{{ condition.video_url }}</p>
+      <!-- Description -->
+      <div v-if="condition.description" class="text-gray-700 text-sm">
+        {{ condition.description }}
       </div>
 
-      <div class="pt-6 space-x-4 text-sm">
-        <router-link to="/conditions" class="text-blue-600 hover:underline">
-          Back to all conditions
+      <!-- Status -->
+      <div class="bg-gray-50 rounded-lg p-4 text-sm space-y-1">
+        <p class="text-gray-700">
+          <strong>Support status:</strong>
+          {{ condition.support ? "Requires extra support" : "Self-managed" }}
+        </p>
+        <p class="text-xs text-gray-500">
+          This indicates whether this condition affects daily functioning or requires help from others.
+        </p>
+      </div>
+
+      <!-- Primary actions -->
+      <div class="flex flex-wrap gap-4 pt-2">
+        <router-link
+            :to="`/conditions/${condition.id}/treatments`"
+            class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
+        >
+          View treatments & progress
         </router-link>
-
-        |
 
         <router-link
-          :to="`/conditions/${condition.id}/edit`"
-          class="text-blue-600 hover:underline"
+            :to="`/conditions/${condition.id}/edit`"
+            class="text-blue-600 hover:underline text-sm self-center"
         >
-          Update Condition
-        </router-link>
-
-        |
-
-        <router-link
-          :to="`/conditions/${condition.id}/treatments`"
-          class="text-blue-600 hover:underline"
-        >
-          Treatments for Condition
+          Edit condition details
         </router-link>
       </div>
 
-      <div class="pt-4">
+      <!-- Optional media -->
+      <div v-if="condition.image_url || condition.video_url" class="pt-4 border-t space-y-4">
+        <h2 class="text-sm font-semibold text-gray-700">
+          Additional details
+        </h2>
+
+        <div v-if="condition.image_url">
+          <img
+              :src="condition.image_url"
+              alt="Condition image"
+              class="w-full rounded-lg shadow"
+          />
+        </div>
+
+        <div v-if="condition.video_url" class="text-sm">
+          <p class="text-gray-700 font-medium">Video reference</p>
+          <a
+              :href="condition.video_url"
+              target="_blank"
+              class="text-blue-600 hover:underline break-all"
+          >
+            {{ condition.video_url }}
+          </a>
+        </div>
+      </div>
+
+      <!-- Footer actions -->
+      <div class="pt-6 border-t space-y-4">
+        <div class="text-sm space-x-4">
+          <router-link to="/conditions" class="text-blue-600 hover:underline">
+            Back to all conditions
+          </router-link>
+        </div>
+
         <button
-          @click="destroyCondition"
-          class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+            @click="destroyCondition"
+            class="text-sm text-red-600 hover:underline"
         >
-          Delete
+          Delete this condition
         </button>
       </div>
     </div>
