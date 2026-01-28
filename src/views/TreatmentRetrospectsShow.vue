@@ -1,51 +1,71 @@
 <template>
   <section class="min-h-screen bg-gray-100 py-10 px-4">
-    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
-      <div>
-        <h2 class="text-2xl font-bold text-gray-800 mb-2">
-          Treatment Retrospect
-        </h2>
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-8">
+
+      <!-- Header -->
+      <div class="space-y-1">
+        <h1 class="text-2xl font-semibold text-gray-800">
+          Treatment check-in
+        </h1>
         <p class="text-sm text-gray-500">
-          Created {{ relativeDate(treatmentRetrospect.created_at) }}
+          Logged {{ relativeDate(treatmentRetrospect.created_at) }}
         </p>
       </div>
 
-      <div>
-        <h4 class="text-lg font-semibold text-gray-700">Feedback</h4>
-        <p class="text-gray-800">{{ treatmentRetrospect.feedback }}</p>
+      <!-- Treatment context -->
+      <div class="bg-gray-50 rounded-lg p-4 space-y-1">
+        <p class="text-sm text-gray-500">
+          Treatment being evaluated
+        </p>
+        <p class="text-sm font-medium text-gray-800">
+          {{ treatment.description }}
+        </p>
       </div>
 
-      <div>
-        <h4 class="text-lg font-semibold text-gray-700">Rating (1–10)</h4>
-        <p class="text-gray-800">{{ treatmentRetrospect.rating }}</p>
+      <!-- Rating -->
+      <div class="bg-gray-50 rounded-lg p-4 space-y-1">
+        <p class="text-sm text-gray-600">
+          Overall effectiveness
+        </p>
+        <p class="text-3xl font-semibold text-gray-800">
+          {{ treatmentRetrospect.rating }}
+          <span class="text-base font-normal text-gray-500">/ 10</span>
+        </p>
       </div>
 
-      <div
-        class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0"
-      >
-        <router-link
-          :to="
-            `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects`
-          "
-          class="text-blue-600 hover:underline"
-        >
-          ← Back to All Retrospects
-        </router-link>
+      <!-- Reflection -->
+      <div class="space-y-2">
+        <h2 class="text-sm font-semibold text-gray-700">
+          Reflection
+        </h2>
+        <p class="text-sm text-gray-800 leading-relaxed">
+          {{ treatmentRetrospect.feedback }}
+        </p>
+      </div>
 
-        <router-link
-          :to="
-            `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${treatmentRetrospect.id}/edit`
-          "
-          class="text-blue-600 hover:underline"
-        >
-          Edit Retrospect
-        </router-link>
+      <!-- Actions -->
+      <div class="pt-4 border-t border-gray-200 space-y-4">
+        <div class="flex flex-wrap gap-4 text-sm">
+          <router-link
+            :to="retrospectsIndexPath"
+            class="text-blue-600 hover:underline"
+          >
+            ← Back to check-ins
+          </router-link>
+
+          <router-link
+            :to="editCheckInPath"
+            class="text-blue-600 hover:underline"
+          >
+            Edit this check-in
+          </router-link>
+        </div>
 
         <button
           @click="destroyTreatmentRetrospect"
-          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+          class="text-sm text-red-600 hover:underline"
         >
-          Delete
+          Delete this check-in
         </button>
       </div>
     </div>
@@ -60,13 +80,25 @@ import moment from "moment";
 
 const route = useRoute();
 const router = useRouter();
+const treatment = ref({});
 
 const treatmentRetrospect = ref({});
+const retrospectsIndexPath =
+  `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects`;
+
+const editCheckInPath =
+  `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${treatmentRetrospect.value.id}/edit`;
 
 onMounted(() => {
   const url = `/api/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${route.params.retrospect_id}`;
   axios.get(url).then(response => {
-    treatmentRetrospect.value = response.data;
+    const data =
+      typeof response.data === "string"
+        ? JSON.parse(response.data)
+        : response.data;
+    console.log(data);
+    treatmentRetrospect.value = data.treatment_retrospect
+    treatment.value = data.treatment
   });
 });
 

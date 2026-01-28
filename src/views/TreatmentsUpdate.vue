@@ -1,29 +1,58 @@
 <template>
   <section class="min-h-screen bg-gray-100 py-10 px-4">
-    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
-      <h3 class="text-2xl font-bold text-gray-800">Update Treatment</h3>
+    <div class="max-w-3xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-8">
 
+      <!-- Header -->
+      <div class="space-y-2">
+        <h1 class="text-2xl font-semibold text-gray-800">
+          Update this treatment
+        </h1>
+        <p class="text-sm text-gray-600 max-w-2xl">
+          You can update this description if you remember more details
+          or want to clarify what you tried.
+        </p>
+      </div>
+
+      <!-- Errors -->
       <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
         <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
       </ul>
 
       <form @submit.prevent="updateTreatment" class="space-y-6">
+
+        <!-- Description -->
         <div>
-          <label class="block font-medium mb-1">Treatment Description</label>
-          <input
-            v-model="treatment.description"
-            type="text"
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
+          <label class="block text-sm font-medium text-gray-700">
+            What did you try?
+          </label>
+          <p class="text-xs text-gray-500 mb-1">
+            Update the details of the treatment, routine, medication,
+            or change you made.
+          </p>
+          <textarea
+              v-model="treatment.description"
+              rows="5"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="For example: Adjusted dosage, changed routine, extended duration, etc."
+          ></textarea>
         </div>
 
-        <div>
+        <!-- Actions -->
+        <div class="flex items-center gap-4 pt-2">
           <button
-            type="submit"
-            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+              type="submit"
+              class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
           >
-            Update
+            Save changes
           </button>
+
+          <router-link
+              :to="`/conditions/${route.params.id}/treatments/${treatment.id}`"
+              class="text-sm text-gray-600 hover:underline"
+          >
+            Cancel
+          </router-link>
         </div>
       </form>
     </div>
