@@ -54,7 +54,8 @@
           </router-link>
 
           <router-link
-            :to="editCheckInPath"
+              v-if="editCheckInPath"
+              :to="editCheckInPath"
             class="text-blue-600 hover:underline"
           >
             Edit this check-in
@@ -77,6 +78,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/lib/axios";
 import moment from "moment";
+import { computed } from "vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -86,8 +88,11 @@ const treatmentRetrospect = ref({});
 const retrospectsIndexPath =
   `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects`;
 
-const editCheckInPath =
-  `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${treatmentRetrospect.value.id}/edit`;
+const editCheckInPath = computed(() => {
+  if (!treatmentRetrospect.value?.id) return null;
+
+  return `/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${treatmentRetrospect.value.id}/edit`;
+});
 
 onMounted(() => {
   const url = `/api/conditions/${route.params.id}/treatments/${route.params.treatment_id}/treatment_retrospects/${route.params.retrospect_id}`;
