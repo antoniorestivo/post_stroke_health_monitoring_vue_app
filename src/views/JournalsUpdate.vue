@@ -1,86 +1,153 @@
 <template>
   <section class="min-h-screen bg-gray-100 py-10 px-4">
-    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
-      <h3 class="text-2xl font-bold text-gray-800">Update Journal</h3>
+    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-8">
 
+      <!-- Header -->
+      <div class="space-y-2">
+        <h1 class="text-2xl font-semibold text-gray-800">
+          Update journal entry
+        </h1>
+        <p class="text-sm text-gray-600 max-w-2xl">
+          You can update this entry if you remember more details or want to clarify
+          how the day went. Changes will apply going forward.
+        </p>
+      </div>
+
+      <!-- Previously recorded cue -->
+      <div class="bg-blue-50 rounded-lg p-4 text-sm text-blue-900">
+        This journal entry was previously recorded.
+        You can adjust any of the fields below if your memory has changed.
+      </div>
+
+      <!-- Errors -->
       <ul v-if="errors.length" class="text-red-600 text-sm list-disc pl-5">
-        <li v-for="(error, i) in errors" :key="i">{{ error }}</li>
+        <li v-for="(error, i) in errors" :key="i">
+          {{ error }}
+        </li>
       </ul>
 
-      <form @submit.prevent="updateJournal" class="space-y-6">
+      <form @submit.prevent="updateJournal" class="space-y-8">
+
+        <!-- Reflection -->
         <div>
-          <label class="block font-medium mb-1">Description</label>
+          <label class="block text-sm font-medium text-gray-700">
+            How did the day go?
+          </label>
+          <p class="text-xs text-gray-500 mb-1">
+            Update anything that feels relevant — how you felt, what stood out, or what changed.
+          </p>
           <textarea
             v-model="journal.description"
-            rows="5"
-            class="w-full border border-gray-300 rounded px-3 py-2"
+            rows="4"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 
+        <!-- Health routines -->
         <div>
-          <label class="block font-medium mb-1">Image URL</label>
-          <input
-            v-model="journal.image_url"
-            type="text"
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label class="block font-medium mb-1">Video URL</label>
-          <input
-            v-model="journal.video_url"
-            type="text"
-            class="w-full border border-gray-300 rounded px-3 py-2"
-          />
-        </div>
-
-        <div>
-          <label class="block font-medium mb-1">Health Routines</label>
+          <label class="block text-sm font-medium text-gray-700">
+            Health routines (optional)
+          </label>
+          <p class="text-xs text-gray-500 mb-1">
+            Update any routines or intentional actions you took for your health.
+          </p>
           <textarea
             v-model="journal.health_routines"
-            rows="4"
-            class="w-full border border-gray-300 rounded px-3 py-2"
+            rows="3"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 
-        <div v-if="journal.metrics && Object.keys(journal.metrics).length">
-          <h4 class="text-lg font-semibold text-gray-700 mt-4 mb-2">Metrics</h4>
-          <div class="space-y-3">
+        <!-- Optional media -->
+        <div class="space-y-4 pt-4 border-t border-gray-200">
+          <h2 class="text-sm font-semibold text-gray-700">
+            Optional details
+          </h2>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Image URL
+            </label>
+            <input
+              v-model="journal.image_url"
+              type="text"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Video URL
+            </label>
+            <input
+              v-model="journal.video_url"
+              type="text"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- Metrics -->
+        <div
+          v-if="journal.metrics && Object.keys(journal.metrics).length"
+          class="space-y-4 pt-4 border-t border-gray-200"
+        >
+          <h2 class="text-sm font-semibold text-gray-700">
+            Health metrics
+          </h2>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div
               v-for="metric in Object.keys(journal.metrics)"
               :key="metric"
-              class="flex flex-col"
+              class="bg-gray-50 rounded-lg p-3 space-y-1"
             >
-              <label class="text-sm font-medium text-gray-700 mb-1">{{
-                metric
-              }}</label>
+              <label class="text-xs font-medium text-gray-600">
+                {{ metric }}
+              </label>
               <input
                 v-model="journal.metrics[metric]"
                 type="text"
-                class="w-full border border-gray-300 rounded px-3 py-2"
+                class="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>
         </div>
 
-        <div class="flex gap-4 pt-4">
+        <!-- Actions -->
+        <div class="flex items-center gap-4 pt-4">
           <button
             type="submit"
             class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
           >
-            Update
+            Save changes
           </button>
 
-          <button
-            type="button"
-            @click="destroyJournal"
-            class="bg-red-600 text-white px-6 py-2 rounded hover:bg-red-700 transition"
+          <router-link
+            :to="`/journals/${journal.id}`"
+            class="text-sm text-gray-600 hover:underline"
           >
-            Delete
-          </button>
+            Cancel
+          </router-link>
         </div>
       </form>
+
+      <!-- Destructive action -->
+      <div class="pt-6 border-t border-gray-200">
+        <button
+          type="button"
+          @click="destroyJournal"
+          class="text-sm text-red-600 hover:underline"
+        >
+          Delete this journal entry
+        </button>
+      </div>
+
     </div>
   </section>
 </template>

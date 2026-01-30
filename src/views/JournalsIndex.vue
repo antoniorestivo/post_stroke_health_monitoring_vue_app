@@ -1,75 +1,90 @@
 <template>
   <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <h1 class="text-2xl font-semibold text-gray-800 text-center mb-4">
+      Journal entries
+    </h1>
     <div class="max-w-7xl mx-auto space-y-8">
       <!-- Actions -->
-      <div class="text-center space-y-4">
-        <div v-if="template">
-          <router-link
+      <div class="flex justify-center gap-4 flex-wrap">
+        <router-link
+            v-if="template"
             to="/journals/new"
             class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
-            Create New Journal
-          </router-link>
-        </div>
+        >
+          Add journal entry
+        </router-link>
 
-        <div v-if="!template">
-          <router-link
+        <router-link
+            v-if="template"
+            :to="`/journals/template/${template.id}/edit`"
+            class="text-blue-600 hover:underline self-center"
+        >
+          Edit journal template
+        </router-link>
+
+        <router-link
+            v-if="!template"
             to="/journals/template/new"
             class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
-            Create Journal Template
-          </router-link>
-        </div>
-        <div v-else>
-          <router-link
-            :to="`/journals/template/${template.id}/edit`"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-          >
-            Edit Journal Template
-          </router-link>
-        </div>
+        >
+          Set up journal template
+        </router-link>
       </div>
 
       <!-- Journals Grid -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
           v-for="journal in journals"
           :key="journal.id"
-          class="bg-white shadow rounded-lg p-4 space-y-2"
+          class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm space-y-4"
         >
+          <!-- Date -->
           <p class="text-sm text-gray-500">
             {{ relativeDate(journal.created_at) }}
           </p>
 
-          <h6 class="font-semibold text-gray-800">Description:</h6>
-          <p class="text-gray-700">{{ journal.description }}</p>
+          <!-- Description -->
+          <p class="text-gray-800 text-sm line-clamp-3">
+            {{ journal.description || 'No description provided.' }}
+          </p>
 
-          <div v-if="journal.image_url">
-            <img :src="journal.image_url" alt="Journal image" class="w-full h-auto rounded" />
+          <!-- Image (optional, restrained) -->
+          <div v-if="journal.image_url" class="pt-2">
+            <img
+              :src="journal.image_url"
+              alt="Journal image"
+              class="w-full h-40 object-cover rounded-md"
+            />
           </div>
 
-          <h6 class="font-semibold mt-2 text-gray-800">Video URL:</h6>
-          <p class="text-sm break-all text-blue-600">{{ journal.video_url }}</p>
-
-          <h6 class="font-semibold mt-2 text-gray-800">Health Routines:</h6>
-          <p class="text-sm">{{ journal.health_routines }}</p>
-
-          <h6 class="font-semibold mt-2 text-gray-800">Metrics:</h6>
-          <div class="space-y-1">
-            <div v-for="metric in Object.keys(journal.metrics)" :key="metric">
-              <p class="text-sm font-medium text-gray-600">{{ metric }}:</p>
-              <p class="text-sm text-gray-800">
-                {{ journal.enriched_metrics?.[metric] ?? '—' }}
-              </p>
+          <!-- Metrics summary -->
+          <div class="pt-2">
+            <h6 class="text-xs font-semibold text-gray-600 mb-2">
+              Metrics
+            </h6>
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <div
+                v-for="metric in Object.keys(journal.metrics)"
+                :key="metric"
+                class="bg-gray-50 rounded px-2 py-1 text-xs"
+              >
+                <span class="font-medium text-gray-600">
+                  {{ metric }}
+                </span>
+                <span class="text-gray-800 ml-1">
+                  {{ journal.enriched_metrics?.[metric] ?? '—' }}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div class="mt-4">
+          <!-- CTA -->
+          <div class="pt-2">
             <router-link
               :to="`/journals/${journal.id}`"
               class="text-blue-600 hover:underline text-sm"
             >
-              More Info →
+              View entry →
             </router-link>
           </div>
         </div>
