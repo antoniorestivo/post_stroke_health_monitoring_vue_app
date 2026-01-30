@@ -1,60 +1,80 @@
 <template>
-  <section
-    class="min-h-screen flex items-center justify-center bg-gray-100 px-4"
-  >
+  <section class="min-h-screen bg-gray-100 py-10 px-4 flex items-center justify-center">
     <div class="max-w-md w-full bg-white shadow-md rounded-xl p-6 space-y-6">
-      <h2 class="text-2xl font-bold text-center text-blue-600">
-        Login to your account
-      </h2>
 
+      <!-- Header -->
+      <div class="space-y-1 text-center">
+        <h1 class="text-2xl font-semibold text-gray-800">
+          Welcome back
+        </h1>
+        <p class="text-sm text-gray-600">
+          Sign in to continue where you left off.
+        </p>
+      </div>
+
+      <!-- Errors -->
+      <div
+        v-if="errors.length"
+        class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700 text-center"
+      >
+        <p v-for="(error, index) in errors" :key="index">
+          {{ error }}
+        </p>
+      </div>
+
+      <!-- Form -->
       <form @submit.prevent="completeLogin" class="space-y-4">
+
+        <!-- Email -->
         <div>
           <label
             for="email"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Email</label
+            class="block text-sm font-medium text-gray-700"
           >
+            Email address
+          </label>
           <input
             id="email"
             v-model="email"
             type="email"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
+        <!-- Password -->
         <div>
           <label
             for="password"
-            class="block text-sm font-medium text-gray-700 mb-1"
-            >Password</label
+            class="block text-sm font-medium text-gray-700"
           >
+            Password
+          </label>
           <input
             id="password"
             v-model="password"
             type="password"
-            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
 
-        <div>
-          <button
-            type="submit"
-            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Sign In
-          </button>
-        </div>
-
-        <div class="text-sm text-center">
-          <router-link to="/signup" class="text-blue-600 hover:underline">
-            Don't have an account? Click here.
-          </router-link>
-        </div>
-
-        <div v-if="errors.length" class="text-red-600 text-sm text-center">
-          <p v-for="(error, index) in errors" :key="index">{{ error }}</p>
-        </div>
+        <!-- Submit -->
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+        >
+          Sign in
+        </button>
       </form>
+
+      <!-- Footer -->
+      <p class="text-center text-sm text-gray-600">
+        Don’t have an account?
+        <router-link to="/signup" class="text-blue-600 hover:underline">
+          Create one
+        </router-link>
+      </p>
     </div>
   </section>
 </template>
@@ -90,7 +110,6 @@ function completeLogin() {
     .catch(error => {
       console.log(error.response);
       errors.value = ["Invalid email or password."];
-      email.value = "";
       password.value = "";
     });
 }

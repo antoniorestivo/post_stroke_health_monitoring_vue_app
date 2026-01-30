@@ -1,148 +1,160 @@
 <template>
-  <div class="signup">
-    <section class="space-ptb login">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-8 col-sm-10">
+  <section class="min-h-screen bg-gray-100 py-10 px-4">
+    <div class="max-w-md mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
 
-            <!-- =========================
-                 SIGNUP SUCCESS MESSAGE
-                 ========================= -->
-            <div
-                v-if="signupComplete"
-                class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center"
-            >
-              <h2 class="title text-blue-700 mb-3">
-                Check your email
-              </h2>
+      <!-- =========================
+           SIGNUP SUCCESS MESSAGE
+           ========================= -->
+      <div
+        v-if="signupComplete"
+        class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center space-y-3"
+      >
+        <h2 class="text-lg font-semibold text-blue-700">
+          Check your email
+        </h2>
 
-              <p class="text-gray-700 mb-4">
-                We’ve sent a verification link to
-                <strong>{{ newEmail }}</strong>.
-                <br />
-                Please click the link to activate your account before logging in.
-              </p>
+        <p class="text-sm text-gray-700">
+          We’ve sent a verification link to
+          <strong>{{ newEmail }}</strong>.
+          Please click the link to activate your account.
+        </p>
 
-              <router-link
-                  to="/login"
-                  class="text-blue-600 font-medium hover:underline"
-              >
-                Back to login
-              </router-link>
-            </div>
-
-            <!-- =========================
-                 SIGNUP FORM
-                 ========================= -->
-            <div v-else>
-              <ul
-                  class="nav nav-tabs nav-tabs-02 justify-content-center"
-                  role="tablist"
-              >
-                <li class="nav-item">
-                  <span class="nav-link active">Register</span>
-                </li>
-              </ul>
-
-              <div class="section-title mt-4">
-                <h2 class="title">Register your account</h2>
-              </div>
-
-              <form
-                  class="form-row mt-4 mb-5 align-items-center"
-                  @submit.prevent="createUser"
-              >
-                <div class="form-group col-md-6">
-                  <label>Email Address</label>
-                  <input
-                      type="email"
-                      class="form-control"
-                      v-model="newEmail"
-                      required
-                  />
-                </div>
-
-                <div class="form-group col-md-6">
-                  <label>First Name</label>
-                  <input
-                      type="text"
-                      class="form-control"
-                      v-model="firstName"
-                      required
-                  />
-                </div>
-
-                <div class="form-group col-md-6">
-                  <label>Last Name</label>
-                  <input
-                      type="text"
-                      class="form-control"
-                      v-model="lastName"
-                      required
-                  />
-                </div>
-
-                <div class="form-group col-md-6">
-                  <label>Profile Image</label>
-                  <input
-                      type="file"
-                      class="form-control"
-                      ref="profileImage"
-                  />
-                </div>
-
-                <div class="form-group col-md-6">
-                  <label>Password</label>
-                  <input
-                      type="password"
-                      class="form-control"
-                      v-model="newPassword"
-                      required
-                  />
-                </div>
-
-                <div class="form-group col-md-6">
-                  <label>Confirm Password</label>
-                  <input
-                      type="password"
-                      class="form-control"
-                      v-model="newConfirmPassword"
-                      required
-                  />
-                </div>
-
-                <div class="col-sm-6">
-                  <button
-                      type="submit"
-                      class="btn btn-primary btn-block"
-                      :disabled="loading"
-                  >
-                    {{ loading ? "Creating account..." : "Sign up" }}
-                  </button>
-                </div>
-
-                <div class="col-sm-6 mt-3 mt-sm-0">
-                  <router-link to="/login">
-                    Already registered? Log in
-                  </router-link>
-                </div>
-
-                <div
-                    v-if="errors.length"
-                    class="col-12 text-danger mt-3"
-                >
-                  <p v-for="(error, index) in errors" :key="index">
-                    {{ error }}
-                  </p>
-                </div>
-              </form>
-            </div>
-
-          </div>
-        </div>
+        <router-link
+          to="/login"
+          class="text-blue-600 hover:underline text-sm"
+        >
+          Back to login
+        </router-link>
       </div>
-    </section>
-  </div>
+
+      <!-- =========================
+           SIGNUP FORM
+           ========================= -->
+      <div v-else class="space-y-6">
+        <!-- Header -->
+        <div class="space-y-1 text-center">
+          <h1 class="text-2xl font-semibold text-gray-800">
+            Create your account
+          </h1>
+          <p class="text-sm text-gray-600">
+            It only takes a minute to get started.
+          </p>
+        </div>
+
+        <!-- Errors -->
+        <div
+          v-if="errors.length"
+          class="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700"
+        >
+          <p v-for="(error, index) in errors" :key="index">
+            {{ error }}
+          </p>
+        </div>
+
+        <form @submit.prevent="createUser" class="space-y-4">
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Email address
+            </label>
+            <input
+              type="email"
+              v-model="newEmail"
+              required
+              class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- Name -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">
+                First name
+              </label>
+              <input
+                type="text"
+                v-model="firstName"
+                required
+                class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700">
+                Last name
+              </label>
+              <input
+                type="text"
+                v-model="lastName"
+                required
+                class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              v-model="newPassword"
+              required
+              class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">
+              Confirm password
+            </label>
+            <input
+              type="password"
+              v-model="newConfirmPassword"
+              required
+              class="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+
+          <!-- Optional profile image -->
+          <div class="pt-2">
+            <label class="block text-sm font-medium text-gray-700">
+              Profile image (optional)
+            </label>
+            <input
+              type="file"
+              ref="profileImage"
+              class="mt-1 block w-full text-sm text-gray-600"
+            />
+          </div>
+
+          <!-- Actions -->
+          <div class="space-y-3 pt-4">
+            <button
+              type="submit"
+              :disabled="loading"
+              class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              {{ loading ? "Creating account…" : "Create account" }}
+            </button>
+
+            <p class="text-center text-sm text-gray-600">
+              Already have an account?
+              <router-link to="/login" class="text-blue-600 hover:underline">
+                Log in
+              </router-link>
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -181,18 +193,18 @@ export default {
       };
 
       axios
-          .post("/api/users", params)
-          .then(() => {
-            this.signupComplete = true;
-          })
-          .catch(error => {
-            this.errors =
-                error.response?.data?.errors ||
-                ["Unable to create account. Please try again."];
-          })
-          .finally(() => {
-            this.loading = false;
-          });
+        .post("/api/users", params)
+        .then(() => {
+          this.signupComplete = true;
+        })
+        .catch(error => {
+          this.errors =
+              error.response?.data?.errors ||
+              ["Unable to create account. Please try again."];
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     }
   }
 };
