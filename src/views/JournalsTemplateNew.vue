@@ -97,19 +97,44 @@
             <!-- Second row -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <!-- Column 1 -->
-              <div class="space-y-1">
+              <div class="space-y-2">
                 <label class="block font-medium text-gray-700">
                   What kind of value is this?
                 </label>
+
                 <p class="text-xs text-gray-500">
-                  Usually a number, but text is fine too
+                  This determines which charts you can create from this metric.
                 </p>
-                <input
-                    type="text"
-                    v-model="field.dataType"
-                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
+
+                <div class="space-y-1 text-sm">
+                  <label class="flex items-start gap-2">
+                    <input
+                        type="radio"
+                        value="numeric"
+                        v-model="field.dataType"
+                    />
+                    <span>
+                      <strong>Numeric</strong> — numbers you want to track or compare over time
+                      <span class="block text-xs text-gray-500">
+                        Examples: hours slept, weight, blood pressure, energy score
+                      </span>
+                    </span>
+                  </label>
+
+                  <label class="flex items-start gap-2">
+                    <input
+                      type="radio"
+                      value="categorical"
+                      v-model="field.dataType"
+                    />
+                    <span>
+                      <strong>Categorical</strong> — labels or states you want to count or group
+                      <span class="block text-xs text-gray-500">
+                        Examples: mood (“good / okay / bad”), medication taken (“yes / no”)
+                      </span>
+                    </span>
+                  </label>
+                </div>
               </div>
 
               <!-- Column 2 -->
@@ -165,7 +190,7 @@ const metricFields = ref([
   {
     name: "",
     unit: "",
-    dataType: "",
+    dataType: "numeric",
     warningThreshold: ""
   }
 ]);
@@ -174,19 +199,19 @@ const basicHealthPreset = [
   {
     name: "Sleep Hours",
     unit: "hours",
-    dataType: "number",
+    dataType: "numeric",
     warningThreshold: 6.0
   },
   {
     name: "Energy Level",
     unit: "scale_1_5",
-    dataType: "number",
+    dataType: "numeric",
     warningThreshold: 2
   },
   {
     name: "Exercise Intensity",
     unit: "scale_0_3",
-    dataType: "number",
+    dataType: "numeric",
     warningThreshold: 0
   }
 ];
@@ -195,7 +220,7 @@ function addField() {
   metricFields.value.push({
     name: "",
     unit: "",
-    dataType: "",
+    dataType: "numeric",
     warningThreshold: ""
   });
 }

@@ -47,6 +47,11 @@
               <input type="radio" value="treatment_comparison" v-model="chartMode" />
               Compare treatments
             </label>
+
+            <label class="flex items-center gap-2 text-sm">
+              <input type="radio" value="metric_frequency" v-model="chartMode" />
+              Frequency of a metric
+            </label>
           </div>
         </div>
 
@@ -119,6 +124,37 @@
           </div>
         </div>
 
+        <!-- Metric frequency -->
+        <div v-if="chartMode === 'metric_frequency'" class="space-y-4">
+          <h3 class="text-sm font-semibold text-gray-700">
+            Choose a categorical metric
+          </h3>
+
+          <p class="text-xs text-gray-500">
+            This chart shows how often each value appears across your journal entries.
+          </p>
+
+          <div v-if="categoricalMetrics.length === 0" class="text-sm text-red-600">
+            You don’t have any categorical metrics defined yet.
+            Create one in your journal template first.
+          </div>
+
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <label
+                v-for="metric in categoricalMetrics"
+                :key="metric.id"
+                class="flex items-center gap-2 text-sm"
+            >
+              <input
+                  type="radio"
+                  :value="metric.metric_name"
+                  v-model="metricOne"
+              />
+              {{ metric.metric_name }}
+            </label>
+          </div>
+        </div>
+
         <!-- Title -->
         <div>
           <label class="block text-sm font-medium text-gray-700">
@@ -165,6 +201,10 @@ const metricTwo = ref("");
 const chartMode = ref("metric");
 const selectedTreatments = ref([]);
 
+const categoricalMetrics = computed(() =>
+  metrics.value.filter(m => m.metric_data_type === "categorical")
+);
+
 watch(
   () => route.params,
   () => fetchData(),
@@ -197,24 +237,61 @@ function fetchData() {
 }
 
 function createChart() {
+  errors.value = [];
+
   const params = {
-    x_label: metricOne.value,
-    y_label: metricTwo.value,
+    chart_mode: chartMode.value,
     title: title.value,
-    options: {},
-    chart_mode: chartMode.value
+    options: {}
   };
 
-  if (chartMode.value === "treatment_comparison") {
-    if (selectedTreatments.value.length < 2) {
-      errors.value = ["Please select at least two treatments to compare."];
+  if (!title.value.trim()) {
+    errors.value.push("Please provide a chart title.");
+    return;
+  }
+
+  if (chartMode.value === "metric_over_time") {
+    if (!metricOne.value) {
+      errors.value.push("Please select a metric.");
       return;
     }
 
-    params.options.treatment_ids = selectedTreatments.value;
+    params.x_label = "Time";
+    params.y_label = metricOne.value;
   }
 
-  console.log(params);
+  if (chartMode.value === "metric_vs_metric") {
+    if (!metricOne.value || !metricTwo.value) {
+      errors.value.push("Please select two metrics to compare.");
+      return;
+    }
+
+    if (metricOne.value === metricTwo.value) {
+      errors.value.push("Please select two different metrics.");
+      return;
+    }
+
+    params.x_label = metricOne.value;
+    params.y_label = metricTwo.value;
+  }
+
+  if (chartMode.value === "metric_frequency") {
+    if (!metricOne.value) {
+      errors.value.push("Please select a metric.");
+      return;
+    }
+
+    params.x_label = metricOne.value;
+  }
+
+  if (chartMode.value === "treatment_comparison") {
+    if (selectedTreatments.value.length < 2) {
+      errors.value.push("Please select at least two treatments.");
+      return;
+    }
+
+    params.options.treatmentIds = selectedTreatments.value;
+  }
 
   axios
     .post(`/api/users/${route.params.id}/user_charts`, params)
@@ -222,7 +299,8 @@ function createChart() {
       router.push(`/users/${route.params.id}/charts`);
     })
     .catch(error => {
-      errors.value = error.response?.data?.errors || ["Chart creation failed."];
+      errors.value =
+        error.response?.data?.errors || ["Chart creation failed."];
     });
 }
 </script>

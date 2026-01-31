@@ -64,14 +64,44 @@
               </div>
 
               <!-- Column 2 -->
-              <div class="space-y-1">
-                <label class="block font-medium text-gray-700">Data Type</label>
-                <input
-                    v-model="metric.metric_data_type"
-                    type="text"
-                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
+              <div class="space-y-2">
+                <label class="block font-medium text-gray-700">
+                  What kind of value is this?
+                </label>
+
+                <p class="text-xs text-gray-500">
+                  This determines which charts can be created from this metric.
+                </p>
+
+                <div class="space-y-1 text-sm">
+                  <label class="flex items-start gap-2">
+                    <input
+                        type="radio"
+                        value="numeric"
+                        v-model="metric.metric_data_type"
+                    />
+                    <span>
+                      <strong>Numeric</strong> — values you want to track or compare over time
+                      <span class="block text-xs text-gray-500">
+                        Examples: hours slept, weight, blood pressure, energy score
+                      </span>
+                    </span>
+                  </label>
+
+                  <label class="flex items-start gap-2">
+                    <input
+                        type="radio"
+                        value="categorical"
+                        v-model="metric.metric_data_type"
+                    />
+                    <span>
+                      <strong>Categorical</strong> — labels or states you want to count or group
+                      <span class="block text-xs text-gray-500">
+                        Examples: mood (“good / okay / bad”), medication taken (“yes / no”)
+                      </span>
+                    </span>
+                  </label>
+                </div>
               </div>
             </div>
 
@@ -154,7 +184,13 @@ onMounted(() => {
   axios
     .get(`/api/journal_templates/${templateId}/edit`)
     .then(response => {
-      metrics.value = response.data.metrics || [];
+      metrics.value = (response.data.metrics || []).map(m => ({
+        ...m,
+        metric_data_type:
+          m.metric_data_type === "categorical"
+            ? "categorical"
+            : "numeric"
+      }));
     })
     .catch(error => {
       errors.value = error.response?.data?.errors || [
@@ -166,7 +202,7 @@ onMounted(() => {
 function addMetricField() {
   metrics.value.push({
     metric_name: "",
-    metric_data_type: "",
+    metric_data_type: "numeric",
     metric_unit_name: "",
     warning_threshold: ""
   });

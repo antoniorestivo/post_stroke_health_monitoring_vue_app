@@ -162,7 +162,7 @@ function createBarChart(ctx, chart) {
       scales: {
         y: {
           beginAtZero: true,
-          title: { display: true, text: chart.y_label }
+          title: { display: true, text: chart.y_label || "Frequency" }
         },
         x: {
           title: { display: true, text: chart.x_label }
