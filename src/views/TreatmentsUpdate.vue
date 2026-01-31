@@ -19,6 +19,23 @@
       </ul>
 
       <form @submit.prevent="updateTreatment" class="space-y-6">
+        <!-- Treatment name -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            Treatment name
+          </label>
+          <p class="text-xs text-gray-500 mb-1">
+            Short label used to identify this treatment in charts.
+          </p>
+          <input
+              v-model="treatment.name"
+              type="text"
+              required
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
 
         <!-- Description -->
         <div>
@@ -81,7 +98,20 @@ onMounted(() => {
 });
 
 function updateTreatment() {
+  errors.value = [];
+
+  if (!treatment.value.name.trim()) {
+    errors.value.push("Please provide a name for this treatment.");
+    return;
+  }
+
+  if (!treatment.value.description.trim()) {
+    errors.value.push("Please provide a description for this treatment.");
+    return;
+  }
+
   const params = {
+    name: treatment.value.name,
     description: treatment.value.description
   };
 

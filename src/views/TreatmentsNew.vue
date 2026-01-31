@@ -19,6 +19,23 @@
       </ul>
 
       <form @submit.prevent="createTreatment" class="space-y-6">
+        <!-- Treatment name -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">
+            Treatment name
+          </label>
+          <p class="text-xs text-gray-500 mb-1">
+            A short label to identify this treatment (used in charts and comparisons).
+          </p>
+          <input
+              v-model="name"
+              type="text"
+              required
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="e.g. Daily walking routine"
+          />
+        </div>
 
         <!-- Description -->
         <div>
@@ -68,10 +85,24 @@ const route = useRoute();
 const router = useRouter();
 
 const description = ref("");
+const name = ref("");
 const errors = ref([]);
 
 function createTreatment() {
+  errors.value = [];
+
+  if (!name.value.trim()) {
+    errors.value.push("Please provide a name for this treatment.");
+    return;
+  }
+
+  if (!description.value.trim()) {
+    errors.value.push("Please provide a description for this treatment.");
+    return;
+  }
+
   const params = {
+    name: name.value,
     description: description.value
   };
 

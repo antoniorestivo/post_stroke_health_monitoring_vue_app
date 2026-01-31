@@ -25,6 +25,9 @@
               class="w-full h-48 object-cover rounded"
             />
           </div>
+          <h3 class="text-xl font-semibold text-gray-800">
+            {{ treatment.name }}
+          </h3>
 
           <p class="text-sm text-gray-500">
             Created {{ relativeDate(treatment.created_at) }}

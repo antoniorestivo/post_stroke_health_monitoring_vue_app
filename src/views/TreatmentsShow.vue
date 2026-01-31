@@ -5,7 +5,7 @@
       <!-- Header -->
       <div class="space-y-1">
         <h1 class="text-2xl font-semibold text-gray-800">
-          Treatment attempt
+          {{ treatment.name }}
         </h1>
         <p class="text-sm text-gray-500">
           Started {{ relativeDate(treatment.created_at) }}

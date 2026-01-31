@@ -7,8 +7,27 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import axios from "@/lib/axios";
-import Chart from "chart.js/auto";
-import "@sgratzl/chartjs-chart-boxplot";
+import {
+  Chart as ChartJS,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Legend
+} from "chart.js";
+
+import {
+  BoxPlotController,
+  BoxAndWiskers
+} from "@sgratzl/chartjs-chart-boxplot";
+
+ChartJS.register(
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Legend,
+  BoxPlotController,
+  BoxAndWiskers
+);
 
 const props = defineProps({
   userId: { type: Number, required: true },
@@ -53,7 +72,7 @@ function initializeChart(ctx, chart) {
 }
 
 function createLineChart(ctx, chart) {
-  new Chart(ctx, {
+  new ChartJS(ctx, {
     type: "line",
     data: {
       labels: chart.data.x,
@@ -125,7 +144,7 @@ function createLineChart(ctx, chart) {
 }
 
 function createBarChart(ctx, chart) {
-  new Chart(ctx, {
+  new ChartJS(ctx, {
     type: "bar",
     data: {
       labels: chart.data.x,
@@ -154,7 +173,7 @@ function createBarChart(ctx, chart) {
 }
 
 function createScatterChart(ctx, chart) {
-  new Chart(ctx, {
+  new ChartJS(ctx, {
     type: "scatter",
     data: {
       labels: chart.data.x,
@@ -224,7 +243,7 @@ function createScatterChart(ctx, chart) {
 }
 
 function createBoxPlotChart(ctx, chart) {
-  new Chart(ctx, {
+  new ChartJS(ctx, {
     type: "boxplot",
     data: {
       labels: chart.data.labels,

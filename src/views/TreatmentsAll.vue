@@ -32,16 +32,16 @@
         <div v-if="condition.treatments.length > 0">
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div
-                v-for="(treatment, tIndex) in condition.treatments"
+                v-for="(treatment) in condition.treatments"
                 :key="treatment.id"
                 class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm space-y-2"
             >
+              <span class="font-medium text-gray-800">
+                {{ treatment.name }}
+              </span>
+
               <p class="text-xs text-gray-500">
                 Started {{ relativeDate(treatment.created_at) }}
-              </p>
-
-              <p class="text-sm font-medium text-gray-700">
-                Treatment attempt #{{ tIndex + 1 }}
               </p>
 
               <p class="text-sm text-gray-600 line-clamp-3">

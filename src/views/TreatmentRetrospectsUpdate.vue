@@ -21,6 +21,9 @@
         <p class="text-sm text-gray-500">
           This check-in is for the following treatment:
         </p>
+        <h3 class="text-lg font-semibold text-gray-800">
+          {{ treatment.name }}
+        </h3>
         <p class="text-sm font-medium text-gray-800">
           {{ treatment.description }}
         </p>
