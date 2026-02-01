@@ -290,6 +290,7 @@ function createChart() {
       return;
     }
 
+    params.y_label = "Treatment Rating (1–10)";
     params.options.treatmentIds = selectedTreatments.value;
   }
 

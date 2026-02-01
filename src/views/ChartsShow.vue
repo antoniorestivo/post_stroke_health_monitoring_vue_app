@@ -52,14 +52,14 @@ const chartTitle = ref("");
 
 onMounted(async () => {
   const response = await axios.get(
-      `/api/users/${userId}/user_charts/${chartId}`
+    `/api/users/${userId}/user_charts/${chartId}`
   );
   chartTitle.value = response.data.title;
 });
 
 function destroyChart() {
   axios
-      .delete(`/api/users/${userId}/user_charts/${chartId}`)
-      .then(() => router.push(`/users/${userId}/charts`));
+    .delete(`/api/users/${userId}/user_charts/${chartId}`)
+    .then(() => router.push(`/users/${userId}/charts`));
 }
 </script>

@@ -39,10 +39,11 @@ let chartInstance = null;
 
 onMounted(async () => {
   const response = await axios.get(
-      `/api/users/${props.userId}/user_charts/${props.chartId}`
+    `/api/users/${props.userId}/user_charts/${props.chartId}`
   );
 
   const chart = response.data;
+  console.log(response.data);
   const ctx = canvasRef.value.getContext("2d");
 
   chartInstance = initializeChart(ctx, chart);
@@ -85,8 +86,8 @@ function createLineChart(ctx, chart) {
           pointBackgroundColor(context) {
             const value = context.dataset.data[context.dataIndex];
             return parseInt(value) > parseInt(chart.data.thresholds.y)
-                ? "rgb(255, 0, 0)"
-                : "rgb(75, 192, 192)";
+              ? "rgb(255, 0, 0)"
+              : "rgb(75, 192, 192)";
           }
         }
       ]
@@ -108,12 +109,12 @@ function createLineChart(ctx, chart) {
             label(context) {
               let label = context.dataset.label || "";
               if (
-                  parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
+                parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
               ) {
                 label += ` Warning for ${chart.y_label}!`;
               }
               if (
-                  parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
+                parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
               ) {
                 label += ` Warning for ${chart.x_label}!`;
               }
@@ -128,11 +129,11 @@ function createLineChart(ctx, chart) {
                 borderRadius: 2
               };
               if (
-                  parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
+                parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
               )
                 return red;
               if (
-                  parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
+                parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
               )
                 return red;
             }
@@ -255,7 +256,12 @@ function createBoxPlotChart(ctx, chart) {
         title: { display: true, text: "Boxplot Comparison" }
       },
       scales: {
-        y: { beginAtZero: true }
+        y: { beginAtZero: true,
+             title: {
+               display: true,
+               text: chart.y_label
+            }
+        }
       }
     }
   });
