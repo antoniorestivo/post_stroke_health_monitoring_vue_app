@@ -73,7 +73,7 @@
                     type="text"
                     v-model="field.name"
                     class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
@@ -89,7 +89,7 @@
                     type="text"
                     v-model="field.unit"
                     class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
             </div>
@@ -138,19 +138,44 @@
               </div>
 
               <!-- Column 2 -->
-              <div class="space-y-1">
+              <div v-if="field.dataType === 'numeric'" class="space-y-3">
                 <label class="block font-medium text-gray-700">
                   When should this stand out? (optional)
                 </label>
+
                 <p class="text-xs text-gray-500">
-                  e.g. "200" (Leave blank if you don’t want alerts)
+                  Set a threshold and choose when values should trigger a warning.
                 </p>
+
                 <input
-                    type="text"
-                    v-model="field.warningThreshold"
-                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  type="number"
+                  v-model="field.warningThreshold"
+                  class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="e.g. 6"
                 />
+
+                <div class="space-y-1 text-sm">
+                  <label class="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="gteq"
+                      v-model="field.warningModifier"
+                      :disabled="!field.warningThreshold"
+                    />
+                    Warn when values are <strong>greater than or equal to</strong> the threshold
+                  </label>
+
+                  <label class="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="lteq"
+                      v-model="field.warningModifier"
+                      :disabled="!field.warningThreshold"
+                    />
+                    Warn when values are <strong>less than or equal to</strong> the threshold
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -191,7 +216,8 @@ const metricFields = ref([
     name: "",
     unit: "",
     dataType: "numeric",
-    warningThreshold: ""
+    warningThreshold: "",
+    warningModifier: "gteq"
   }
 ]);
 
@@ -200,19 +226,22 @@ const basicHealthPreset = [
     name: "Sleep Hours",
     unit: "hours",
     dataType: "numeric",
-    warningThreshold: 6.0
+    warningThreshold: 6.0,
+    warningModifier: "lteq"
   },
   {
     name: "Energy Level",
     unit: "scale_1_5",
     dataType: "numeric",
-    warningThreshold: 2
+    warningThreshold: 2,
+    warningModifier: "lteq"
   },
   {
     name: "Exercise Intensity",
     unit: "scale_0_3",
     dataType: "numeric",
-    warningThreshold: 0
+    warningThreshold: 0,
+    warningModifier: "lteq"
   }
 ];
 
@@ -221,7 +250,8 @@ function addField() {
     name: "",
     unit: "",
     dataType: "numeric",
-    warningThreshold: ""
+    warningThreshold: "",
+    warningModifier: "gteq"
   });
 }
 
@@ -234,6 +264,7 @@ function createJournalTemplate() {
     template[`field_unit_${i}`] = field.unit;
     template[`field_data_type_${i}`] = field.dataType;
     template[`warning_threshold_${i}`] = field.warningThreshold;
+    template[`warning_modifier_${i}`] = field.warningModifier;
   });
 
   axios
@@ -251,7 +282,8 @@ function applyPreset(preset) {
     name: field.name,
     unit: field.unit,
     dataType: field.dataType,
-    warningThreshold: field.warningThreshold
+    warningThreshold: field.warningThreshold,
+    warningModifier: field.warningModifier || "gteq"
   }));
 }
 </script>

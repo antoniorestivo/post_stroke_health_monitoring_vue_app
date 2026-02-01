@@ -85,7 +85,11 @@ function createLineChart(ctx, chart) {
           fill: false,
           pointBackgroundColor(context) {
             const value = context.dataset.data[context.dataIndex];
-            return parseInt(value) > parseInt(chart.data.thresholds.y)
+            return isWarning(
+                value,
+                chart.data.thresholds.y,
+                chart.data.thresholds.y_modifier
+            )
               ? "rgb(255, 0, 0)"
               : "rgb(75, 192, 192)";
           }
@@ -109,15 +113,25 @@ function createLineChart(ctx, chart) {
             label(context) {
               let label = context.dataset.label || "";
               if (
-                parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
+                  isWarning(
+                      context.parsed.y,
+                      chart.data.thresholds.y,
+                      chart.data.thresholds.y_modifier
+                  )
               ) {
                 label += ` Warning for ${chart.y_label}!`;
               }
+
               if (
-                parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
+                  isWarning(
+                      context.parsed.x,
+                      chart.data.thresholds.x,
+                      chart.data.thresholds.x_modifier
+                  )
               ) {
                 label += ` Warning for ${chart.x_label}!`;
               }
+
               return label;
             },
             labelColor(context) {
@@ -129,11 +143,19 @@ function createLineChart(ctx, chart) {
                 borderRadius: 2
               };
               if (
-                parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
+                  isWarning(
+                      context.parsed.y,
+                      chart.data.thresholds.y,
+                      chart.data.thresholds.y_modifier
+                  )
               )
                 return red;
               if (
-                parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
+                  isWarning(
+                      context.parsed.x,
+                      chart.data.thresholds.x,
+                      chart.data.thresholds.x_modifier
+                  )
               )
                 return red;
             }
@@ -185,9 +207,13 @@ function createScatterChart(ctx, chart) {
           borderWidth: 1,
           pointBackgroundColor(context) {
             const value = context.dataset.data[context.dataIndex];
-            return parseInt(value) > parseInt(chart.data.thresholds.y)
-                ? "rgb(255, 0, 0)"
-                : "rgb(75, 192, 192)";
+            return isWarning(
+              value,
+              chart.data.thresholds.y,
+              chart.data.thresholds.y_modifier
+            )
+              ? "rgb(255, 0, 0)"
+              : "rgb(75, 192, 192)";
           }
         }
       ]
@@ -208,12 +234,20 @@ function createScatterChart(ctx, chart) {
             label(context) {
               let label = context.dataset.label || "";
               if (
-                  parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
+                  isWarning(
+                      context.parsed.y,
+                      chart.data.thresholds.y,
+                      chart.data.thresholds.y_modifier
+                  )
               ) {
                 label += ` Warning for ${chart.y_label}!`;
               }
               if (
-                  parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
+                  isWarning(
+                      context.parsed.x,
+                      chart.data.thresholds.x,
+                      chart.data.thresholds.x_modifier
+                  )
               ) {
                 label += ` Warning for ${chart.x_label}!`;
               }
@@ -228,11 +262,19 @@ function createScatterChart(ctx, chart) {
                 borderRadius: 2
               };
               if (
-                  parseInt(context.parsed.y) > parseInt(chart.data.thresholds.y)
+                  isWarning(
+                      context.parsed.y,
+                      chart.data.thresholds.y,
+                      chart.data.thresholds.y_modifier
+                  )
               )
                 return red;
               if (
-                  parseInt(context.parsed.x) > parseInt(chart.data.thresholds.x)
+                  isWarning(
+                      context.parsed.x,
+                      chart.data.thresholds.x,
+                      chart.data.thresholds.x_modifier
+                  )
               )
                 return red;
             }
@@ -265,5 +307,21 @@ function createBoxPlotChart(ctx, chart) {
       }
     }
   });
+}
+function isWarning(value, threshold, modifier) {
+  if (threshold == null || value == null) return false;
+
+  const v = Number(value);
+  const t = Number(threshold);
+
+  if (Number.isNaN(v) || Number.isNaN(t)) return false;
+
+  // Default to greater-than-or-equal
+  if (modifier === "lteq") {
+    return v <= t;
+  }
+
+  // gteq or null / unknown
+  return v >= t;
 }
 </script>

@@ -7,11 +7,11 @@
         </h3>
         <!-- Tooltip Block -->
         <img
-            src="https://www.shutterstock.com/image-vector/info-information-help-tooltip-icon-260nw-1265320249.jpg"
-            alt="Info"
-            class="w-4 h-4 cursor-pointer"
-            @mouseover="tooltipVisible = true"
-            @mouseleave="tooltipVisible = false"
+          src="https://www.shutterstock.com/image-vector/info-information-help-tooltip-icon-260nw-1265320249.jpg"
+          alt="Info"
+          class="w-4 h-4 cursor-pointer"
+          @mouseover="tooltipVisible = true"
+          @mouseleave="tooltipVisible = false"
         />
       </div>
       <p class="text-gray-700">
@@ -19,8 +19,8 @@
         journal entries.
       </p>
       <p
-          v-if="tooltipVisible"
-          class="text-sm bg-gray-800 text-white p-3 rounded max-w-md leading-relaxed"
+        v-if="tooltipVisible"
+        class="text-sm bg-gray-800 text-white p-3 rounded max-w-md leading-relaxed"
       >
         Each field becomes a question in your daily journal.
         <br /><br />
@@ -56,10 +56,10 @@
               <div class="space-y-1">
                 <label class="block font-medium text-gray-700">Metric Name</label>
                 <input
-                    v-model="metric.metric_name"
-                    type="text"
-                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  v-model="metric.metric_name"
+                  type="text"
+                  class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
@@ -76,9 +76,9 @@
                 <div class="space-y-1 text-sm">
                   <label class="flex items-start gap-2">
                     <input
-                        type="radio"
-                        value="numeric"
-                        v-model="metric.metric_data_type"
+                      type="radio"
+                      value="numeric"
+                      v-model="metric.metric_data_type"
                     />
                     <span>
                       <strong>Numeric</strong> — values you want to track or compare over time
@@ -90,9 +90,9 @@
 
                   <label class="flex items-start gap-2">
                     <input
-                        type="radio"
-                        value="categorical"
-                        v-model="metric.metric_data_type"
+                      type="radio"
+                      value="categorical"
+                      v-model="metric.metric_data_type"
                     />
                     <span>
                       <strong>Categorical</strong> — labels or states you want to count or group
@@ -111,30 +111,60 @@
               <div class="space-y-1">
                 <label class="block font-medium text-gray-700">Unit Name</label>
                 <input
-                    v-model="metric.metric_unit_name"
-                    type="text"
-                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  v-model="metric.metric_unit_name"
+                  type="text"
+                  class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 
               <!-- Column 2 -->
-              <div class="space-y-1">
-                <label class="block font-medium text-gray-700">Warning Threshold</label>
+              <div v-if="metric.metric_data_type === 'numeric'" class="space-y-3">
+                <label class="block font-medium text-gray-700">
+                  Warning threshold (optional)
+                </label>
+
+                <p class="text-xs text-gray-500">
+                  Set a threshold and choose when values should trigger a warning.
+                </p>
+
                 <input
-                    v-model="metric.warning_threshold"
-                    type="text"
-                    class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
-                           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  type="number"
+                  v-model="metric.warning_threshold"
+                  class="w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="e.g. 6"
                 />
+
+                <div class="space-y-1 text-sm">
+                  <label class="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="gteq"
+                      v-model="metric.warning_modifier"
+                      :disabled="!metric.warning_threshold"
+                    />
+                    Warn when values are <strong>greater than or equal to</strong> the threshold
+                  </label>
+
+                  <label class="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      value="lteq"
+                      v-model="metric.warning_modifier"
+                      :disabled="!metric.warning_threshold"
+                    />
+                    Warn when values are <strong>less than or equal to</strong> the threshold
+                  </label>
+                </div>
               </div>
             </div>
 
             <div class="text-right">
               <button
-                  type="button"
-                  @click="removeMetricField(index)"
-                  class="text-red-600 text-sm hover:underline"
+                type="button"
+                @click="removeMetricField(index)"
+                class="text-red-600 text-sm hover:underline"
               >
                 Delete Field
               </button>
@@ -152,14 +182,23 @@
           </button>
         </div>
 
-        <div>
+        <div class="mt-6 space-y-3">
           <button
             type="submit"
-            class="mt-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
           >
             Update
           </button>
+
+          <div
+            v-if="message"
+            class="bg-green-50 border border-green-200 rounded-lg p-3 text-sm text-green-700"
+          >
+            {{ message }}
+          </div>
         </div>
+
+
       </form>
     </div>
   </section>
@@ -188,8 +227,9 @@ onMounted(() => {
         ...m,
         metric_data_type:
           m.metric_data_type === "categorical"
-            ? "categorical"
-            : "numeric"
+              ? "categorical"
+              : "numeric",
+        warning_modifier: m.warning_modifier || "gteq"
       }));
     })
     .catch(error => {
@@ -204,7 +244,8 @@ function addMetricField() {
     metric_name: "",
     metric_data_type: "numeric",
     metric_unit_name: "",
-    warning_threshold: ""
+    warning_threshold: "",
+    warning_modifier: "gteq"
   });
 }
 
