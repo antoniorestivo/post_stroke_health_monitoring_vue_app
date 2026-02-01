@@ -25,15 +25,15 @@
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">
-              What are you condition are you tracking?
+              What condition are you tracking?
             </label>
             <p class="text-xs text-gray-500 mb-1">
               For example: Insomnia, Back pain, High Blood pressure
             </p>
             <input
-                v-model="form.name"
-                type="text"
-                class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+              v-model="form.name"
+              type="text"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -46,19 +46,19 @@
               Add any details that help explain what’s going on or why this matters.
             </p>
             <textarea
-                v-model="form.description"
-                rows="4"
-                class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+              v-model="form.description"
+              rows="4"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             ></textarea>
           </div>
 
           <div class="flex items-start gap-2">
             <input
-                v-model="form.support"
-                type="checkbox"
-                id="support"
-                class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded"
+              v-model="form.support"
+              type="checkbox"
+              id="support"
+              class="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded"
             />
             <label for="support" class="text-sm text-gray-700">
               This condition requires extra support or assistance
@@ -77,9 +77,9 @@
               Image URL
             </label>
             <input
-                v-model="form.image_url"
-                type="text"
-                class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+              v-model="form.image_url"
+              type="text"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -89,9 +89,9 @@
               Video URL
             </label>
             <input
-                v-model="form.video_url"
-                type="text"
-                class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+              v-model="form.video_url"
+              type="text"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
                      focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
@@ -100,8 +100,8 @@
         <!-- Submit -->
         <div>
           <button
-              type="submit"
-              class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+            type="submit"
+            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
           >
             Start tracking this condition
           </button>

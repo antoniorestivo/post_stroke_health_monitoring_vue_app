@@ -34,7 +34,7 @@
             v-model="form.description"
             rows="4"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 
@@ -50,7 +50,7 @@
             v-model="form.health_routines"
             rows="3"
             class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           ></textarea>
         </div>
 
@@ -68,7 +68,7 @@
               v-model="form.image_url"
               type="text"
               class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
 
@@ -80,7 +80,7 @@
               v-model="form.video_url"
               type="text"
               class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
-                   focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
@@ -98,13 +98,13 @@
               class="bg-gray-50 rounded-lg p-3 space-y-1"
             >
               <label class="text-xs font-medium text-gray-600">
-                {{ metric.metric_name }}
+                {{ metric.metric_name }} ({{ metric.metric_unit_name }})
               </label>
               <input
                 type="text"
                 v-model="form.metrics[metric.metric_name]"
                 class="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm
-                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
           </div>

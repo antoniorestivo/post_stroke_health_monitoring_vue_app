@@ -12,6 +12,30 @@
         </p>
       </div>
 
+      <!-- Empty state: no conditions -->
+      <div
+        v-if="conditionTreatments.length === 0"
+        class="bg-gray-50 border border-dashed border-gray-300 rounded-lg p-8 text-center space-y-4"
+      >
+        <h2 class="text-lg font-semibold text-gray-800">
+          No conditions yet
+        </h2>
+
+        <p class="text-sm text-gray-600 max-w-md mx-auto">
+          Treatments are always associated with a condition.
+          Start by adding something you want to monitor or improve,
+          like sleep quality, blood pressure, or recovery progress.
+        </p>
+
+        <router-link
+          to="/conditions/new"
+          class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Add your first condition
+        </router-link>
+      </div>
+
+
       <!-- Condition groups -->
       <div
           v-for="condition in conditionTreatments"

@@ -107,7 +107,7 @@
               class="bg-gray-50 rounded-lg p-3 space-y-1"
             >
               <label class="text-xs font-medium text-gray-600">
-                {{ metric }}
+                {{ metric }} ({{ extractUnit(journal, metric) }})
               </label>
               <input
                 v-model="journal.metrics[metric]"
@@ -193,5 +193,39 @@ function destroyJournal() {
   axios.delete(`/api/journals/${journal.value.id}`).then(() => {
     router.push("/journals");
   });
+}
+
+function getEnrichedMetric(journal, metricName) {
+  if (!journal?.enriched_metrics) return null
+  if (!journal?.id) return null
+
+  return journal.enriched_metrics[journal.id]?.[metricName] ?? null
+}
+
+function extractUnit(journal, metricName) {
+  const enrichedValue = getEnrichedMetric(journal, metricName)
+
+  if (typeof enrichedValue !== "string") {
+    return "" // no unit, categorical, or missing data
+  }
+
+  // Common patterns we tolerate:
+  // "7.5 hours"
+  // "204 lbs"
+  // "120 mmHg"
+  const parts = enrichedValue.trim().split(/\s+/)
+
+  if (parts.length < 2) {
+    return "" // no unit present
+  }
+
+  const unitCandidate = parts.at(-1)
+
+  // Defensive: ensure it looks like a unit, not a number
+  if (!isNaN(Number(unitCandidate))) {
+    return ""
+  }
+
+  return unitCandidate
 }
 </script>
