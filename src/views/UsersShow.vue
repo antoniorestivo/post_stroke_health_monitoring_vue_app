@@ -17,12 +17,6 @@
 
       <div class="space-x-4 mb-6">
         <router-link
-          :to="`/users/${user.id}/edit`"
-          class="text-blue-600 hover:underline"
-          >Update User</router-link
-        >
-
-        <router-link
           :to="`/users/${user.id}/charts`"
           class="text-blue-600 hover:underline"
           >User Charts</router-link
@@ -39,6 +33,47 @@
         <div>
           <h3 class="text-lg font-semibold text-gray-700 mb-2">Daily Logins</h3>
           <canvas ref="dailyCanvas" class="w-full h-64" />
+        </div>
+      </div>
+
+      <!-- Account & Data -->
+      <div class="mt-10 pt-6 border-t border-gray-200 space-y-4">
+        <h3 class="text-lg font-semibold text-gray-800">
+          Account & data
+        </h3>
+
+        <p class="text-sm text-gray-600 max-w-2xl">
+          This is a demo environment. All accounts and associated data are automatically
+          deleted within 2-3 days after creation.
+        </p>
+
+        <p class="text-sm text-gray-600 max-w-2xl">
+          You can also delete your account immediately. This will permanently remove
+          all your journals, conditions, treatments, charts, and reflections.
+        </p>
+
+        <!-- Delete confirmation -->
+        <div class="bg-red-50 border border-red-200 rounded-lg p-4 space-y-3 max-w-md">
+          <p class="text-sm text-red-700">
+            To delete your account now, type <strong>DELETE</strong> below and confirm.
+          </p>
+
+          <input
+              v-model="deleteConfirmation"
+              type="text"
+              placeholder="Type DELETE to confirm"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm
+                     focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+          />
+
+          <button
+              @click="deleteAccount"
+              :disabled="deleteConfirmation !== 'DELETE' || deleting"
+              class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition
+                     disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {{ deleting ? "Deleting…" : "Delete account" }}
+          </button>
         </div>
       </div>
     </div>
@@ -59,6 +94,24 @@ const profileImageUrl = ref("");
 
 const monthlyCanvas = ref(null);
 const dailyCanvas = ref(null);
+
+const deleteConfirmation = ref("");
+const deleting = ref(false);
+
+async function deleteAccount() {
+  if (deleteConfirmation.value !== "DELETE") return;
+
+  deleting.value = true;
+
+  try {
+    await axios.delete(`/api/users/${user.value.id}`);
+    localStorage.removeItem('jwt')
+    router.push("/");
+  } catch (error) {
+    console.error("Failed to delete account:", error);
+    deleting.value = false;
+  }
+}
 
 onMounted(async () => {
   try {

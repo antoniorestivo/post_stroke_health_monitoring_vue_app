@@ -5,7 +5,6 @@ import SignUp from '../views/SignUp.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import UsersShow from '../views/UsersShow.vue'
-import UsersEdit from '../views/UsersEdit.vue'
 import JournalsIndex from '../views/JournalsIndex.vue'
 import JournalsNewV2 from '../views/JournalsNewV2.vue'
 import JournalsTemplateNew from '../views/JournalsTemplateNew.vue'
@@ -27,7 +26,6 @@ import TreatmentRetrospectsUpdate from '../views/TreatmentRetrospectsUpdate.vue'
 import ChartsShow from '../views/ChartsShow.vue'
 import ChartsIndex from '../views/ChartsIndex.vue'
 import ChartsNew from '../views/ChartsNew.vue'
-import ChartsUpdate from '../views/ChartsUpdate.vue'
 import TreatmentsAll from '../views/TreatmentsAll.vue'
 import Dashboard from '../views/Dashboard.vue'
 
@@ -38,7 +36,6 @@ const routes = [
   { path: '/login', name: 'login', component: Login },
   { path: '/logout', name: 'logout', component: Logout },
   { path: '/users/:id', name: 'users-show', component: UsersShow },
-  { path: '/users/:id/edit', name: 'users-edit', component: UsersEdit },
   { path: '/journals', name: 'journals-index', component: JournalsIndex },
   { path: '/journals/new', name: 'journals-new', component: JournalsNewV2 },
   { path: '/journals/template/new', name: 'journals-template-new', component: JournalsTemplateNew },
@@ -60,7 +57,6 @@ const routes = [
   { path: '/users/:id/charts/new', name: 'charts-new', component: ChartsNew },
   { path: '/users/:id/charts/:chart_id', name: 'charts-show', component: ChartsShow },
   { path: '/users/:id/charts', name: 'charts-index', component: ChartsIndex },
-  { path: '/users/:id/charts/:chart_id/edit', name: 'charts-update', component: ChartsUpdate },
   { path: '/treatments', name: 'treatments-all', component: TreatmentsAll },
   { path: '/users/:id/dashboard', name: 'dashboard', component: Dashboard }
 ];

@@ -9,6 +9,7 @@
         <p class="text-yellow-900 text-sm">
           <strong>You’re viewing sample data.</strong>
           Explore freely — nothing you do here will be saved.
+          <strong>Note that all data is deleted within 2-3 days after creation.</strong>
           <router-link to="/signup" class="underline ml-1">
             Create your own account
           </router-link>
@@ -53,20 +54,20 @@
 
         <!-- DASHBOARD CHARTS -->
         <div
-            v-for="chart in dashboardCharts"
-            :key="chart.id"
-            class="bg-white shadow-md rounded-xl p-6"
+          v-for="chart in dashboardCharts"
+          :key="chart.id"
+          class="bg-white shadow-md rounded-xl p-6"
         >
           <UsersChart
-              :user-id="userId"
-              :chart-id="chart.id"
+            :user-id="userId"
+            :chart-id="chart.id"
           />
 
 
           <!-- Reuse existing chart route -->
           <router-link
-              :to="`/users/${userId}/charts/${chart.id}`"
-              class="text-blue-600 hover:underline text-sm"
+            :to="`/users/${userId}/charts/${chart.id}`"
+            class="text-blue-600 hover:underline text-sm"
           >
             View full chart →
           </router-link>
@@ -76,8 +77,8 @@
 
       <!-- EMPTY STATE -->
       <div
-          v-else
-          class="bg-white shadow-md rounded-xl p-8 text-center space-y-4"
+        v-else
+        class="bg-white shadow-md rounded-xl p-8 text-center space-y-4"
       >
         <h3 class="text-xl font-semibold text-gray-800">
           This is where your charts will appear
@@ -89,8 +90,8 @@
         </p>
 
         <router-link
-            to="/journals/new"
-            class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+          to="/journals/new"
+          class="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
         >
           Log your first entry
         </router-link>
@@ -101,22 +102,22 @@
            ===================== -->
       <div class="flex flex-wrap gap-4 pt-4">
         <router-link
-            to="/journals/new"
-            class="text-blue-600 hover:underline"
+          to="/journals/new"
+          class="text-blue-600 hover:underline"
         >
           Log today’s journal
         </router-link>
 
         <router-link
-            :to="`/users/${userId}/charts`"
-            class="text-blue-600 hover:underline"
+          :to="`/users/${userId}/charts`"
+          class="text-blue-600 hover:underline"
         >
           View all charts
         </router-link>
 
         <router-link
-            to="/conditions"
-            class="text-blue-600 hover:underline"
+          to="/conditions"
+          class="text-blue-600 hover:underline"
         >
           Review conditions
         </router-link>
@@ -140,13 +141,13 @@ onMounted(async () => {
     userId.value = userResponse.data.id;
 
     const chartsResponse = await axios.get(
-        `/api/users/${userId.value}/user_charts`
+      `/api/users/${userId.value}/user_charts`
     );
 
     const payload =
-        typeof chartsResponse.data === "string"
-            ? JSON.parse(chartsResponse.data)
-            : chartsResponse.data;
+      typeof chartsResponse.data === "string"
+          ? JSON.parse(chartsResponse.data)
+          : chartsResponse.data;
 
     charts.value = payload.charts ?? [];
   } catch (error) {

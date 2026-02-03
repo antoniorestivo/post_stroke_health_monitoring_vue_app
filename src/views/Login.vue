@@ -9,6 +9,8 @@
         </h1>
         <p class="text-sm text-gray-600">
           Sign in to continue where you left off.
+          <br>
+          <strong> Note: this app is in demo mode. Your account will be deleted within 2-3 days after creation.</strong>
         </p>
       </div>
 

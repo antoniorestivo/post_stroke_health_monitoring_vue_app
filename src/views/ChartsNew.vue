@@ -182,7 +182,7 @@
 
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import axios from "@/lib/axios";
 
@@ -198,7 +198,7 @@ const post = ref(false);
 const title = ref("");
 const metricOne = ref("");
 const metricTwo = ref("");
-const chartMode = ref("metric");
+const chartMode = ref("");
 const selectedTreatments = ref([]);
 
 const categoricalMetrics = computed(() =>

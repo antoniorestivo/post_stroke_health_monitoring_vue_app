@@ -7,29 +7,22 @@
       </h2>
 
       <UsersChart
-          :user-id="userId"
-          :chart-id="chartId"
+        :user-id="userId"
+        :chart-id="chartId"
       />
 
       <div class="space-x-4">
         <router-link
-            :to="`/users/${userId}/charts`"
-            class="text-blue-600 hover:underline"
+          :to="`/users/${userId}/charts`"
+          class="text-blue-600 hover:underline"
         >
           Back to charts
-        </router-link>
-        |
-        <router-link
-            :to="`/users/${userId}/charts/${chartId}/edit`"
-            class="text-blue-600 hover:underline"
-        >
-          Update chart
         </router-link>
       </div>
 
       <button
-          @click="destroyChart"
-          class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+        @click="destroyChart"
+        class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
       >
         Delete
       </button>
