@@ -43,6 +43,9 @@
           <router-link to="/users/me" class="hover:underline"
             >User Profile</router-link
           >
+          <router-link to="/users/me/charts" class="hover:underline"
+            >My Charts</router-link
+          >
         </div>
       </nav>
     </header>

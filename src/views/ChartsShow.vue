@@ -1,8 +1,8 @@
 <template>
-  <section class="min-h-screen bg-gray-100 py-10 px-4">
-    <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
+  <section class="min-h-screen bg-gray-100 py-6 px-4">
+    <div class="max-w-screen-xl mx-auto bg-white shadow-md rounded-xl p-6 space-y-6">
 
-      <h2 class="text-2xl font-bold text-gray-800">
+    <h2 class="text-2xl font-bold text-gray-800">
         {{ chartTitle }}
       </h2>
 

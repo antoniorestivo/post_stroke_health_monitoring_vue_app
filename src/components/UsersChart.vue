@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <canvas ref="canvasRef" class="w-full h-64" />
+  <div class="relative w-full h-[70vh]">
+    <canvas ref="canvasRef" />
   </div>
 </template>
 
@@ -97,10 +97,12 @@ function createLineChart(ctx, chart) {
       ]
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           beginAtZero: false,
-          title: { display: true, text: chart.y_label }
+          title: { display: true, text: titleWithUnits(chart.y_label, chart.data.y_unit) }
         },
         x: {
           beginAtZero: false,
@@ -182,6 +184,8 @@ function createBarChart(ctx, chart) {
       ]
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           beginAtZero: true,
@@ -219,13 +223,15 @@ function createScatterChart(ctx, chart) {
       ]
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           beginAtZero: false,
-          title: { display: true, text: chart.y_label }
+          title: { display: true, text: titleWithUnits(chart.y_label, chart.data.y_unit) }
         },
         x: {
-          title: { display: true, text: chart.x_label }
+          title: { display: true, text: titleWithUnits(chart.x_label, chart.data.x_unit) }
         }
       },
       plugins: {
@@ -293,6 +299,7 @@ function createBoxPlotChart(ctx, chart) {
       datasets: chart.data.datasets
     },
     options: {
+      maintainAspectRatio: false,
       responsive: true,
       plugins: {
         title: { display: true, text: "Boxplot Comparison" }
@@ -323,5 +330,9 @@ function isWarning(value, threshold, modifier) {
 
   // gteq or null / unknown
   return v >= t;
+}
+
+function titleWithUnits(label, unit) {
+  return `${label} (${unit})`
 }
 </script>

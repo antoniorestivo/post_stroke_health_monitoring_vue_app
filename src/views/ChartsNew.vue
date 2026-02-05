@@ -61,9 +61,13 @@
             Choose a metric
           </h3>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div v-if="numericalMetrics.length === 0" class="text-sm text-red-600">
+            You must have at least one numerical metric to track over time. Create one in your journal template.
+          </div>
+
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             <label
-              v-for="metric in metrics"
+              v-for="metric in numericalMetrics"
               :key="metric.id"
               class="flex items-center gap-2 text-sm"
             >
@@ -79,12 +83,16 @@
             Choose two metrics
           </h3>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div v-if="numericalMetrics.length < 2" class="text-sm text-red-600">
+            You must have at least two numerical metrics to compare. Create some in your journal template.
+          </div>
+
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <p class="text-xs text-gray-500 mb-1">First metric</p>
               <select v-model="metricOne" class="w-full rounded border px-2 py-1 text-sm">
                 <option disabled value="">Select</option>
-                <option v-for="m in metrics" :key="m.id" :value="m.metric_name">
+                <option v-for="m in numericalMetrics" :key="m.id" :value="m.metric_name">
                   {{ m.metric_name }}
                 </option>
               </select>
@@ -203,6 +211,10 @@ const selectedTreatments = ref([]);
 
 const categoricalMetrics = computed(() =>
   metrics.value.filter(m => m.metric_data_type === "categorical")
+);
+
+const numericalMetrics = computed(() =>
+    metrics.value.filter(m => m.metric_data_type === "numeric")
 );
 
 watch(

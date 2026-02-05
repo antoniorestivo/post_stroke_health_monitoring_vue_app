@@ -28,20 +28,59 @@
         </p>
       </div>
 
-      <!-- Primary actions -->
-      <div class="flex flex-wrap gap-4 pt-2">
-        <router-link
-            :to="`/conditions/${condition.id}/treatments`"
-            class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
-        >
-          View treatments & progress
-        </router-link>
+      <!-- Treatments -->
+      <div class="pt-6 border-t space-y-4">
+        <h2 class="text-lg font-semibold text-gray-700">
+          Treatments
+        </h2>
+
+        <div v-if="treatments.length === 0" class="text-sm text-gray-500">
+          No treatments added yet.
+        </div>
+
+        <ul v-else class="space-y-3">
+          <li
+              v-for="treatment in treatments"
+              :key="treatment.id"
+              class="bg-gray-50 rounded-lg p-4"
+          >
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-sm font-medium text-gray-800">
+                  {{ treatment.name }}
+                </p>
+
+                <p
+                    v-if="treatment.description"
+                    class="text-xs text-gray-600 mt-1 line-clamp-3"
+                >
+                  {{ treatment.description }}
+                </p>
+              </div>
+
+              <router-link
+                  :to="`/conditions/${condition.id}/treatments/${treatment.id}`"
+                  class="text-xs text-blue-600 hover:underline whitespace-nowrap"
+              >
+                View
+              </router-link>
+            </div>
+          </li>
+        </ul>
 
         <router-link
-            :to="`/conditions/${condition.id}/edit`"
-            class="text-blue-600 hover:underline text-sm self-center"
+            :to="`/conditions/${condition.id}/treatments/new`"
+            class="text-sm text-blue-600 hover:underline my-2"
         >
-          Edit condition details
+          + Add treatment
+        </router-link>
+        <br>
+
+        <router-link
+            :to="`/conditions/${condition.id}/treatments`"
+            class="text-xs text-blue-600 hover:underline inline-block"
+        >
+          View all treatments & progress →
         </router-link>
       </div>
 
@@ -74,6 +113,13 @@
       <!-- Footer actions -->
       <div class="pt-6 border-t space-y-4">
         <div class="text-sm space-x-4">
+          <router-link
+              :to="`/conditions/${condition.id}/edit`"
+              class="text-blue-600 hover:underline text-sm self-center"
+          >
+            Edit condition details
+          </router-link>
+
           <router-link to="/conditions" class="text-blue-600 hover:underline">
             Back to all conditions
           </router-link>
@@ -100,11 +146,19 @@ const route = useRoute();
 const router = useRouter();
 
 const condition = ref({});
+const treatments = ref([]);
 
-onMounted(() => {
-  axios.get(`/api/conditions/${route.params.id}`).then(response => {
-    condition.value = response.data;
-  });
+onMounted(async () => {
+  const conditionResponse = await axios.get(
+    `/api/conditions/${route.params.id}`
+  );
+  condition.value = conditionResponse.data;
+
+  const treatmentsResponse = await axios.get(
+    `/api/conditions/${route.params.id}/treatments`
+  );
+  const data = JSON.parse(treatmentsResponse.data)
+  treatments.value = data.treatments;
 });
 
 function relativeDate(date) {
