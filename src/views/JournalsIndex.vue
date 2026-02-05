@@ -16,7 +16,7 @@
 
         <router-link
             v-if="template"
-            :to="`/journals/template/${template.id}/edit`"
+            :to="`/journals/template/edit`"
             class="text-blue-600 hover:underline self-center"
         >
           Edit journal template

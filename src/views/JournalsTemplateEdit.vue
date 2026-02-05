@@ -216,12 +216,11 @@ const tooltipVisible = ref(false);
 const message = ref("");
 const errors = ref([]);
 
-const templateId = route.params.id;
 const metrics = ref([]);
 
 onMounted(() => {
   axios
-    .get(`/api/journal_templates/${templateId}/edit`)
+    .get(`/api/journal_templates/edit`)
     .then(response => {
       metrics.value = (response.data.metrics || []).map(m => ({
         ...m,
@@ -259,10 +258,10 @@ function updateJournalTemplate() {
   };
 
   axios
-    .patch(`/api/journal_templates/${templateId}`, params)
+    .patch("/api/journal_templates", params)
     .then(() => {
       message.value = "Template successfully updated!";
-      router.push(`/journals/template/${templateId}/edit`);
+      router.push("/journals/template/edit");
     })
     .catch(error => {
       errors.value = error.response?.data?.errors || ["Update failed"];

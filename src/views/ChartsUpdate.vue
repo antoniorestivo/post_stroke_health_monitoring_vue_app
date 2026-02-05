@@ -97,9 +97,11 @@ onMounted(() => {
 function updateChart() {
   const url = `/api/users/${route.params.id}/user_charts/${chart.value.id}`;
   const params = {
-    x_label: chart.value.x_label,
-    y_label: chart.value.y_label,
-    title: chart.value.title
+    user_chart: {
+      x_label: chart.value.x_label,
+      y_label: chart.value.y_label,
+      title: chart.value.title
+    }
   };
 
   axios

@@ -43,8 +43,8 @@
         </h3>
 
         <p class="text-sm text-gray-600 max-w-2xl">
-          This is a demo environment. All accounts and associated data are automatically
-          deleted within 2-3 days after creation.
+          <strong>This is a demonstration environment. Please do not enter real or sensitive personal or medical information.
+          All accounts and associated data are automatically deleted within 2-3 days after creation.</strong>
         </p>
 
         <p class="text-sm text-gray-600 max-w-2xl">

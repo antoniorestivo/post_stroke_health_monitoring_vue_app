@@ -239,7 +239,7 @@ function fetchData() {
 function createChart() {
   errors.value = [];
 
-  const params = {
+  const chartPayload = {
     chart_mode: chartMode.value,
     title: title.value,
     options: {}
@@ -256,8 +256,8 @@ function createChart() {
       return;
     }
 
-    params.x_label = "Time";
-    params.y_label = metricOne.value;
+    chartPayload.x_label = "Time";
+    chartPayload.y_label = metricOne.value;
   }
 
   if (chartMode.value === "metric_vs_metric") {
@@ -271,8 +271,8 @@ function createChart() {
       return;
     }
 
-    params.x_label = metricOne.value;
-    params.y_label = metricTwo.value;
+    chartPayload.x_label = metricOne.value;
+    chartPayload.y_label = metricTwo.value;
   }
 
   if (chartMode.value === "metric_frequency") {
@@ -281,7 +281,7 @@ function createChart() {
       return;
     }
 
-    params.x_label = metricOne.value;
+    chartPayload.x_label = metricOne.value;
   }
 
   if (chartMode.value === "treatment_comparison") {
@@ -290,12 +290,14 @@ function createChart() {
       return;
     }
 
-    params.y_label = "Treatment Rating (1–10)";
-    params.options.treatmentIds = selectedTreatments.value;
+    chartPayload.y_label = "Treatment Rating (1–10)";
+    chartPayload.options.treatmentIds = selectedTreatments.value;
   }
 
   axios
-    .post(`/api/users/${route.params.id}/user_charts`, params)
+    .post(`/api/users/${route.params.id}/user_charts`, {
+      user_chart: chartPayload
+    })
     .then(() => {
       router.push(`/users/${route.params.id}/charts`);
     })

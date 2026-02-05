@@ -39,7 +39,7 @@ const routes = [
   { path: '/journals', name: 'journals-index', component: JournalsIndex },
   { path: '/journals/new', name: 'journals-new', component: JournalsNewV2 },
   { path: '/journals/template/new', name: 'journals-template-new', component: JournalsTemplateNew },
-  { path: '/journals/template/:id/edit', name: 'journals-template-edit', component: JournalsTemplateEdit },
+  { path: '/journals/template/edit', name: 'journals-template-edit', component: JournalsTemplateEdit },
   { path: '/journals/:id', name: 'journals-show', component: JournalsShow },
   { path: '/journals/:id/edit', name: 'journals-update', component: JournalsUpdate },
   { path: '/conditions', name: 'conditions-index', component: ConditionsIndex },

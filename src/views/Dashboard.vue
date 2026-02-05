@@ -9,7 +9,8 @@
         <p class="text-yellow-900 text-sm">
           <strong>You’re viewing sample data.</strong>
           Explore freely — nothing you do here will be saved.
-          <strong>Note that all data is deleted within 2-3 days after creation.</strong>
+          <strong>This is a demonstration environment. Please do not enter real or sensitive personal or medical information.
+            Note that all data is deleted within 2-3 days after creation.</strong>
           <router-link to="/signup" class="underline ml-1">
             Create your own account
           </router-link>
